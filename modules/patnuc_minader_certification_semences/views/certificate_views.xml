@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_form_certification_certificate" model="ir.ui.view">
+        <field name="name">certification.certificate.form</field>
+        <field name="model">certification.certificate</field>
+        <field name="arch" type="xml">
+            <form string="Certificat de Conformité">
+                <sheet>
+                    <group col="4">
+                        <group colspan="2" string="Informations générales">
+                            <group>
+                                <field name="name"/>
+                                <field name="request_id"/>
+                                <field name="operator_id"/>
+                                <field name="issue_date"/>
+                            </group>
+                            <group>
+                                <field name="validity_date"/>
+                                <field name="seed_variety"/>
+                                <field name="certified_quantity"/>
+                                <field name="production_site"/>
+                            </group>
+                        </group>
+                        <group colspan="2" string="Signatures">
+                            <field name="technical_validator_id"/>
+                            <field name="final_signatory_id"/>
+                            <field name="state"/>
+                        </group>
+                        <group colspan="2" string="QR Code et Documents">
+                            <field name="qr_code"/>
+                            <field name="certificate_pdf"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+
+    <record id="view_tree_certification_certificate" model="ir.ui.view">
+        <field name="name">certification.certificate.tree</field>
+        <field name="model">certification.certificate</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="request_id" widget="link_to_record"/>
+                <field name="operator_id"/>
+                <field name="issue_date"/>
+                <field name="validity_date"/>
+                <field name="production_site"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_certification_certificate" model="ir.actions.act_window">
+        <field name="name">Certificats</field>
+        <field name="res_model">certification.certificate</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Enregistrez vos informations ici !
+            </p>
+        </field>
+    </record>
+<!-- 
+    <menuitem id="menu_certification_certificate" name="Certificats"
+              parent="menu_certification_root" action="action_certification_certificate" sequence="6"/> -->
+</odoo>

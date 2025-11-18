@@ -1,0 +1,56 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+
+access_fertilizer_homologation_promoteur,fertilizer.homologation.promoteur,model_fertilizer_homologation,group_promoteur_demandeur,1,1,1,0
+access_fertilizer_homologation_sre,fertilizer.homologation.sre,model_fertilizer_homologation,group_agent_SRE,1,1,1,0
+access_fertilizer_homologation_lnad,fertilizer.homologation.lnad,model_fertilizer_homologation,group_agent_LNAD,1,1,1,0
+access_fertilizer_homologation_src,fertilizer.homologation.src,model_fertilizer_homologation,group_agent_SRC,1,1,1,0
+access_fertilizer_homologation_drcq,fertilizer.homologation.drcq,model_fertilizer_homologation,group_agent_DRCQ,1,1,1,0
+access_fertilizer_homologation_cabinet,fertilizer.homologation.cabinet,model_fertilizer_homologation,group_agent_CABINET_MINADER,1,1,1,0
+access_fertilizer_homologation_group_manager,fertilizer.homologation.group_manager,model_fertilizer_homologation,group_manager,1,1,1,1
+access_laboratory_analysis_lnad,laboratory.analysis.lnad,model_laboratory_analysis,group_agent_LNAD,1,1,1,0
+access_field_test_src,field.test.src,model_field_test,group_agent_SRC,1,1,1,0
+access_economic_evaluation_src,economic.evaluation.src,model_economic_evaluation,group_agent_SRC,1,1,1,0
+access_fertilizer_certificate_wizard_cabinet,fertilizer.certificate.wizard.cabinet,model_fertilizer_certificate_wizard,group_agent_CABINET_MINADER,1,1,1,0
+access_mod_homologation_promoteur,Mod Homologation Promoteur,model_fertilizer_mod_homologation,group_promoteur_demandeur,1,1,1,0
+access_mod_homologation_sre,Mod Homologation SRE,model_fertilizer_mod_homologation,group_agent_SRE,1,1,1,0
+access_mod_homologation_lnad,Mod Homologation LNAD,model_fertilizer_mod_homologation,group_agent_LNAD,1,1,1,0
+access_mod_homologation_src,Mod Homologation SRC,model_fertilizer_mod_homologation,group_agent_SRC,1,1,1,0
+access_mod_homologation_drcq,Mod Homologation DRCQ,model_fertilizer_mod_homologation,group_agent_DRCQ,1,1,1,0
+access_mod_homologation_cabinet,Mod Homologation Cabinet,model_fertilizer_mod_homologation,group_agent_CABINET_MINADER,1,1,1,0
+access_mod_homologation_manager,Mod Homologation Manager,model_fertilizer_mod_homologation,group_manager,1,1,1,1
+access_decree_promoteur,Arrêté Promoteur,model_fertilizer_decree,group_promoteur_demandeur,1,0,0,0
+access_decree_sre,Arrêté SRE,model_fertilizer_decree,group_agent_SRE,1,0,0,0
+access_decree_lnad,Arrêté LNAD,model_fertilizer_decree,group_agent_LNAD,1,0,0,0
+access_decree_src,Arrêté SRC,model_fertilizer_decree,group_agent_SRC,1,0,0,0
+access_decree_drcq,Arrêté DRCQ,model_fertilizer_decree,group_agent_DRCQ,1,0,0,0
+access_decree_cabinet,Arrêté Cabinet (R/W),model_fertilizer_decree,group_agent_CABINET_MINADER,1,1,1,1
+access_decree_manager,Arrêté Manager (R/W),model_fertilizer_decree,group_manager,1,1,1,1
+access_renew_homologation_promoteur,Renew Homologation Promoteur,model_fertilizer_renew_homologation,group_promoteur_demandeur,1,1,1,0
+access_renew_homologation_sre,Renew Homologation SRE,model_fertilizer_renew_homologation,group_agent_SRE,1,1,1,0
+access_renew_homologation_lnad,Renew Homologation LNAD,model_fertilizer_renew_homologation,group_agent_LNAD,1,1,1,0
+access_renew_homologation_src,Renew Homologation SRC,model_fertilizer_renew_homologation,group_agent_SRC,1,1,1,0
+access_renew_homologation_drcq,Renew Homologation DRCQ,model_fertilizer_renew_homologation,group_agent_DRCQ,1,1,1,0
+access_renew_homologation_cabinet,Renew Homologation Cabinet,model_fertilizer_renew_homologation,group_agent_CABINET_MINADER,1,1,1,0
+access_renew_homologation_manager,Renew Homologation Manager,model_fertilizer_renew_homologation,group_manager,1,1,1,1
+access_mod_return_wizard_promoteur,Mod Return Wizard Promoteur,model_fertilizer_mod_return_wizard,group_promoteur_demandeur,1,1,1,0
+access_mod_return_wizard_sre,Mod Return Wizard SRE,model_fertilizer_mod_return_wizard,group_agent_SRE,1,1,1,0
+access_mod_return_wizard_manager_group,Mod Return Wizard Manager Group,model_fertilizer_mod_return_wizard,group_manager,1,1,1,1
+access_renew_return_wizard_sre,Renew Return Wizard SRE,model_fertilizer_renew_return_wizard,group_agent_SRE,1,1,1,0
+access_renew_return_wizard_drcq,Renew Return Wizard DRCQ,model_fertilizer_renew_return_wizard,group_agent_DRCQ,1,1,1,0
+access_renew_return_wizard_cabinet,Renew Return Wizard Cabinet,model_fertilizer_renew_return_wizard,group_agent_CABINET_MINADER,1,1,1,0
+access_renew_return_wizard_manager,Renew Return Wizard Manager,model_fertilizer_renew_return_wizard,group_manager,1,1,1,1
+access_renew_rejection_wizard_cabinet,Renew Rejection Wizard Cabinet,model_fertilizer_renew_rejection_wizard,group_agent_CABINET_MINADER,1,1,1,0
+access_renew_rejection_wizard_manager,Renew Rejection Wizard Manager,model_fertilizer_renew_rejection_wizard,group_manager,1,1,1,1
+access_suspend_homologation_promoteur,Suspend Homologation Promoteur (R/C),model_fertilizer_suspend_homologation,group_promoteur_demandeur,1,0,1,0
+access_suspend_homologation_sre,Suspend Homologation SRE (R/W/C),model_fertilizer_suspend_homologation,group_agent_SRE,1,1,1,0
+access_suspend_homologation_drcq,Suspend Homologation DRCQ (R/W/C),model_fertilizer_suspend_homologation,group_agent_DRCQ,1,1,1,0
+access_suspend_homologation_cabinet,Suspend Homologation Cabinet (R/W/C),model_fertilizer_suspend_homologation,group_agent_CABINET_MINADER,1,1,1,0
+access_suspend_homologation_manager,Suspend Homologation Manager (ALL),model_fertilizer_suspend_homologation,group_manager,1,1,1,1
+access_fertilizer_homologation_manager,fertilizer.homologation.group_manager,model_fertilizer_product,group_manager,1,1,1,1
+access_laboratory_analysis_manager,laboratory.analysis.manager,model_laboratory_analysis,group_manager,1,1,1,1
+access_field_test_manager,field.test.manager,model_field_test,group_manager,1,1,1,1
+access_economic_evaluation_manager,economic.evaluation.manager,model_economic_evaluation,group_manager,1,1,1,1
+access_fertilizer_certificate_wizard_manager,fertilizer.certificate.wizard.manager,model_fertilizer_certificate_wizard,group_manager,1,1,1,1
+access_fertilizer_rejection_wizard_manager,fertilizer.rejection.wizard.manager,model_fertilizer_rejection_wizard,group_manager,1,1,1,1
+access_fertilizer_return_wizard_manager,fertilizer.return.wizard.manager,model_fertilizer_return_wizard,group_manager,1,1,1,1
+access_document_preview_wizard_manager,document.preview.wizard.manager,model_document_preview_wizard,group_manager,1,1,1,1

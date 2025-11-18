@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+    <!-- Rapport final -->
+    <record id="view_cert_inspection_final_tree" model="ir.ui.view">
+      <field name="name">cert.inspection.final.tree</field>
+      <field name="model">certification.inspection.final</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="request_id"/>
+          <field name="created_by"/>
+          <field name="decision"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_cert_inspection_final_form" model="ir.ui.view">
+      <field name="name">cert.inspection.final.form</field>
+      <field name="model">certification.inspection.final</field>
+      <field name="arch" type="xml">
+        <form string="Rapport final d'inspection">
+          <sheet>
+            <group>
+              <field name="name" readonly="1"/>
+              <field name="request_id"/>
+              <field name="created_by" readonly="1"/>
+              <field name="created_date" readonly="1"/>
+            </group>
+            <group>
+              <field name="inspection_ids" widget="many2many_tags"/>
+            </group>
+            <group>
+              <field name="summary"/>
+              <field name="decision"/>
+              <field name="final_report" filename="final_report_filename"/>
+                <field name="final_report_filename" invisible="1" />
+
+            </group>
+          </sheet>
+          <!--
+          Le bouton d'enregistrement (Sauvegarder) est géré automatiquement par Odoo
+          dans l'en-tête du formulaire (header).
+          La balise <footer> n'est pas nécessaire pour une simple sauvegarde.
+          -->
+        </form>
+      </field>
+    </record>
+
+          <record id="action_cert_inspection_final" model="ir.actions.act_window">
+      <field name="name">Rapports finaux</field>
+      <field name="res_model">certification.inspection.final</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    </data>
+</odoo>

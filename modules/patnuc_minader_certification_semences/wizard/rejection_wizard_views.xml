@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fertilizer_rejection_wizard_form" model="ir.ui.view">
+        <field name="name">fertilizer.rejection.wizard.form</field>
+        <field name="model">fertilizer.rejection.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Rejeter la demande">
+                <group>
+                    <field name="homologation_id" invisible="1"/>
+                    <field name="current_state" invisible="1"/>
+                    <field name="rejection_reason" placeholder="Saisissez le motif du rejet..." required="1"/>
+                </group>
+                <footer>
+                    <button name="action_confirm_rejection" string="Confirmer le rejet" type="object" class="btn-danger"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

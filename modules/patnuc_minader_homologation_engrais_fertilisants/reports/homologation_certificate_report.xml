@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Définition du rapport pour le certificat d'homologation -->
+        <record id="action_report_homologation_certificate" model="ir.actions.report">
+            <field name="name">Certificat d'homologation</field>
+            <field name="model">fertilizer.homologation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">patnuc_minader_homologation_engrais_fertilisants.report_homologation_certificate_template</field>
+            <field name="report_file">patnuc_minader_homologation_engrais_fertilisants.report_homologation_certificate_template</field>
+            <field name="binding_model_id" ref="model_fertilizer_homologation"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Template du rapport -->
+        <template id="report_homologation_certificate_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <div class="text-center">
+                                <h2>RÉPUBLIQUE DU CAMEROUN</h2>
+                                <h3>MINISTÈRE DE L'AGRICULTURE ET DU DÉVELOPPEMENT RURAL</h3>
+                                <h4>CERTIFICAT D'HOMOLOGATION D'ENGRAIS ET FERTILISANTS</h4>
+                            </div>
+                            
+                            <br/><br/>
+                            
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong>N° Certificat :</strong> <span t-field="doc.name"/>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <strong>Date :</strong> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/>
+                                </div>
+                            </div>
+                            
+                            <br/><br/>
+                            
+                            <div class="text-center">
+                                <h3>CERTIFICAT D'HOMOLOGATION</h3>
+                            </div>
+                            
+                            <br/>
+                            
+                            <div>
+                                <p>Le Ministre de l'Agriculture et du Développement Rural,</p>
+                                
+                                <p>Vu la loi n° 2001/014 du 23 juillet 2001 relative à l'activité semencière ;</p>
+                                <p>Vu le décret n° 2005/118 du 15 avril 2005 portant organisation du Ministère de l'Agriculture et du Développement Rural ;</p>
+                                
+                                <br/>
+                                
+                                <p><strong>CERTIFIE QUE :</strong></p>
+                                
+                                <div style="margin: 20px 0; padding: 15px; border: 2px solid #000;">
+                                    <table class="table table-borderless">
+                                        <tr>
+                                            <td><strong>Produit :</strong></td>
+                                            <td><span t-field="doc.product_id.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Demandeur :</strong></td>
+                                            <td><span t-field="doc.applicant_id.name"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Date de soumission :</strong></td>
+                                            <td><span t-field="doc.submission_date"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Date d'homologation :</strong></td>
+                                            <td><span t-field="doc.homologation_date"/></td>
+                                        </tr>
+                                        <tr t-if="doc.expiry_date">
+                                            <td><strong>Date d'expiration :</strong></td>
+                                            <td><span t-field="doc.expiry_date"/></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                
+                                <p>Le produit susmentionné a fait l'objet d'une procédure complète d'homologation incluant :</p>
+                                <ul>
+                                    <li>Analyses chimiques et microbiologiques</li>
+                                    <li>Tests agronomiques en champ</li>
+                                    <li>Évaluation agro-économique</li>
+                                    <li>Validation de conformité réglementaire</li>
+                                </ul>
+                                
+                                <p><strong>EST HOMOLOGUÉ</strong> pour la commercialisation et l'utilisation sur le territoire national conformément à la réglementation en vigueur.</p>
+                                
+                                <br/>
+                                
+                                <p>Le présent certificat est valable pour une durée de <strong>5 ans</strong> à compter de la date d'homologation, sauf révocation anticipée.</p>
+                                
+                                <br/><br/>
+                                
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p><strong>Fait à Yaoundé, le</strong> <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%d/%m/%Y')"/></p>
+                                    </div>
+                                    <div class="col-6 text-right">
+                                        <p><strong>Le Ministre</strong></p>
+                                        <br/>
+                                        <t t-if="doc.certificate_signature">
+                                            <img t-att-src="'data:image/png;base64,%s' % doc.certificate_signature.decode('utf-8')" style="max-width: 200px; max-height: 100px;"/>
+                                        </t>
+                                        <t t-else="">
+                                            <br/><br/>
+                                            <p>_________________________</p>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

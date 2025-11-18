@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vue formulaire pour les mini-infrastructures -->
+        <record id="view_infrastructure_mini_form" model="ir.ui.view">
+            <field name="name">infrastructure.mini.form</field>
+            <field name="model">infrastructure.mini</field>
+            <field name="arch" type="xml">
+                <form string="Fiche Technique - Mini-infrastructure">
+                    <sheet>
+                        <group>
+                            <field name="request_id" readonly="1"/>
+                            <field name="technical_info_date" readonly="1"/>
+                            <group string="Type d'infrastructure">
+                                <field name="mini_type" required="1"/>
+                                <field name="intervention_type"/>
+                            </group>
+                            <group string="Localisation">
+                                <field name="localisation"/>
+                                <field name="superficie"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Conditions du site">
+                                <field name="soil_type"/>
+                                <field name="hydrology"/>
+                            </group>
+                            <group string="État actuel">
+                                <field name="status"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Spécifications techniques">
+                                <field name="design_data"/>
+                                <field name="equipment_data"/>
+                            </group>
+                        </group>
+                        <footer>
+                            <button string="Enregistrer" type="object" name="action_save_and_close" class="btn-primary"/>
+                            <button string="Annuler" class="btn-secondary" special="cancel"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Vue liste pour les mini-infrastructures -->
+        <record id="view_infrastructure_mini_tree" model="ir.ui.view">
+            <field name="name">infrastructure.mini.tree</field>
+            <field name="model">infrastructure.mini</field>
+            <field name="arch" type="xml">
+                <tree string="Mini-infrastructures">
+                    <field name="mini_type"/>
+                    <field name="intervention_type"/>
+                    <field name="localisation"/>
+                    <field name="superficie"/>
+                    <field name="status"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Action pour le menu -->
+        <record id="action_infrastructure_mini" model="ir.actions.act_window">
+            <field name="name">Mini-Infrastructure</field>
+            <field name="res_model">infrastructure.mini</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Créer une fiche technique de mini-infrastructure
+                </p>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

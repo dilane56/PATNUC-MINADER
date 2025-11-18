@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Tâche cron pour vérifier les agréments expirants -->
+        <record id="cron_check_expiring_agreements" model="ir.cron">
+            <field name="name">Vérification des agréments expirants</field>
+
+            <!-- Modèle concerné -->
+            <field name="model_id" ref="model_certification_agreement"/>
+
+            <!-- Méthode Python à exécuter -->
+            <field name="state">code</field>
+            <field name="code">model._cron_check_expiring_agreements()</field>
+
+            <!-- Intervalle d’exécution --> 
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+
+            <!-- L’utilisateur qui exécute la tâche -->
+            <field name="user_id" ref="base.user_admin"/>
+
+            <!-- Activer le cron -->
+            <field name="active" eval="True"/>
+
+            <field name="numbercall">-1</field>
+            <field name="priority">5</field>
+            
+            <!-- Point d'Exécution départ quotidiet de depart  à 9h00 -->
+            <field name="nextcall">2025-10-25 09:00:00</field>
+        </record>
+        
+    </data>
+</odoo>

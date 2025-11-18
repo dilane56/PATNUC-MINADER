@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    <record id="view_form_laboratory_analysis" model="ir.ui.view">
+        <field name="name">certification.laboratory.analysis.form</field>
+        <field name="model">certification.laboratory.analysis</field>
+        <field name="arch" type="xml">
+            <form string="Analyse Laboratoire Globale">
+                <header>
+                    
+                    <!-- Bouton 1: Démarrer l'Analyse (passe de pending à in_progress) -->
+                    <button name="action_start_analysis" string="Démarrer l'Analyse" type="object" 
+                            class="oe_highlight" 
+                            invisible="state != 'pending'"/>
+
+                    <!-- Bouton 2: Terminer l'Analyse (passe de in_progress à completed) -->
+                    <button name="action_complete_analysis" string="Terminer l'Analyse" type="object" 
+                            class="btn-info" 
+                            invisible="state != 'in_progress'"
+                            confirm="Confirmez-vous que toutes les analyses de lots sont terminées et prêtes pour la validation ?"/>
+                                        
+                    <field name="state" widget="statusbar" statusbar_visible="pending,in_progress,completed"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+                    
+                    <!-- Informations générales -->
+                    <group string="Informations Générales de l'Analyse">
+                        <group>
+                            <field name="request_id" readonly="1" options="{'no_open': True}"/>
+                            <!-- Rendre 'laboratory_id' et 'analyst_id' modifiables uniquement en état 'pending' -->
+                            <field name="laboratory_id" required="1" readonly="state != 'pending'"/>
+                            <field name="analysis_date" readonly="state != 'pending'"/>
+                        </group>
+                        <group>
+                            <field name="analyst_id" readonly="state != 'pending'"/>
+                            <field name="result" string="Résultat Global" 
+                                readonly="state in ('completed', 'cancelled')"
+                                decoration-success="result == 'compliant'"
+                                decoration-danger="result == 'non_compliant'"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Détails des Prélèvements de Lots">
+                            <!-- Affichage des lignes de prélèvement associées -->
+                            <!-- Rendre le champ éditable uniquement si l'analyse est en cours (in_progress) ou en attente (pending) -->
+                            <field name="prelevement_lots" readonly="state not in ('pending', 'in_progress')">
+                                <tree string="Prélèvements" editable="bottom">
+                                    <field name="lot_id" required="1"/>
+                                    <field name="analyste_lot_id"/>
+                                    <field name="analysis_date"/>
+                                    <field name="result" string="Lot Résultat" decoration-success="result == 'compliant'" decoration-danger="result == 'non_compliant'"/>
+                                    <field name="state" widget="badge"/>
+                                </tree>
+                            </field>
+                           
+                        </page>
+
+                        <page string="Rapport Final">
+                            <group>
+                                <!-- MODIFICATION CLÉ : Rendre le champ binaire readonly après 'in_progress' -->
+                                <field name="analysis_report" 
+                                       filename="analysis_report_filename"
+                                       readonly="state in ('completed', 'cancelled')"/>
+                                
+                                <field name="analysis_report_filename" invisible="1"/>
+                                
+                                <!-- Bouton pour déclencher la mise à jour du nom de fichier si nécessaire -->
+                                <button name="action_update_filenames" 
+                                        string="Mettre à jour le nom du rapport" 
+                                        type="object" 
+                                        class="oe_link" 
+                                        icon="fa-refresh"
+                                        invisible="not analysis_report or analysis_report_filename or state not in ('pending', 'in_progress', 'completed')"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tree_laboratory_analysis" model="ir.ui.view">
+        <field name="name">certification.laboratory.analysis.tree</field>
+        <field name="model">certification.laboratory.analysis</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="request_id"/>
+                <field name="laboratory_id"/>
+                <field name="analysis_date"/>
+                <field name="state"/>
+                <field name="result"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_certification_laboratory_analysis" model="ir.actions.act_window">
+        <field name="name">Analyses Laboratoire</field>
+        <field name="res_model">certification.laboratory.analysis</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Enregistrez vos informations ici !
+            </p>
+        </field>
+    </record>
+    </data>
+</odoo>

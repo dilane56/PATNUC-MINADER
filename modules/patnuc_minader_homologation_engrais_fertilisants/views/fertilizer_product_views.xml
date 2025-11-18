@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <record id="view_fertilizer_product_form" model="ir.ui.view">
+        <field name="name">fertilizer.product.form</field>
+        <field name="model">fertilizer.product</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group col="4" string="Informations générales">
+                        <group colspan="2">
+                            <field name="name"/>
+                            <field name="technical_name"/>
+                            <field name="manufacturer_id"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="country_of_origin"/>
+                            <field name="image" widget="image" class="oe_avatar"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="Composition">
+                            <field name="composition"/>
+                        </page>
+                        
+                        <page string="Utilisation">
+                            <field name="target_crops"/>
+                            <field name="usage_instructions"/>
+                            <field name="safety_measures"/>
+                        </page>
+                        
+                        <page string="Stockage">
+                            <field name="storage_conditions"/>
+                        </page>
+                        
+                        <!-- <page string="Homologations">
+                            <field name="homologation_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="state"/>
+                                    <field name="submission_date"/>
+                                    <field name="homologation_date"/>
+                                </tree>
+                            </field>
+                        </page> -->
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_fertilizer_product_tree" model="ir.ui.view">
+        <field name="name">fertilizer.product.tree</field>
+        <field name="model">fertilizer.product</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="technical_name"/>
+                <field name="manufacturer_id"/>
+                <field name="country_of_origin"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_fertilizer_product" model="ir.actions.act_window">
+        <field name="name">Produits Engrais/Fertilisants</field>
+        <field name="res_model">fertilizer.product</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    
+</odoo>

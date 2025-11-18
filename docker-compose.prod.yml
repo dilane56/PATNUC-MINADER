@@ -1,0 +1,27 @@
+version: '3'
+services:
+  erp:
+    build: .
+    ports:
+      - "8090:8069"
+    restart: always
+    volumes:
+      - ./modules:/mnt/extra-addons/
+      - ./odoo_prod_conf:/etc/odoo
+    container_name: patnuc_erp
+    networks:
+      - erpnet
+
+  db:
+    image: postgres:15
+    restart: always
+    ports:
+      - "5432"
+    env_file: .env
+    container_name: patnuc_postgres
+    networks:
+      - erpnet
+
+networks:
+  erpnet:
+    driver: bridge

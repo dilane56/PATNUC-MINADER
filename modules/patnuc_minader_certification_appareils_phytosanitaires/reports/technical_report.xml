@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Rapport technique -->
+        <record id="report_technical_evaluation" model="ir.actions.report">
+            <field name="name">Rapport d'Évaluation Technique</field>
+            <field name="model">phytosanitary.technical.evaluation</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">phytosanitary_certification.technical_report_template</field>
+            <field name="report_file">phytosanitary_certification.technical_report_template</field>
+            <field name="binding_model_id" ref="model_phytosanitary_technical_evaluation"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Template du rapport technique -->
+        <template id="technical_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <div class="page">
+                        <div class="header text-center">
+                            <h3>RÉPUBLIQUE DU CAMEROUN</h3>
+                            <h4>MINISTÈRE DE L'AGRICULTURE ET DU DÉVELOPPEMENT RURAL</h4>
+                            <h5>Service de la Réglementation des Appareils de Traitement (SRAT)</h5>
+                            <hr/>
+                        </div>
+                        
+                        <div class="text-center mt-3">
+                            <h2 style="color: #1976D2; font-weight: bold;">
+                                RAPPORT D'ÉVALUATION TECHNIQUE
+                            </h2>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h4>INFORMATIONS GÉNÉRALES</h4>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Demande N°:</strong></td>
+                                    <td><span t-field="doc.request_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Appareil évalué:</strong></td>
+                                    <td><span t-field="doc.equipment_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Évaluateur:</strong></td>
+                                    <td><span t-field="doc.evaluator_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Date d'évaluation:</strong></td>
+                                    <td><span t-field="doc.evaluation_date"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h4>SCORES D'ÉVALUATION</h4>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Critère</th>
+                                        <th>Score (/20)</th>
+                                        <th>Commentaires</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Fonctionnalité</td>
+                                        <td><span t-field="doc.functionality_score"/></td>
+                                        <td><span t-field="doc.functionality_comments"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Sécurité</td>
+                                        <td><span t-field="doc.safety_score"/></td>
+                                        <td><span t-field="doc.safety_comments"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Conformité</td>
+                                        <td><span t-field="doc.compliance_score"/></td>
+                                        <td><span t-field="doc.compliance_comments"/></td>
+                                    </tr>
+                                    <tr class="table-info">
+                                        <td><strong>Score Global</strong></td>
+                                        <td><strong><span t-field="doc.overall_score"/></strong></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-4" t-if="doc.field_test_performed">
+                            <h4>TESTS TERRAIN</h4>
+                            <p><strong>Date des tests:</strong> <span t-field="doc.field_test_date"/></p>
+                            <p><strong>Résultats:</strong></p>
+                            <p><span t-field="doc.field_test_results"/></p>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h4>RECOMMANDATION</h4>
+                            <p>
+                                <strong>Avis technique:</strong> 
+                                <span t-field="doc.recommendation" 
+                                      t-att-class="'text-success' if doc.recommendation == 'favorable' else 'text-warning' if doc.recommendation == 'conditional' else 'text-danger'"/>
+                            </p>
+                            <div t-if="doc.conditions">
+                                <strong>Conditions:</strong>
+                                <p><span t-field="doc.conditions"/></p>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4" t-if="doc.technical_report">
+                            <h4>RAPPORT DÉTAILLÉ</h4>
+                            <p><span t-field="doc.technical_report"/></p>
+                        </div>
+                        
+                        <div class="mt-5 text-right">
+                            <p><strong>L'Évaluateur Technique</strong></p>
+                            <br/>
+                            <p><span t-field="doc.evaluator_id.name"/></p>
+                            <p>Service de la Réglementation des Appareils de Traitement</p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

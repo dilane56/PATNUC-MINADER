@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Séquence pour les demandes d'homologation -->
+        <record id="seq_fertilizer_homologation" model="ir.sequence">
+            <field name="name">Demande d'homologation engrais</field>
+            <field name="code">fertilizer.homologation</field>
+            <field name="prefix">HOM-ENG-FERT-%(year)s-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+         <!-- NOUVELLE SÉQUENCE : Séquence pour les demandes de modification d'homologation -->
+        <record id="seq_fertilizer_mod_homologation" model="ir.sequence">
+            <field name="name">Demande de modification d'homologation engrais</field>
+            <field name="code">fertilizer.mod.homologation</field>
+            <field name="prefix">HOM-MOD-ENG-FERT-%(year)s-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_fertilizer_renew_homologation" model="ir.sequence">
+            <field name="name">Demande de renouvellement d'homologation engrais</field>
+            <field name="code">fertilizer.renew.homologation</field>
+            <field name="prefix">HOM-RNEW-ENG-FERT-%(year)s-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+
+        <record id="seq_fertilizer_suspend_homologation" model="ir.sequence">
+            <field name="name">Demande de suspendion d'homologation engrais</field>
+            <field name="code">fertilizer.suspend.homologation</field>
+            <field name="prefix">HOM-SUS-ENG-FERT-%(year)s-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        <record id="seq_fertilizer_decree" model="ir.sequence">
+            <field name="name">Arrêté délivré</field>
+            <field name="code">fertilizer.decree</field>
+            <!-- Format : ARR/Année/Numéro (ex: ARR/2025/0001) -->
+            <field name="prefix">ARR-HOM-ENG-FERT%(year)s/</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        <!-- Séquence pour les analyses de laboratoire -->
+        <record id="seq_laboratory_analysis" model="ir.sequence">
+            <field name="name">Analyse de laboratoire engrais</field>
+            <field name="code">laboratory.analysis</field>
+            <field name="prefix">LAB-ENG-FERT-%(year)s-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        <!-- Séquence pour les tests en champ -->
+        <record id="seq_field_test" model="ir.sequence">
+            <field name="name">Test en champ engrais</field>
+            <field name="code">field.test</field>
+            <field name="prefix">TEST-ENG-FERT-%(year)s-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        <!-- Séquence pour les évaluations économiques -->
+        <record id="seq_economic_evaluation" model="ir.sequence">
+            <field name="name">Évaluation économique engrais</field>
+            <field name="code">economic.evaluation</field>
+            <field name="prefix">ECO-ENG-FERT-%(year)s-</field>
+            <field name="padding">4</field>
+            <field name="company_id" eval="False"/>
+        </record>
+        
+        <!-- Laboratoires par défaut -->
+        <record id="lab_national_analyse" model="res.partner">
+            <field name="name">Laboratoire National d'Analyse Diagnostique des Produits et des Intrants Agricoles</field>
+            <field name="country_id" ref="base.cm"/>
+        </record>
+    </data>
+</odoo>

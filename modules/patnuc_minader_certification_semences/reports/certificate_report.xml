@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="report_certificat_document_action" model="ir.actions.report">
+            <field name="name">Certificat</field>
+            <field name="model">certification.certificate</field>
+            <field name="report_type">qweb-html</field>
+            <field name="report_name">patnuc_minader_certification_semences.report_certificate_document</field>
+            <field name="report_file">patnuc_minader_certification_semences.report_certificate_document</field>
+            <field name="print_report_name"></field>
+            <field name="binding_model_id" ref="model_certification_certificate"/>
+            <field name="binding_type">report</field>
+        </record>
+        <template id="report_certificate_document">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="certificate">
+                    <div class="page">
+                        <div class="row">
+                            <div class="col-6 text-left">
+                                <img src="/web/static/img/logo.png" alt="Logo MINADER" style="height: 80px;"/>
+                            </div>
+                            <div class="col-6 text-right">
+                                <h3>RÉPUBLIQUE DU CAMEROUN</h3>
+                                <h4>MINISTÈRE DE L'AGRICULTURE ET DU DÉVELOPPEMENT RURAL</h4>
+                                <h5>Direction de la Réglementation et du Contrôle de la Qualité</h5>
+                            </div>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-12 text-center">
+                                <h2 style="color: #2E8B57; font-weight: bold;">
+                                    CERTIFICAT OFFICIEL DE CONFORMITÉ DES SEMENCES
+                                </h2>
+                                <h3 style="color: #666;">
+                                    N° <span t-field="certificate.name"/>
+                                </h3>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <p style="font-size: 16px; text-align: justify;">
+                                    Le Ministère de l'Agriculture et du Développement Rural certifie que les semences 
+                                    produites par <strong t-field="certificate.operator_id.name"/> sur le site de 
+                                    <strong t-field="certificate.production_site"/> sont conformes aux normes 
+                                    nationales et internationales en vigueur.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-6">
+                                <table class="table table-bordered">
+                                    <tr>
+                                        <td><strong>Variété certifiée :</strong></td>
+                                        <td><span t-field="certificate.seed_variety"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Quantité certifiée :</strong></td>
+                                        <td><span t-field="certificate.certified_quantity"/> kg</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Site de production :</strong></td>
+                                        <td><span t-field="certificate.production_site"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Date d'émission :</strong></td>
+                                        <td><span t-field="certificate.issue_date"/></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Validité :</strong></td>
+                                        <td><span t-field="certificate.validity_date"/></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="row mt-5">
+                            <div class="col-6 text-left">
+                                <p><strong>Émis à :</strong> Yaoundé</p>
+                                <p><strong>Le :</strong> <span t-field="certificate.issue_date"/></p>
+                            </div>
+                            <div class="col-6 text-right">
+                                <p><strong>Pour le MINADER</strong></p>
+                                <p><em>(Signature et cachet)</em></p>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

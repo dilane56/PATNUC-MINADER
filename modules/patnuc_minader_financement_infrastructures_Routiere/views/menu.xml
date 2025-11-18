@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+  <data>
+  
+        <!-- Menu principal -->
+        <menuitem id="menu_financing_root" 
+                  name="Financement Communal"
+                  sequence="10"/>
+
+        <!-- Sous-menus -->
+        <menuitem id="menu_financial_requests" 
+                  name="Demandes de financement" 
+                  parent="menu_financing_root" 
+                  action="action_infrastructure_financing_request" 
+                  sequence="10"/>
+
+
+        <menuitem id="menu_infrastructure_technical_support"
+          name="Appuis Techniques"
+          parent="menu_financing_root"
+          action="action_infrastructure_technical_support"
+          sequence="20"/>
+          
+
+        <menuitem id="menu_infrastructure_documents"
+          name="Documents d'Infrastructure"
+          parent="menu_financing_root"
+          action="action_infrastructure_document"
+          sequence="30"/>
+
+        <!-- Menu Fiches Techniques -->
+        <menuitem id="menu_technical_sheets"
+          name="Fiches Techniques"
+          parent="menu_financing_root"
+          sequence="35"/>
+          
+        <!-- Sous-menus Fiches Techniques -->
+        <menuitem id="menu_infrastructure_road"
+          name="Infrastructure Routière"
+          parent="menu_technical_sheets"
+          action="action_infrastructure_road"
+          sequence="10"/>
+
+        <menuitem id="menu_infrastructure_artwork"
+          name="Ouvrage d'Art"
+          parent="menu_technical_sheets"
+          action="action_infrastructure_artwork"
+          sequence="20"/>
+
+        <menuitem id="menu_infrastructure_mini"
+          name="Mini-Infrastructure"
+          parent="menu_technical_sheets"
+          action="action_infrastructure_mini"
+          sequence="30"/>
+
+        <!-- Menu Configuration -->
+        <menuitem id="menu_configuration"
+          name="Configuration"
+          parent="menu_financing_root"
+          sequence="50"/>
+          
+        <!-- Sous-menus de Configuration -->
+        <menuitem id="menu_communes"
+          name="Communes"
+          parent="menu_configuration"
+          action="action_commune"
+          sequence="10"/>
+
+        <menuitem id="menu_delegations"
+          name="Délégations MINADER"
+          parent="menu_configuration"
+          action="action_delegation"
+          sequence="20"/>
+        
+  </data>
+
+</odoo>

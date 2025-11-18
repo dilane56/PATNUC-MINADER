@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Laboratoire LNAD -->
+        <record id="lnad_lab" model="certification.laboratory">
+            <field name="name">Laboratoire National d'Analyses Diagnostiques</field>
+            <field name="code">LNAD</field>
+            <field name="address">Yaoundé, Cameroun</field>
+            <field name="phone">+237 222 XX XX XX</field>
+            <field name="email">lnad@minader.gov.cm</field>
+            <field name="accreditation">ISO 17025</field>
+            <field name="test_capabilities">Analyses de germination, pureté, humidité, tests phytosanitaires</field>
+        </record>
+        
+        <!-- Modèle d'email pour notification certificat -->
+        <record id="certificate_notification_template" model="mail.template">
+            <field name="name">Notification Certificat Émis</field>
+            <field name="model_id" ref="model_certification_certificate"/>
+            <field name="subject">Votre certificat de conformité n°${object.name} est disponible</field>
+            <field name="body_html">
+                <![CDATA[
+                <p>Bonjour ${object.operator_id.name},</p>
+                <p>Nous avons le plaisir de vous informer que votre certificat de conformité 
+                   n°<strong>${object.name}</strong> pour la variété <strong>${object.seed_variety}</strong> 
+                   a été émis avec succès.</p>
+                <p>Vous pouvez le télécharger en vous connectant à votre espace personnel 
+                   ou en vous rendant dans nos services.</p>
+                <p>Cordialement,<br/>
+                   L'équipe MINADER - DRCQ</p>
+                ]]>
+            </field>
+            <field name="auto_delete" eval="False"/>
+        </record>
+    </data>
+</odoo>

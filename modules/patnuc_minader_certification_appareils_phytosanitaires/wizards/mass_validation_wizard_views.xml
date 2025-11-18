@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vue formulaire wizard validation en masse -->
+        <record id="view_mass_validation_wizard_form" model="ir.ui.view">
+            <field name="name">phytosanitary.mass.validation.wizard.form</field>
+            <field name="model">phytosanitary.mass.validation.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Validation en Masse">
+                    <group>
+                        <field name="request_ids" widget="many2many_tags"/>
+                        <field name="action_type"/>
+                        <field name="comments" placeholder="Commentaires optionnels..."/>
+                    </group>
+                    <footer>
+                        <button name="action_apply" type="object" string="Appliquer" class="btn-primary"/>
+                        <button string="Annuler" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action pour le wizard -->
+        <record id="action_mass_validation_wizard" model="ir.actions.act_window">
+            <field name="name">Validation en Masse</field>
+            <field name="res_model">phytosanitary.mass.validation.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

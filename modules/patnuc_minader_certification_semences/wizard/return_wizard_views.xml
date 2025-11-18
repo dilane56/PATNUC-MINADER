@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fertilizer_return_wizard_form" model="ir.ui.view">
+        <field name="name">certification.return.wizard.form</field>
+        <field name="model">certification.return.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Retour au brouillon">
+                <group>
+                    <field name="certification_request_id" invisible="1"/>
+                    <field name="current_state" invisible="1"/>
+                    <field name="return_reason" placeholder="Saisissez le motif du retour..." required="1"/>
+                </group>
+                <footer>
+                    <button name="action_confirm_return" string="Confirmer le retour" type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

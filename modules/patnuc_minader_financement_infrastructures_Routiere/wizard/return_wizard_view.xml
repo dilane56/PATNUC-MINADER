@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- (Q) Vue formulaire pour le wizard de retour -->
+        <record id="view_infrastructure_return_wizard_form" model="ir.ui.view">
+            <field name="name">infrastructure.return.wizard.form</field>
+            <field name="model">infrastructure.return.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Demande Retournée">
+                    <group>
+                        <field name="request_id" invisible="1"/>
+                        <field name="current_state" invisible="1"/>
+                        <field name="return_reason" placeholder="Saisissez le motif du retour..."/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm_return" type="object" string="Confirmer le retour" class="btn-primary"/>
+                        <button string="Annuler" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

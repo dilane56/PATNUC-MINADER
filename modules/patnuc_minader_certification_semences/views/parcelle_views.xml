@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Action de Fenêtre (Window Action) -->
+    <record id="action_certification_parcelle" model="ir.actions.act_window">
+        <field name="name">Parcelles de Culture Semencière</field>
+        <field name="res_model">certification.parcelle</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créez une nouvelle parcelle de culture semencière.
+            </p>
+        </field>
+    </record>
+
+    <!-- Vue Formulaire (Form View) -->
+    <record id="view_certification_parcelle_form" model="ir.ui.view">
+        <field name="name">certification.parcelle.form</field>
+        <field name="model">certification.parcelle</field>
+        <field name="arch" type="xml">
+            <form string="Parcelle Semencière">
+                <sheet>
+
+                        <h1>
+                            <field name="parcelle_name" />
+                        </h1>
+
+
+                    <group>
+                        <group string="Identification de la culture">
+                            <field name="espece"/>
+                            <field name="variete"/>
+                            <field name="categorie"/>
+                        </group>
+
+                        <group string="Quantités &amp; Production">
+                            <field name="superficie" widget="monetary"/>
+                            <field name="quantite_semences_meres"/>
+                            <field name="type_semence_mere"/>
+                            <field name="production_attendue"/>
+                            <field name="frais_redevance" readonly="1" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
+                            <!-- Champ pour la devise si vous en avez un dans le modèle -->
+                            <!-- <field name="company_currency_id" invisible="1"/> -->
+                        </group>
+                    </group>
+
+                    <separator string="Traçabilité et Origine de la Semence Mère"/>
+                    <group>
+                        <group>
+                           
+                            <field name="region_id" />
+                            <field name="departement_id" domain="[('region_id', '=', region_id)]" />
+                            <field name="arrondissement_id" domain="[('departement_id', '=', departement_id)]" />
+                            <field name="localite_id" />
+                    
+                        </group>
+                        
+                    </group>
+
+                    <group string="Informations supplementaire">
+                        <field name="operator_id" />
+                        <field name="request_id" readonly="1"/>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue Liste (Tree View) -->
+    <record id="view_certification_parcelle_tree" model="ir.ui.view">
+        <field name="name">certification.parcelle.tree</field>
+        <field name="model">certification.parcelle</field>
+        <field name="arch" type="xml">
+            <tree string="Parcelles Semencières">
+                <field name="espece"/>
+                <field name="variete"/>
+                <field name="categorie"/>
+                <field name="superficie" sum="Total Superficie (ha)"/>
+                <field name="quantite_semences_meres"/>
+                <field name="production_attendue"/>
+                <field name="frais_redevance" sum="Total Redevances"/>
+                <field name="operator_id"/>
+                <field name="request_id" optional="hidden"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vue Recherche (Search View) -->
+    <record id="view_certification_parcelle_search" model="ir.ui.view">
+        <field name="name">certification.parcelle.search</field>
+        <field name="model">certification.parcelle</field>
+        <field name="arch" type="xml">
+            <search string="Recherche de Parcelles">
+                <field name="espece"/>
+                <field name="variete"/>
+                <field name="categorie"/>
+                <field name="operator_id"/>
+
+                <group expand="0" string="Group By">
+                    <filter string="Espèce" name="group_by_espece" context="{'group_by':'espece'}"/>
+                    <filter string="Variété" name="group_by_variete" context="{'group_by':'variete'}"/>
+                    <filter string="Catégorie" name="group_by_categorie" context="{'group_by':'categorie'}"/>
+                    <filter string="Opérateur" name="group_by_operator" context="{'group_by':'operator_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+
+
+</odoo>

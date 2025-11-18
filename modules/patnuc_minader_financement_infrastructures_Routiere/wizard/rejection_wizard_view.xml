@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- (Q) Vue du wizard de rejet créée pour l'étape vérification -->
+        <record id="view_rejection_wizard_form" model="ir.ui.view">
+            <field name="name">infrastructure.rejection.wizard.form</field>
+            <field name="model">infrastructure.rejection.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Demande Rejetée">
+                    <group>
+                        <field name="request_id" invisible="1"/>
+                        <!-- (Q) Champ current_state ajouté pour sauvegarder l'état actuel -->
+                        <field name="current_state" invisible="1"/>
+                        <field name="rejection_reason" placeholder="Veuillez préciser le motif du rejet..." required="1"/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm_rejection" type="object" string="Confirmer le rejet" class="btn-primary"/>
+                        <button string="Annuler" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

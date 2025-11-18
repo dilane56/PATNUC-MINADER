@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Menu principal -->
+        <menuitem id="menu_phytosanitary_main" 
+                  name="Certification Phytosanitaire"
+                  web_icon="patnuc_minader_certification_appareils_phytosanitaires,static/description/icon.svg" 
+                  sequence="10"/>
+
+        <!-- Sous-menus -->
+        <menuitem id="menu_phytosanitary_requests" 
+                  name="Demandes de Certification" 
+                  parent="menu_phytosanitary_main" 
+                  action="action_certification_request" 
+                  sequence="10"/>
+
+        <menuitem id="menu_phytosanitary_equipment" 
+                  name="Appareils" 
+                  parent="menu_phytosanitary_main" 
+                  action="action_equipment" 
+                  sequence="20"/>
+
+        <menuitem id="menu_phytosanitary_evaluations" 
+                  name="Évaluations" 
+                  parent="menu_phytosanitary_main" 
+                  sequence="30"/>
+
+        <menuitem id="menu_phytosanitary_technical_eval" 
+                  name="Évaluations Techniques" 
+                  parent="menu_phytosanitary_evaluations" 
+                  action="action_technical_evaluation" 
+                  sequence="10"/>
+
+
+        <!-- Menu Configuration -->
+        <menuitem id="menu_phytosanitary_config" 
+                  name="Configuration" 
+                  parent="menu_phytosanitary_main" 
+                  sequence="90" 
+                  groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_manager"/>
+    </data>
+</odoo>

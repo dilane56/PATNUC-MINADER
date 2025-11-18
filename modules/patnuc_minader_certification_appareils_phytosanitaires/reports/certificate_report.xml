@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Rapport de certificat -->
+        <record id="report_certification_certificate" model="ir.actions.report">
+            <field name="name">Certificat de Certification</field>
+            <field name="model">phytosanitary.certification.request</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">patnuc_minader_certification_appareils_phytosanitaires.certificate_template</field>
+            <field name="report_file">patnuc_minader_certification_appareils_phytosanitaires.certificate_template</field>
+            <field name="binding_model_id" ref="model_phytosanitary_certification_request"/>
+            <field name="binding_type">report</field>
+        </record>
+
+        <!-- Template du certificat -->
+        <template id="certificate_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <div class="page">
+                        <div class="header text-center">
+                            <h3>REPUBLIQUE DU CAMEROUN</h3>
+                            <h4>MINISTERE DE L'AGRICULTURE ET DU DEVELOPPEMENT RURAL</h4>
+                            <h5>Direction de la Reglementation des Intrants et Produits Agricoles</h5>
+                            <hr/>
+                        </div>
+                        
+                        <div class="text-center mt-5">
+                            <h2 style="color: #2E7D32; font-weight: bold;">
+                                CERTIFICAT DE CERTIFICATION
+                            </h2>
+                            <h3>APPAREIL DE TRAITEMENT PHYTOSANITAIRE</h3>
+                        </div>
+                        
+                        <div class="mt-5">
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Numero de certificat:</strong></td>
+                                    <td><span t-field="doc.certificate_number"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Date de delivrance:</strong></td>
+                                    <td><span t-field="doc.certificate_validity_start"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Date d'expiration:</strong></td>
+                                    <td><span t-field="doc.certificate_validity_end"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h4>TITULAIRE DU CERTIFICAT</h4>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Raison sociale:</strong></td>
+                                    <td><span t-field="doc.partner_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Adresse:</strong></td>
+                                    <td><span t-field="doc.partner_id.contact_address"/></td>
+                                </tr>
+                                <tr t-if="doc.legal_representative">
+                                    <td><strong>Representant legal:</strong></td>
+                                    <td><span t-field="doc.legal_representative"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-4">
+                            <h4>APPAREIL CERTIFIE</h4>
+                            <table class="table table-borderless">
+                                <tr>
+                                    <td><strong>Nom de l'appareil:</strong></td>
+                                    <td><span t-field="doc.equipment_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Marque:</strong></td>
+                                    <td><span t-field="doc.equipment_id.brand"/></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Modele:</strong></td>
+                                    <td><span t-field="doc.equipment_id.model"/></td>
+                                </tr>
+                               
+                                <tr t-if="doc.equipment_id.capacity">
+                                    <td><strong>Capacite:</strong></td>
+                                    <td><span t-field="doc.equipment_id.capacity"/> L</td>
+                                </tr>
+                                <tr t-if="doc.equipment_id.manufacturer_id">
+                                    <td><strong>Fabricant:</strong></td>
+                                    <td><span t-field="doc.equipment_id.manufacturer_id.name"/></td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-5">
+                            <p class="text-justify">
+                                Le present certificat atteste que l'appareil de traitement phytosanitaire decrit ci-dessus 
+                                est conforme aux normes nationales en matiere de securite, d'efficacite et de protection 
+                                de l'environnement. Il peut etre commercialise et utilise sur le territoire national 
+                                dans le respect des conditions d'utilisation.
+                            </p>
+                        </div>
+                        
+                        <div class="mt-5 row">
+                            <div class="col-6">
+                                <p><strong>Valide par:</strong></p>
+                                <p><span t-field="doc.dripa_validator_id.name"/></p>
+                                <p>Directeur DRIPA</p>
+                            </div>
+                            <div class="col-6 text-right">
+                                <p><strong>Approuve par:</strong></p>
+                                <p><span t-field="doc.minister_signer_id.name"/></p>
+                                <p>Ministre de l'Agriculture et du Développement Rural</p>
+                                <br/>
+                                <div t-if="doc.signature_draw or doc.signature_image">
+                                    <img t-if="doc.signature_draw" t-att-src="'data:image/png;base64,%s' % doc.signature_draw.decode('utf-8')" style="max-height: 80px; max-width: 200px;"/>
+                                    <img t-if="not doc.signature_draw and doc.signature_image" t-att-src="'data:image/png;base64,%s' % doc.signature_image.decode('utf-8')" style="max-height: 80px; max-width: 200px;"/>
+                                </div>
+                                <p t-if="not doc.signature_draw and not doc.signature_image">Signature et cachet</p>
+                            </div>
+                        </div>
+                        
+                        <div class="footer mt-5 text-center small">
+                            <p>Ce certificat est valable jusqu'au <span t-field="doc.certificate_validity_end"/>.</p>
+                            <p>Toute modification de l'appareil annule la validité de ce certificat.</p>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

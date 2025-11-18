@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vue Liste (Tree View) -->
+        <record id="fertilizer_decree_view_tree" model="ir.ui.view">
+            <field name="name">fertilizer.decree.view.tree</field>
+            <field name="model">fertilizer.decree</field>
+            <field name="arch" type="xml">
+                <tree string="Arrêtés d'Homologation">
+                    <!-- Référence de l'Arrêté (Maintenant unique et générée par séquence) -->
+                      
+                    <field name="name" readonly="1"/>
+                    
+                    <!-- Demandeur (Lié à la Demande) -->
+                    <field name="applicant_id"/>
+                    <!-- Nom Commercial du Produit (Lié à la Demande/Produit) -->
+                    <field name="commercial_name"/>
+                    <!-- Date de Délivrance -->
+                    <field name="delivery_date"/>
+                    <!-- Date d'Expiration (Calculée) -->
+                    <field name="expiration_date"/>
+                    <!-- Statut (Utilisation d'un widget badge pour la couleur) -->
+                    <field name="state" 
+                        widget="badge"
+                        decoration-success="state == 'actif'"
+                        decoration-warning="state == 'suspendu'"
+                        decoration-danger="state == 'expiré'"
+                        decoration-info="state == 'inactif'"
+                    />
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vue Formulaire (Form View) -->
+        <record id="fertilizer_decree_view_form" model="ir.ui.view">
+            <field name="name">fertilizer.decree.view.form</field>
+            <field name="model">fertilizer.decree</field>
+            <field name="arch" type="xml">
+                <form string="Arrêté d'Homologation">
+                    <header>
+                        <!-- Le champ 'name' est généré par séquence, toujours en lecture seule -->
+                       <field name="name" 
+                            readonly="1" 
+                            widget="label_title"
+                            class="oe_read_only_title"
+                        />
+                        
+                        <!-- Barre de statut pour visualiser le cycle de vie -->
+                        <field name="state" 
+                            widget="statusbar" 
+                            statusbar_visible="inactif,actif,suspendu,expiré"
+                            statusbar_colors="{'expiré': 'red', 'suspendu': 'orange'}"
+                        />
+                    </header>
+                    
+                    <sheet>
+                        <group>
+                            <!-- Section 1: Référence et Dates -->
+                            <group string="Références et Dates de Validité">
+                                
+                                <field name="homologation_id" 
+                                    string="Demande homologation Initiale"
+                                    options="{'no_create': True, 'no_edit': True}" 
+                                    domain="[('state', '=', 'signed')]"
+                                    readonly="state != 'inactif'"
+                                    />   
+                                <field name="delivery_date"/>
+                                <field name="expiration_date" readonly="1"/>
+                            </group>
+                            
+                            <!-- Le champ state est déjà dans le header -->
+                            <group string="Statut et État Actuel">
+                                <field name="state" widget="selection"/>
+                            </group>
+                        </group>
+                        
+                        <notebook>
+                            <page string="Informations Relatives à la Demande" name="related_info">
+                                <group string="Demandeur et Produit">
+                                    <group>
+                                        <field name="applicant_id" readonly="1"/>
+                                        <field name="phone_number" readonly="1"/>
+                                        <field name="manufacturer_id" readonly="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="commercial_name" readonly="1"/>
+                                        <field name="technical_name" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                            
+                            <page string="Arrêté Fichier" name="decree_file">
+                                <group>
+                                    <field name="decree_file" filename="decree_filename" readonly="1" widget="binary"/>
+                                    <field name="decree_filename" invisible="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action de Fenêtre (Window Action) -->
+        <record id="action_fertilizer_decree" model="ir.actions.act_window">
+            <field name="name">Arrêtés délivrés</field>
+            <field name="res_model">fertilizer.decree</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Enregistrez les arrêtés ministériels d'homologation ici.
+                </p>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

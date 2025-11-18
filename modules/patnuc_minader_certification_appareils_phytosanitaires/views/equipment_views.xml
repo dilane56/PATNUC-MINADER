@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vue formulaire des appareils -->
+        <record id="view_equipment_form" model="ir.ui.view">
+            <field name="name">phytosanitary.equipment.form</field>
+            <field name="model">phytosanitary.equipment</field>
+            <field name="arch" type="xml">
+                <form string="Appareil Phytosanitaire">
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="object" name="action_view_certifications" icon="fa-certificate">
+                                <field string="Certifications" name="certification_request_ids" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Nom de l'appareil"/>
+                            </h1>
+                        </div>
+                        <group col="4">
+                            <group colspan="2" name="basic_info">
+                                <field name="brand"/>
+                                <field name="model"/>
+                                <field name="equipment_type"/>
+                                <field name="manufacturer_id"/>
+                                <field name="country_origin"/>
+                                <field name="manufacturing_date"/>
+                            </group>
+                            <group colspan="2" name="technical_specs">
+                                <field name="capacity"/>
+                                <field name="pressure_max"/>
+                                <field name="flow_rate"/>
+                                <field name="power_source"/>
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="Documents Techniques" name="technical_docs">
+                                <group>
+                                    <group>
+                                        <field name="technical_sheet" filename="technical_sheet_filename"/>
+                                        <field name="technical_sheet_filename" placeholder="Nom du fichier" invisible="1"/>
+                                        <field name="user_manual" filename="user_manual_filename"/>
+                                        <field name="user_manual_filename" placeholder="Nom du fichier" invisible="1"/>
+                                    </group>
+                                    <group>
+                                        <field name="compliance_certificate" filename="compliance_certificate_filename"/>
+                                        <field name="compliance_certificate_filename" placeholder="Nom du fichier" invisible="1"/>
+                                        <field name="safety_datasheet" filename="safety_datasheet_filename"/>
+                                        <field name="safety_datasheet_filename" placeholder="Nom du fichier" invisible="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                         
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vue liste des appareils -->
+        <record id="view_equipment_tree" model="ir.ui.view">
+            <field name="name">phytosanitary.equipment.tree</field>
+            <field name="model">phytosanitary.equipment</field>
+            <field name="arch" type="xml">
+                <tree string="Appareils Phytosanitaires">
+                    <field name="name"/>
+                    <field name="brand"/>
+                    <field name="model"/>
+                    <field name="equipment_type"/>
+                    <field name="manufacturer_id"/>
+                    <field name="country_origin"/>
+                    <field name="capacity"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vue recherche des appareils -->
+        <record id="view_equipment_search" model="ir.ui.view">
+            <field name="name">phytosanitary.equipment.search</field>
+            <field name="model">phytosanitary.equipment</field>
+            <field name="arch" type="xml">
+                <search string="Rechercher Appareils">
+                    <field name="name"/>
+                    <field name="brand"/>
+                    <field name="model"/>
+                    <field name="manufacturer_id"/>
+                    <filter string="Pulvérisateurs" name="pulverisateur" 
+                            domain="[('equipment_type', '=', 'pulverisateur')]"/>
+                    <filter string="Atomiseurs" name="atomiseur" 
+                            domain="[('equipment_type', '=', 'atomiseur')]"/>
+                    <filter string="Nébuliseurs" name="nebuliseur" 
+                            domain="[('equipment_type', '=', 'nebuliseur')]"/>
+                    <separator/>
+                    <group expand="0" string="Grouper par">
+                        <filter string="Type" name="group_type" context="{'group_by': 'equipment_type'}"/>
+                        <filter string="Marque" name="group_brand" context="{'group_by': 'brand'}"/>
+                        <filter string="Fabricant" name="group_manufacturer" context="{'group_by': 'manufacturer_id'}"/>
+                        <filter string="Pays d'Origine" name="group_country" context="{'group_by': 'country_origin'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Action pour les appareils -->
+        <record id="action_equipment" model="ir.actions.act_window">
+            <field name="name">Appareils Phytosanitaires</field>
+            <field name="res_model">phytosanitary.equipment</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Enregistrez votre premier appareil !
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

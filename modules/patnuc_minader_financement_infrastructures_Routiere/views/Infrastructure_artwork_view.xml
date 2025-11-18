@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vue formulaire pour les ouvrages d'art -->
+        <record id="view_infrastructure_artwork_form" model="ir.ui.view">
+            <field name="name">infrastructure.artwork.form</field>
+            <field name="model">infrastructure.artwork</field>
+            <field name="arch" type="xml">
+                <form string="Fiche Technique - Ouvrage d'art">
+                    <sheet>
+                        <group>
+                            <field name="request_id" readonly="1"/>
+                            <field name="technical_info_date" readonly="1"/>
+                            <group string="Type d'ouvrage">
+                                <field name="work_type" required="1"/>
+                                <field name="dimensions"/>
+                            </group>
+                            <group string="Urgence des travaux">
+                                <field name="maintenance_urgency"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="État constaté">
+                                <field name="condition"/>
+                                <field name="hydraulic_state"/>
+                            </group>
+                            <group string="Recommandations">
+                                <field name="structural_state"/>
+                                <field name="recommended_work"/>
+                            </group>
+                        </group>
+                        <footer>
+                            <button string="Enregistrer" type="object" name="action_save_and_close" class="btn-primary"/>
+                            <button string="Annuler" class="btn-secondary" special="cancel"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Vue liste pour les ouvrages d'art -->
+        <record id="view_infrastructure_artwork_tree" model="ir.ui.view">
+            <field name="name">infrastructure.artwork.tree</field>
+            <field name="model">infrastructure.artwork</field>
+            <field name="arch" type="xml">
+                <tree string="Ouvrages d'art">
+                    <field name="work_type"/>
+                    <field name="dimensions"/>
+                    <field name="maintenance_urgency"/>
+                    <field name="condition"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Action pour le menu -->
+        <record id="action_infrastructure_artwork" model="ir.actions.act_window">
+            <field name="name">Ouvrage d'Art</field>
+            <field name="res_model">infrastructure.artwork</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Créer une fiche technique d'ouvrage d'art
+                </p>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

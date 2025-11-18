@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_minader_region,minader.region,model_minader_region,base.group_user,1,1,1,1
+access_minader_departement,minader.departement,model_minader_departement,base.group_user,1,1,1,1
+access_minader_arrondissement,minader.arrondissement,model_minader_arrondissement,base.group_user,1,1,1,1

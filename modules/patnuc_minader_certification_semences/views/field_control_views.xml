@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_form_field_control" model="ir.ui.view">
+        <field name="name">certification.field.control.form</field>
+        <field name="model">certification.field.control</field>
+        <field name="arch" type="xml">
+            <form string="Contrôle Terrain">
+                <sheet>
+                    <group col="4" string="Informations générales">
+                        <group colspan="2">
+                            <field name="name" readonly="1"/>
+                            <field name="request_id"/>
+                            <field name="scheduled_date"/>
+                            <field name="lieu_saisi"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="lieu_prelevement"/>
+                            <field name="actual_date"/>
+                            <field name="inspector_id"/>
+                            <field name="state"/>
+                        </group>
+                    </group>
+                    <group col="4" string="Résultats">
+                        <group colspan="2">
+                            <field name="variety_compliance"/>
+                            <field name="surface_compliance"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="cultivation_practices"/>
+                            <field name="result"/>
+                        </group>
+                    </group>
+                    <group col="4" string="Observations">
+                        <group colspan="2">
+                            <field name="observations"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="recommendations"/>
+                        </group>
+                    </group>
+                    <group col="4" string="Échantillons">
+                        <group colspan="2">
+                            <field name="samples_taken"/>
+                            <field name="sample_quantity"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="sample_location"/>
+                        </group>
+                    </group>
+                    <group col="4" string="Documents">
+                        <group colspan="2">
+                            <field name="control_report" filename="control_report_filename"/>
+                            <field name="control_report_filename" placeholder="Nom du fichier uploadé" invisible="1"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="photos" filename="photos_filename"/>
+                            <field name="photos_filename" placeholder="Nom du fichier uploadé" invisible="1"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_tree_field_control" model="ir.ui.view">
+        <field name="name">certification.field.control.tree</field>
+        <field name="model">certification.field.control</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="request_id"/>
+                <field name="scheduled_date"/>
+                <field name="state"/>
+                <field name="result"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_certification_field_control" model="ir.actions.act_window">
+        <field name="name">Contrôles Terrain</field>
+        <field name="res_model">certification.field.control</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Enregistrez vos informations ici !
+            </p>
+        </field>
+    </record>
+<!-- 
+    <menuitem id="menu_certification_field_control" name="Contrôles terrain"
+              parent="menu_certification_root" action="action_certification_field_control" sequence="3"/> -->
+</odoo>

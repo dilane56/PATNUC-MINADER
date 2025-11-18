@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_form_certification_technical_review" model="ir.ui.view">
+        <field name="name">certification.technical.review.form</field>
+        <field name="model">certification.technical.review</field>
+        <field name="arch" type="xml">
+            <form string="Examen Technique">
+                <sheet>
+                <group col="4" string="Informations générales">
+                    <group colspan="2">
+                        <field name="request_id"/>
+                        <field name="reviewer_id"/>
+                        <field name="review_date"/>
+                        <field name="result"/>
+                        <field name="review_notes"/>
+                    </group>
+                    <group colspan="2">
+                        <field name="validation_date" />
+                        <field name="additional_observations"/>
+                        <field name="attachment_ids" widget="many2many_binary"/>
+                        <field name="reviewer_signature" filename="reviewer_signature_filename" widget="signature"/>
+                        <field name="reviewer_signature_filename" placeholder="Nom du fichier uploadé" invisible="1"/>
+                        <field name="state" readonly="1"/>
+                    </group>
+                </group>
+                    <!-- <footer>
+                        <button name="action_validate" string="Valider" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                    </footer> -->
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="view_tree_certification_technical_review" model="ir.ui.view">
+        <field name="name">certification.technical.review.tree</field>
+        <field name="model">certification.technical.review</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="request_id"/>
+                <field name="reviewer_id"/>
+                <field name="review_date"/>
+                <field name="result"/>
+                <field name="state"/>
+                <field name="validation_date"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_certification_technical_review" model="ir.actions.act_window">
+        <field name="name">Examens Techniques</field>
+        <field name="res_model">certification.technical.review</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Enregistrez vos informations ici !
+            </p>
+        </field>
+    </record>
+</odoo> 

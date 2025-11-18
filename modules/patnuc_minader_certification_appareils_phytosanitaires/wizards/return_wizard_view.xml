@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_certification_return_wizard_form" model="ir.ui.view">
+            <field name="name">certification.return.wizard.form</field>
+            <field name="model">certification.return.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Retour de la Demande de Certification">
+                    <group>
+                        <!-- Les champs request_id, current_state et target_state sont remplis par le contexte lors de l'appel de l'action -->
+                        <field name="request_id" invisible="1"/>
+                        <field name="current_state" invisible="1"/>
+                        <!-- AJOUTÉ : target_state doit être présent dans la vue pour être correctement initialisé par le contexte, si la méthode Python souhaite y accéder directement (self.target_state) -->
+                        <field name="target_state" invisible="1"/> 
+                        
+                        <!-- Champ pour la saisie du motif -->
+                        <field name="return_reason" placeholder="Saisissez le motif du retour, y compris les actions requises par le demandeur..."/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm_return" type="object" string="Confirmer le retour" class="btn-primary" data-hotkey="q"/>
+                        <!-- VÉRIFIÉ : special="cancel" assure la fermeture sans exécution d'action, résolvant le problème précédent -->
+                        <button string="Annuler" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record> 
+        
+    </data>
+</odoo>

@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- VUE FORMULAIRE (CORRECTED MODEL: fertilizer.mod.homologation) -->
+    <record id="view_fertilizer_mod_homologation_form" model="ir.ui.view">
+        <field name="name">fertilizer.mod.homologation.form</field>
+        <field name="model">fertilizer.mod.homologation</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <!-- Boutons mis à jour avec groupes de sécurité + groupe manager -->
+                    <button name="action_submit" string="Soumettre" type="object" class="oe_highlight" invisible="state != 'draft'" groups="patnuc_minader_homologation_engrais_fertilisants.group_promoteur_demandeur,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    <button name="action_start_analysis" string="passer a analyse" type="object" class="oe_highlight" invisible="state != 'verification' or not all_documents_verified" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_SRE,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    <button name="action_create_analysis" string="lancer analyse" type="object" class="oe_highlight" invisible="state != 'analysis' or laboratory_analysis_id" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_LNAD,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    <button name="action_start_field_test" string="passer au test agronomique" type="object" class="oe_highlight" invisible="state != 'analysis' or not analysis_complete" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_LNAD,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    <button name="action_create_field_test" string="lancer test agronomique" type="object" class="oe_highlight" invisible="state != 'field_test' or field_test_id" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_LNAD,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    <button name="action_start_economic_evaluation" string="passer a l'éval. économique" type="object" class="oe_highlight" invisible="state != 'field_test' or not field_test_complete" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_LNAD,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    <button name="action_create_economic_evaluation" string="lancer éval économique" type="object" class="oe_highlight" invisible="state != 'economic_eval' or economic_evaluation_id" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_SRC,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    <button name="action_prepare_synthesis" string="passer a la synthèse" type="object" class="oe_highlight" invisible="state != 'economic_eval' or not economic_evaluation_complete" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_SRE,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    <button name="action_validate_regulatory" string="passer a la conformité" type="object" class="oe_highlight" invisible="state != 'synthesis'" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_SRE,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    <button name="action_final_decision" string="passer a la decision d'homologation" type="object" class="oe_highlight" invisible="state != 'validation'" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_DRCQ,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    <button name="action_approve" string="Approuver" type="object" class="oe_highlight" invisible="state != 'decision' or not homologation_arretement or not reception_pv" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_CABINET_MINADER,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    <button name="action_sign" string="Confirmer l'homologation" type="object" class="oe_highlight" invisible="state != 'approved' or not homologation_document " groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_CABINET_MINADER" />
+
+                    <!-- Boutons de Retour -->
+                    <button name="action_return_to_conformity_check" string="Retourner a la verification de conformite" type="object" class="btn-warning" invisible="state != 'decision'" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_SRE,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    <button name="action_return_to_admin_check" string="Retourner a la verification" type="object" class="btn-warning" invisible="state != 'validation'" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_SRE,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    <button name="action_return_to_economic_eval" string="Retourner a l'evaluation" type="object" class="btn-warning" invisible="state != 'synthesis'" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_SRE,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    <button name="action_return_to_field_test" string="Retourner aux test agronomique" type="object" class="btn-warning" invisible="state != 'economic_eval'" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_SRE,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    <button name="action_return_to_lab_analysis" string="Retourner a l'analyse" type="object" class="btn-warning" invisible="state != 'field_test'" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_SRE,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    <button name="action_return_to_draft" string="Retourner au dépôt" type="object" class="btn-warning" invisible="state != 'verification'" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_SRE,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    <button name="action_return_to_verification" string="Retourner à la vérification" type="object" class="btn-warning" invisible="state != 'analysis'" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_SRE,patnuc_minader_homologation_engrais_fertilisants.group_manager" />
+                    
+                    <!-- Bouton Rejet -->
+                    <button name="action_reject" string="Rejeter" type="object" class="btn-danger" invisible="state not in ['decision']" groups="patnuc_minader_homologation_engrais_fertilisants.group_agent_SRE,patnuc_minader_homologation_engrais_fertilisants.group_manager,patnuc_minader_homologation_engrais_fertilisants.group_agent_CABINET_MINADER" />
+
+                    <field name="state" widget="statusbar" statusbar_visible="draft,verification,analysis,field_test,economic_eval,synthesis,validation,decision,approved,signed,rejected"/>
+                </header>
+                <sheet>
+                    <h1>
+                        <field name="name" readonly="1"/>
+                    </h1>
+                    <group col="4" string="Informations générales">
+                        <group colspan="2">
+                          <field name="name" readonly="1"/>
+                          <!-- Champs grisés à partir de l'étape 'recue' -->
+                          <field name="arrete_id" 
+                                       string="Arrêté Initial" 
+                                       options="{'no_create': True, 'no_open': False}" 
+                                       domain="[('state', '=', 'actif')]"
+                                       readonly="state not in ['draft']"
+                          />
+                          <field name="applicant_id" readonly="state not in ['draft']"/>
+                          <field name="old_product_hom" readonly="state not in ['draft']"/>
+                          <field name="product_id" readonly="state not in ['draft']"/>
+                          <field name="submission_date" readonly="1"/>
+                        </group>
+                        <group colspan="2">
+                        
+                          <field name="date_delivrance" readonly="1"/>
+                          <field name="expiry_date" readonly="1"/>
+                          <field name="all_documents_verified" invisible="1"/>
+                          <field name="analysis_complete" invisible="1"/>
+                          <field name="field_test_complete" invisible="1"/>
+                          <field name="economic_evaluation_complete" invisible="1"/>
+                          <field name="conformity_complete" invisible="1"/>
+                          <field name="return_reason" readonly="1" invisible="not return_reason" string="Motif de retour"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                         <page string="Documents">
+                            <group style="display:flex; flex-direction: column " >
+                                <group  style="display:flex; " >
+                                        <field name="official_request_letter" filename="official_request_letter_filename" readonly="state not in ['draft']" />
+                                         <field name="official_request_letter_filename" readonly="1" invisible="1" />
+                                        <button name="preview_document" string="Prévisualiser" type="object" class="oe_highlight " context="{'document_field': 'official_request_letter'}" invisible="not official_request_letter or state=='draft'" style="display:inline;"/>
+                                </group>
+
+                                <group style="display:flex; ">
+                                    <field name="import_agreement_copy" filename="import_agreement_copy_filename" readonly="state not in ['draft']" />
+                                     <field name="import_agreement_copy_filename" readonly="1" class="col-md-3" nolabel="1" invisible="1"/>
+                                    <button name="preview_document" string="Prévisualiser" type="object" class="oe_highlight " context="{'document_field': 'import_agreement_copy'}" invisible="not import_agreement_copy or state=='draft'" style="display:inline;"/>
+                                </group>
+
+                                <group style="display:flex; ">
+                                    <field name="homologation_certificate" filename="homologation_certificate_filename" readonly="state not in ['draft']" />
+                                     <field name="homologation_certificate_filename" readonly="1"  invisible="1"/>
+                                    <button name="preview_document" string="Prévisualiser" type="object" class="oe_highlight " context="{'document_field': 'homologation_certificate'}" invisible="not homologation_certificate or state=='draft' " style="display:inline;"/>
+                                </group>
+                                <group style="display:flex; ">
+                                    <field name="identity_document_copy" filename="identity_document_copy_filename" readonly="state not in ['draft']" />
+                                     <field name="identity_document_copy_filename" readonly="1" class="col-md-3" nolabel="1" invisible="1"/>
+                                    <button name="preview_document" string="Prévisualiser" type="object" class="oe_highlight " context="{'document_field': 'identity_document_copy'}" invisible="not identity_document_copy or state=='draft'" style="display:inline;"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Vérification des documents" invisible="state == 'draft'">
+                            <group  >
+                                <group string="Vérification des documents">
+                                    <field name="official_request_letter_verified" string="Lettre de demande officielle"/>
+                                    <field name="homologation_certificate_verified" string="Attestation d'homologation"/>
+                                    <field name="import_agreement_copy_verified" string="Copie de l'agrément d'importation"/>
+                                    <field name="identity_document_copy_verified" string="Photocopie pièce d'identité"/>
+                                    <field name="verification_note" string="Commentaire" placeholder="Commentaire obligatoire pour passer à l'étape suivante..."/>
+
+                                </group>
+                                <group string="Informations supplementaire sur la verification">
+                                    <field name="reception_agent" readonly="1"/>
+                                    <field name="reception_date" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Analyse laboratoire" invisible="state in ['draft', 'verification']">
+                            <group invisible="state not in ['analysis', 'field_test', 'economic_eval', 'synthesis', 'validation', 'decision', 'approved','signed', 'rejected']">
+                                <group string="Informations générales">
+                                    <field name="laboratory_analysis_id" readonly="1"/>
+                                    <field name="analysis_creation_date" readonly="1"/>
+                                    <field name="analysis_submission_date" readonly="1"/>
+                                    <field name="laboratory_analysis_agent" readonly="1"/>
+                                </group>
+                              <group string="Documents d'analyse" style="display:flex ; flex-direction: column">
+                                <div class="o_row" >
+                                    <div>
+                                         <label for="analysis_chemical_report" string="Rapport d'analyse chimique" />
+                                        <field name="analysis_chemical_report" filename="analysis_chemical_report_filename" />
+                                        <field name="analysis_chemical_report_filename" invisible="1" />
+                                    </div>
+                                    <button name="preview_document" string="Prévisualiser" type="object" class="oe_highlight"
+                                            context="{'document_field': 'analysis_chemical_report'}"
+                                            invisible="not analysis_chemical_report"/>
+                                </div>
+
+                                <div  class="o_row">
+                                    <div>
+                                        <label for="analysis_chemical_report" string="Rapport d'analyse microbiologique" />
+                                        <field name="analysis_microbiological_report" filename="analysis_microbiological_report_filename"  />
+                                        <field name="analysis_microbiological_report_filename" invisible="1"/>
+                                    </div>
+
+                                    <button name="preview_document" string="Prévisualiser" type="object" class="oe_highlight"
+                                            context="{'document_field': 'analysis_microbiological_report'}"
+                                            invisible="not analysis_microbiological_report"/>
+                                </div>
+
+                            </group>
+                            </group>
+
+                        </page>
+
+                        <page string="Test en champ" invisible="state in ['draft', 'verification', 'analysis']">
+                            <group invisible="state not in ['field_test', 'economic_eval', 'synthesis', 'validation', 'decision', 'approved','signed', 'rejected']">
+                                <group string="Informations">
+                                    <field name="field_test_id" readonly="1"/>
+                                    <field name="field_test_start_date" readonly="1"/>
+                                    <field name="field_test_agent" readonly="1"/>
+                                </group>
+                                <group string="Documents" style="display:flex; flex-direction: column ">
+                                    <div  style="display:flex; ">
+                                         <field name="field_test_results_file" filename="field_test_results_filename"/>
+                                        <field name="field_test_results_filename" invisible="1"/>
+                                        <button name="preview_document" string="Prévisualiser" type="object" class="oe_highlight" context="{'document_field': 'field_test_results_file'}" invisible="not field_test_results_file"/>
+                                    </div>
+                                    <div  style="display:flex; ">
+                                         <field name="field_agronomic_test_report" filename="field_agronomic_test_report_filename"/>
+                                       <field name="field_agronomic_test_report_filename" invisible="1" />
+                                        <button name="preview_document" string="Prévisualiser" type="object" class="oe_highlight" context="{'document_field': 'field_agronomic_test_report'}" invisible="not field_agronomic_test_report"/>
+                                    </div>
+
+                                </group>
+
+                            </group>
+
+                        </page>
+
+                        <page string="Évaluation économique" invisible="state in ['draft', 'verification', 'analysis', 'field_test']">
+                            <group invisible="state not in ['economic_eval', 'synthesis', 'validation', 'decision', 'approved','signed', 'rejected']">
+                                <group string="Informations générales">
+                                    <field name="economic_evaluation_id" readonly="1"/>
+                                    <field name="economic_evaluation_date" readonly="1"/>
+                                    <field name="economic_eval_agent" readonly="1"/>
+                                </group>
+                                <group string="Documents" style="display: flex; flex-direction: column" >
+                                    <group >
+
+                                        <div style="display: flex; gap: 20px">
+                                            <label for="economic_eval_report" string="Rapport d'evaluation economique" />
+                                            <div style="display: flex; flex-direction: row">
+                                                 <field name="economic_eval_report" filename="economic_eval_report_filename" readonly="1"/>
+                                                 <field name="economic_eval_report_filename" invisible="1" style="display: inline-block"/>
+                                            </div>
+                                            <button name="preview_document" string="Prévisualiser" type="object" class="oe_highlight" context="{'document_field': 'economic_eval_report'}" invisible="not economic_eval_report" />
+
+                                        </div>
+
+                                    </group>
+
+                                </group>
+
+                            </group>
+
+                        </page>
+
+                        <page string="Vérification administrative" invisible="state in ['draft', 'verification', 'analysis', 'field_test', 'economic_eval']">
+                            <group invisible="state not in ['synthesis', 'validation', 'decision', 'approved','signed', 'rejected']">
+                                <group string="Vérification des documents " >
+
+                                    <field name="admin_check_official_request_letter" string="Lettre de demande officielle" readonly="state != 'synthesis'"/>
+                                    <field name="admin_check_homologation_certificate" string="Attestation d'homologation" readonly="state != 'synthesis'"/>
+                                    <field name="admin_check_import_agreement_copy" string="Copie agrément d'importation" readonly="state != 'synthesis'"/>
+                                    <field name="admin_check_identity_document_copy" string="Photocopie pièce d'identité" readonly="state != 'synthesis'"/>
+                                    <field name="admin_check_chemical_report" string="Rapport d'analyse chimique" readonly="state != 'synthesis'"/>
+                                    <field name="admin_check_microbiological_report" string="Rapport d'analyse microbiologique" readonly="state != 'synthesis'"/>
+                                    <field name="admin_check_field_test_results" string="Résultats de test en champ" readonly="state != 'synthesis'"/>
+                                    <field name="admin_check_agronomic_test_report" string="Rapport de test agronomique" readonly="state != 'synthesis'"/>
+                                    <field name="admin_check_economic_eval_report" string="Rapport d'évaluation économique" readonly="state != 'synthesis'"/>
+                                </group>
+                                <group string="Informations supplementaire sur la verification">
+                                    <field name="check_date"  readonly="1"/>
+                                    <field name="check_agent" readonly="1"/>
+                                    <field name="admin_verification_note" string="Note de vérification administrative" placeholder="Commentaires sur la vérification..." readonly="state != 'synthesis'"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Conformité" invisible="state in ['draft', 'verification', 'analysis', 'field_test', 'economic_eval', 'synthesis']">
+                            <group invisible="state not in ['validation', 'decision', 'approved','signed', 'rejected']">
+                                <group string="Évaluation de conformité" style="display: flex; flex-direction: column;">
+                                    <div style="display: flex; gap: 20px;"  >
+
+                                        <label for="economic_eval_report" string="Rapport d'evaluation economique" />
+                                        <div>
+                                             <field name="conformity_report" filename="conformity_report_filename"/>
+                                             <field name="conformity_report_filename" invisible="1"/>
+                                        </div>
+
+                                        <button name="preview_document" string="Prévisualiser" type="object" class="oe_highlight" context="{'document_field': 'conformity_report'}" invisible="not conformity_report" style="display: inline"/>
+                                    </div>
+
+
+                                </group>
+                                <group string="Information supplementaire sur l'evaluation">
+                                    <field name="conformity_check_date" readonly="1"/>
+                                    <field name="conformity_check_agent" readonly="1"/>
+                                    <field name="conformity_note" placeholder="Saisissez ici la note de conformité..." readonly="state != 'validation'"/>
+
+                                </group>
+                            </group>
+                        </page>
+                        <page string="Decision" invisible="state not in ('decision','approved','signed')">
+                            <group>
+                                 <group string="Documents" style="display:flex; flex-direction: column ">
+                                <group>
+                                     <field name="reception_pv" filename="reception_pv_filename" />
+                                     <field name="reception_pv_filename" invisible="1"/>
+                                     <button name="preview_document" string="Prévisualiser" type="object" class="oe_highlight" context="{'document_field': 'reception_pv'}" invisible="not reception_pv or state not in ('approved','signed')" style="display: inline"/>
+                                </group>
+                                <group>
+                                     <field name="homologation_arretement" filename="homologation_arretement_filename"/>
+                                     <field  name="homologation_arretement_filename" invisible="1" />
+                                     <button name="preview_document" string="Prévisualiser" type="object" class="oe_highlight" context="{'document_field': 'homologation_arretement'}" invisible="not homologation_arretement or state not in ('approved','signed')" style="display: inline"/>
+                                </group>
+
+                            </group>
+                            <group string="Informations supplementaire sur la Decision">
+                                <field name="decision_date" readonly="1"/>
+                                <field name="decision_agent" readonly="1"/>
+                                <field name="decision_note" placeholder="Note de decision"/>
+                            </group>
+                            </group>
+
+                        </page>
+
+                        <page string="Insertion de la signature du ministre" invisible="state not in ('approved', 'signed')">
+                            <group string="Insertion du certificat signé">
+                               <field name="homologation_document" filename="homologation_document_filename"/>
+                                <field name="homologation_document_filename" invisible="1"/>      
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <!-- Ajout du chatter pour le suivi des messages et activités -->
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- VUE LISTE (TREE VIEW) -->
+    <record id="view_fertilizer_mod_homologation_tree" model="ir.ui.view">
+        <field name="name">fertilizer.mod.homologation.tree</field>
+        <field name="model">fertilizer.mod.homologation</field>
+        <field name="arch" type="xml">
+            <tree string="Demandes de modification d'homologation">
+                <field name="name"/>
+                <field name="arrete_id"/>
+                <field name="old_product_hom"/>
+                <field name="product_id"/>
+                <field name="applicant_id"/>
+                <field name="submission_date"/>
+                <field name="state" widget="badge"/>
+                <field name="assigned_to"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- VUE RECHERCHE (SEARCH VIEW) -->
+    <record id="view_fertilizer_mod_homologation_search" model="ir.ui.view">
+        <field name="name">fertilizer.mod.homologation.search</field>
+        <field name="model">fertilizer.mod.homologation</field>
+        <field name="arch" type="xml">
+            <search string="Recherche Demandes de Modification">
+                <field name="name"/>
+                <field name="arrete_id"/>
+                <field name="applicant_id"/>
+                <field name="old_product_hom"/>
+                <filter name="draft" string="Brouillons" domain="[('state', '=', 'draft')]"/>
+                <filter name="submitted" string="Soumises" domain="[('state', '!=', 'draft')]"/>
+                <separator/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_by_homologation" string="Arrêté Initial" context="{'group_by':'arrete_id'}"/>
+                    <filter name="group_by_applicant" string="Demandeur" context="{'group_by':'applicant_id'}"/>
+                    <filter name="group_by_state" string="Statut" context="{'group_by':'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- ACTION DE FENÊTRE (COMPLÉTÉE) -->
+    <record id="action_fertilizer_mod_homologation" model="ir.actions.act_window">
+        <field name="name">Demandes de modification d'homologation</field>
+        <field name="res_model">fertilizer.mod.homologation</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    
+
+</odoo>

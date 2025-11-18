@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_delegation_form" model="ir.ui.view">
+        <field name="name">infrastructure.delegation.form</field>
+        <field name="model">infrastructure.delegation</field>
+        <field name="arch" type="xml">
+            <form string="Délégation MINADER">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nom de la délégation..."/>
+                        </h1>
+                    </div>
+                    
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_requests" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="active_requests_count" widget="statinfo" string="Actives"/>
+                        </button>
+                        <button name="action_view_requests" type="object" class="oe_stat_button" icon="fa-files-o">
+                            <field name="total_requests_count" widget="statinfo" string="Total"/>
+                        </button>
+                    </div>
+                    
+                    <group>
+                        <group name="general">
+                            <field name="type"/>
+                            <field name="code"/>
+                            <field name="delegate_name"/>
+                            <field name="region" />
+                            <field name="department"/>
+                            <field name="active"/>
+                        </group>
+                        <group name="contact">
+                            <field name="contact_email" widget="email"/>
+                            <field name="contact_phone" widget="phone"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Adresse">
+                        <field name="address" nolabel="1"/>
+                    </group>
+                    
+                    <group string="Utilisateurs Assignés">
+                        <field name="user_ids" nolabel="1" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record id="view_delegation_tree" model="ir.ui.view">
+        <field name="name">infrastructure.delegation.tree</field>
+        <field name="model">infrastructure.delegation</field>
+        <field name="arch" type="xml">
+            <tree string="Délégations">
+                <field name="name"/>
+                <field name="type"/>
+                <field name="code"/>
+                <field name="delegate_name"/>
+                <field name="region"/>
+                <field name="department"/>
+                <field name="active_requests_count"/>
+                <field name="total_requests_count"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="view_delegation_search" model="ir.ui.view">
+        <field name="name">infrastructure.delegation.search</field>
+        <field name="model">infrastructure.delegation</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher Délégations">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="delegate_name"/>
+                <field name="region"/>
+                <field name="department"/>
+                <filter name="regional" string="Régionales" domain="[('type', '=', 'regional')]"/>
+                <filter name="departmental" string="Départementales" domain="[('type', '=', 'departmental')]"/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_type" string="Type" context="{'group_by': 'type'}"/>
+                    <filter name="group_region" string="Région" context="{'group_by': 'region'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_delegation" model="ir.actions.act_window">
+        <field name="name">Délégations MINADER</field>
+        <field name="res_model">infrastructure.delegation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Ajouter une délégation
+            </p>
+            <p>
+                Gérez les délégations régionales et départementales du MINADER.
+            </p>
+        </field>
+    </record>
+</odoo>

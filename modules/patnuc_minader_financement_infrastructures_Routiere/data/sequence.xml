@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Séquence pour les demandes de certification -->
+        <record id="seq_infrastructure_financing_request" model="ir.sequence">
+            <field name="name">Demande Financement Infrastructure</field>
+            <field name="code">infrastructure.financing.request</field>
+            <field name="prefix">FIN-REQ-%(year)s-</field>
+            <field name="padding">4</field>
+            <field name="number_increment">1</field>
+        </record>
+
+        <!-- Séquence pour les certificats
+        <record id="seq_certificate" model="ir.sequence">
+            <field name="name">Certificat Phytosanitaire</field>
+            <field name="code">phytosanitary.certificate</field>
+            <field name="prefix">PHYTO-</field>
+            <field name="padding">6</field>
+            <field name="number_increment">1</field>
+        </record> -->
+    </data>
+</odoo>

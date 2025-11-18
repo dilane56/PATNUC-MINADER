@@ -1,0 +1,396 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+  <data noupdate="1">
+
+      <!-- (Q) Séquence pour les demandes de financement d'infrastructure -->
+      <record id="view_infrastructure_financing_request_form" model="ir.ui.view">
+        <field name="name">infrastructure.financing.request.form</field>
+        <field name="model">infrastructure.financing.request</field>
+        <field name="arch" type="xml">
+          <form string="Demande de Financement" class="o_form_sheet">
+            <header>
+              <button name="action_submit" type="object" string="passer a la verification" class="btn-primary" invisible="state != 'draft'" groups="patnuc_minader_financement_infrastructures_Routiere.agent_Delegation"/>
+              <!-- (Q) Boutons pour l'étape verification &amp; conformité - groupe agent_Delegation -->
+              <button name="action_technical_support" type="object" string="passer a l'Appui Technique" class="btn-primary" invisible="state != 'verification' or not all_documents_verified" groups="patnuc_minader_financement_infrastructures_Routiere.agent_Delegation"/>
+              <!-- (Q) Bouton Retourner ajouté pour l'étape vérification -->
+              <button name="action_return_verification" type="object" string="Retourner" class="btn-warning" invisible="state != 'verification'" groups="patnuc_minader_financement_infrastructures_Routiere.agent_Delegation"/>
+              <!-- Bouton pour lancer l'appui technique à l'étape technical_support -->
+              <button name="action_launch_technical_support" type="object" string="Lancer appui technique" class="btn-primary" invisible="state != 'technical_support' or technical_support_id" groups="patnuc_minader_financement_infrastructures_Routiere.agent_commune"/>
+              
+              <button name="action_review" type="object" string="passer a la Revue" class="btn-success" invisible="state != 'technical_support' or not technical_support_id" groups="patnuc_minader_financement_infrastructures_Routiere.agent_commune"/>
+              
+              <!-- (Q) Bouton pour retourner à la vérification depuis l'appui technique -->
+              <button name="action_return_to_verification" type="object" string="Retourner à la Vérification" class="btn-warning" invisible="state != 'technical_support'" groups="patnuc_minader_financement_infrastructures_Routiere.agent_commune"/>
+              
+              <!-- (Q) Bouton pour retourner à l'appui technique depuis la revue -->
+              <button name="action_return_to_technical_support" type="object" string="Retourner à l'Appui Technique" class="btn-warning" invisible="state != 'review'" groups="patnuc_minader_financement_infrastructures_Routiere.agent_commune"/>
+              
+              <!-- <button name="action_approve_review" type="object" string="Approuver la Revue" class="btn-success" invisible="state != 'review' "/> -->
+              <!-- (Q) Boutons pour l'étape décision finale - groupe cabinet_Ministre -->
+              <button name="action_final_decision" type="object" string="passer a la decision Finale" class="btn-primary" invisible="state != 'review'" groups="patnuc_minader_financement_infrastructures_Routiere.cabinet_Ministre"/>
+              <button name="action_approve" type="object" string="Approuver" class="btn-success" invisible="state != 'final_decision'" groups="patnuc_minader_financement_infrastructures_Routiere.cabinet_Ministre"/>
+              <button name="action_reject_final_decision" type="object" string="Rejeter" class="btn-danger" invisible="state != 'final_decision'" groups="patnuc_minader_financement_infrastructures_Routiere.cabinet_Ministre"/>
+              <button name="action_return_final_decision" type="object" string="Retourner a la Revue" class="btn-warning" invisible="state != 'final_decision'" groups="patnuc_minader_financement_infrastructures_Routiere.cabinet_Ministre"/>
+              
+
+
+              <!-- (Q) Bouton Mise à jour restreint au demandeur uniquement pour les demandes rejetées depuis les étapes précédentes (pas depuis décision finale) -->
+              <button name="action_resubmit_after_rejection" type="object" string="Mise à jour de la demande" class="btn-success" invisible="state != 'rejected' or create_uid != uid or rejected_from_state == 'final_decision'" groups="patnuc_minader_financement_infrastructures_Routiere.group_infrastructure_user"/>
+              <field name="state" widget="statusbar" statusbar_fold="rejected" statusbar_colors="{'rejected':'red', 'approuvee':'green'}"/>
+
+            </header>
+
+            <sheet>
+              
+                <field name="technical_support_id" invisible="1"/>
+                <field name="all_documents_verified" invisible="1"/>
+
+
+
+                <div class="oe_button_box" name="button_box">
+                    <button class="oe_stat_button" type="object" name="action_open_technical_support_form" icon="fa-cogs" invisible="state != 'technical_support' or not technical_support_id">
+                        <div class="o_field_widget o_stat_info">
+                            <span class="o_stat_text">Appui</span>
+                            <span class="o_stat_text">Technique</span>
+                        </div>
+                    </button>
+
+                </div>
+                <div class="oe_title">
+                    <h1>
+                        <field name="name" readonly="1"/>
+                    </h1>
+                    
+                    <h2>
+                        <!-- (Q) Grisé à partir de l'étape verification sauf pour les demandes rejetées par le demandeur -->
+                        <field name="project_title" placeholder="Titre du projet..." required="1" readonly="state not in ['draft'] and not (state == 'rejected' and create_uid == uid)"/>
+                    </h2>
+                </div>
+
+
+              <group>
+                <group>
+                  <!-- (Q) Champs grisés à partir de l'étape verification, sauf pour les demandes rejetées où seul le demandeur peut modifier -->
+                  <!-- (Q) Commune qui effectue la demande - vue readonly à partir de l'étape verification -->
+                  <field name="commune_id" required="1" readonly="state not in ['draft'] and not (state == 'rejected' and create_uid == uid)" domain="[('active', '=', True)]" context="{'form_view_ref': 'patnuc_minader_financement_infrastructures_Routiere.view_commune_form_readonly' if state not in ['draft'] and not (state == 'rejected' and create_uid == uid) else False}"/>
+                  <!-- <field name="location" required="1" readonly="state not in ['draft'] and not (state == 'rejected' and create_uid == uid)"/> -->
+                  <field name="infrastructure_type" required="1" readonly="state not in ['draft'] and not (state == 'rejected' and create_uid == uid)"/>
+                  <!-- (Q) Date de soumission toujours en lecture seule - remplie automatiquement -->
+                  <field name="submission_date" readonly="1" invisible="not submission_date"/>
+
+                </group>
+                <group >
+                 
+                  <field name="localite_id" readonly="state not in ['draft'] and not (state == 'rejected' and create_uid == uid)"/>
+                </group>
+
+                <group>
+                  <!-- <field name="delegation_id" readonly="state not in ['verification', 'technical_support']" domain="[('active', '=', True)]"/> -->
+                  <!-- (Q) Budget grisé à partir de l'étape verification -->
+                  <field name="estimated_budget" readonly="state not in ['draft'] and not (state == 'rejected' and create_uid == uid)"/>
+                  <field name="currency_id" invisible="1"/>
+                  <field name="state" readonly="1"/>
+                  <field name="decision_date" readonly="1" invisible="not decision_date"/>
+                  <field name="approval_date" readonly="1" invisible="not approval_date"/>
+                  <field name="processing_days" readonly="1" invisible="not processing_days"/>
+
+                  <!-- (Q) Champ motif de rejet ajouté, visible uniquement s'il y a un motif -->
+                  <field name="rejection_reason" readonly="1" invisible="not rejection_reason"/>
+
+                  <!-- (Q) Champs d'information sur le rejet ajoutés -->
+                  <field name="rejected_from_state" readonly="1" invisible="not rejected_from_state"/>
+                  <field name="rejected_by_user_id" readonly="1" invisible="not rejected_by_user_id"/>
+
+                  <!-- (Q) Champs d'information sur le retour ajoutés -->
+                  <field name="return_reason" readonly="1" invisible="not return_reason"/>
+                  <field name="returned_from_state" readonly="1" invisible="not returned_from_state"/>
+                  <field name="returned_by_user_id" readonly="1" invisible="not returned_by_user_id"/>
+
+                  <!-- (Q) Champ invisible pour les conditions de sécurité -->
+                  <field name="create_uid" invisible="1"/>
+                </group>
+              </group>
+
+              <notebook>
+
+                
+                <!-- Onglet Documents requis - Visible dès le dépôt -->
+                <page string="Documents requis">
+                  <group>
+                    <label string="Lettre de demande officielle" for="official_request_file"/>
+                    <div class="o_row">
+                      <field name="official_request_file" filename="official_request_filename" readonly="state not in ['draft'] and not (state == 'rejected' and create_uid == uid)" nolabel="1"/>
+                      <field name="official_request_filename" invisible="1"/>
+                      <button name="preview_document" type="object" string="Prévisualiser" class="btn-secondary" invisible="not official_request_file or state == 'draft'" context="{'document_field': 'official_request_file'}"/>
+                    </div>
+                    
+                    <label string="Plan de situation de l'infrastructure" for="location_plan_file"/>
+                    <div class="o_row">
+                      <field name="location_plan_file" filename="location_plan_filename" readonly="state not in ['draft'] and not (state == 'rejected' and create_uid == uid)" nolabel="1"/>
+                      <field name="location_plan_filename" invisible="1"/>
+                      <button name="preview_document" type="object" string="Prévisualiser" class="btn-secondary" invisible="not location_plan_file or state == 'draft'" context="{'document_field': 'location_plan_file'}"/>
+                    </div>
+                    
+                    <label string="Approbation du conseil municipal" for="communal_commitment_file"/>
+                    <div class="o_row">
+                      <field name="communal_commitment_file" filename="communal_commitment_filename" readonly="state not in ['draft'] and not (state == 'rejected' and create_uid == uid)" nolabel="1"/>
+                      <field name="communal_commitment_filename" invisible="1"/>
+                      <button name="preview_document" type="object" string="Prévisualiser" class="btn-secondary" invisible="not communal_commitment_file or state == 'draft'" context="{'document_field': 'communal_commitment_file'}"/>
+                    </div>
+                    
+                    <label string="Évaluation de l'impact environnemental" for="environmental_impact_file"/>
+                    <div class="o_row">
+                      <field name="environmental_impact_file" filename="environmental_impact_filename" readonly="state not in ['draft'] and not (state == 'rejected' and create_uid == uid)" nolabel="1"/>
+                      <field name="environmental_impact_filename" invisible="1"/>
+                      <button name="preview_document" type="object" string="Prévisualiser" class="btn-secondary" invisible="not environmental_impact_file or state == 'draft'" context="{'document_field': 'environmental_impact_file'}"/>
+                    </div>
+                  </group>
+                </page>
+
+                <!-- ################################################################################################  -->
+
+                <!-- Onglet Infrastructure Routière - Visible seulement si type = road -->
+                <page string="Infrastructure Routière" invisible="infrastructure_type != 'road'">
+                  <group>
+                    <field name="id" invisible="1"/>
+                    <button name="action_add_road_info" string="Ajouter informations techniques" type="object" class="btn-primary" invisible="road_id"/>
+                  </group>
+                  <group string="Informations Techniques" invisible="not road_id" col="4">
+                    <group colspan="2">
+                      <field name="road_id" invisible="1"/>
+                      <label for="road_intervention_type"/>
+                      <field name="road_intervention_type" readonly="1" nolabel="1"/>
+                      <label for="road_linear_km"/>
+                      <field name="road_linear_km" readonly="1" nolabel="1"/>
+                      <label for="road_start_point"/>
+                      <field name="road_start_point" readonly="1" nolabel="1"/>
+                    </group>
+                    <group colspan="2">
+                      <label for="road_end_point"/>
+                      <field name="road_end_point" readonly="1" nolabel="1"/>
+                      <label for="road_villages_served"/>
+                      <field name="road_villages_served" readonly="1" nolabel="1"/>
+                      <label for="road_soil_type"/>
+                      <field name="road_soil_type" readonly="1" nolabel="1"/>
+                    </group>
+                  </group>
+                </page>
+                
+                <!-- Onglet Ouvrage d'Art - Visible seulement si type = artwork -->
+                <page string="Ouvrage d'Art" invisible="infrastructure_type != 'artwork'">
+                  <group>
+                    <field name="id" invisible="1"/>
+                    <button name="action_add_artwork_info" string="Ajouter informations techniques" type="object" class="btn-primary" invisible="artwork_id"/>
+                  </group>
+                  <group string="Informations Techniques" invisible="not artwork_id" col="4">
+                    <group colspan="2">
+                      <field name="artwork_id" invisible="1"/>
+                      <label for="artwork_work_type"/>
+                      <field name="artwork_work_type" readonly="1" nolabel="1"/>
+                      <label for="artwork_dimensions"/>
+                      <field name="artwork_dimensions" readonly="1" nolabel="1"/>
+                      <label for="artwork_condition"/>
+                      <field name="artwork_condition" readonly="1" nolabel="1"/>
+                    </group>
+                    <group colspan="2">
+                      <label for="artwork_maintenance_urgency"/>
+                      <field name="artwork_maintenance_urgency" readonly="1" nolabel="1"/>
+                      <label for="artwork_hydraulic_state"/>
+                      <field name="artwork_hydraulic_state" readonly="1" nolabel="1"/>
+                      <label for="artwork_structural_state"/>
+                      <field name="artwork_structural_state" readonly="1" nolabel="1"/>
+                    </group>
+                  </group>
+                </page>
+                
+                <!-- Onglet Mini-Infrastructure - Visible seulement si type = mini_infra -->
+                <page string="Mini-Infrastructure" invisible="infrastructure_type != 'mini_infra'">
+                  <group>
+                    <field name="id" invisible="1"/>
+                    <button name="action_add_mini_info" string="Ajouter informations techniques" type="object" class="btn-primary" invisible="mini_id"/>
+                  </group>
+                  <group string="Informations Techniques" invisible="not mini_id" col="4">
+                    <group colspan="2">
+                      <field name="mini_id" invisible="1"/>
+                      <label for="mini_mini_type"/>
+                      <field name="mini_mini_type" readonly="1" nolabel="1"/>
+                      <label for="mini_localisation"/>
+                      <field name="mini_localisation" readonly="1" nolabel="1"/>
+                      <label for="mini_superficie"/>
+                      <field name="mini_superficie" readonly="1" nolabel="1"/>
+                    </group>
+                    <group colspan="2">
+                      <label for="mini_intervention_type"/>
+                      <field name="mini_intervention_type" readonly="1" nolabel="1"/>
+                      <label for="mini_soil_type"/>
+                      <field name="mini_soil_type" readonly="1" nolabel="1"/>
+                      <label for="mini_status"/>
+                      <field name="mini_status" readonly="1" nolabel="1"/>
+                    </group>
+                  </group>
+                </page>
+
+
+                <!-- ################################################################################################ -->
+
+                <!-- Onglet Vérification - Visible à partir de l'étape vérification -->
+                <page string="Vérification" invisible="state == 'draft'">
+                  
+                  <group string="Vérification des documents" col="2">
+                    <group>
+                      <label string="Lettre de demande officielle" for="official_request_verified"/>
+                      <field name="official_request_verified" readonly="state != 'verification'" nolabel="1"/>
+                      
+                      <label string="Plan de situation de l'infrastructure" for="location_plan_verified"/>
+                      <field name="location_plan_verified" readonly="state != 'verification'" nolabel="1"/>
+                    </group>
+
+                    <group>
+                      <label string="Approbation du conseil municipal" for="communal_commitment_verified"/>
+                      <field name="communal_commitment_verified" readonly="state != 'verification'" nolabel="1"/>
+                      
+                      <label string="Évaluation de l'impact environnemental" for="environmental_impact_verified"/>
+                      <field name="environmental_impact_verified" readonly="state != 'verification'" nolabel="1"/>
+                    </group>
+                    
+                    <field name="conformity_notes" placeholder="Saisissez ici votre commentaire global sur la vérification..." readonly="state != 'verification'" nolabel="1" colspan="2"/>
+                  </group>
+                </page>
+
+                <!-- Onglet Appui Technique - Visible à partir de l'étape appui technique -->
+                <page string="Appui Technique" invisible="state in ['draft', 'verification']">
+                  <group string="Informations Appui Technique" invisible="state not in ['technical_support', 'review', 'final_decision', 'approuvee', 'rejected'] or not technical_support_id">
+                    <group>
+                      <field name="tech_evaluation" string="Évaluation Technique" readonly="1"/>
+                      <field name="tech_avis" string="Avis Technique" readonly="1"/>
+                    </group>
+                  </group>
+                  
+                  <group string="Documents Techniques" invisible="state not in ['technical_support', 'review', 'final_decision', 'approuvee', 'rejected'] or not technical_support_id" col="4">
+                    <group colspan="2">
+                      <field name="tech_plan_file" filename="tech_plan_filename" readonly="1" string="Plan technique"/>
+                      <field name="tech_plan_filename" invisible="1"/>
+                      
+                      <field name="tech_cost_estimate_file" filename="tech_cost_estimate_filename" readonly="1" string="Devis"/>
+                      <field name="tech_cost_estimate_filename" invisible="1"/>
+                    </group>
+                    <group colspan="2">
+                      <field name="tech_feasibility_report_file" filename="tech_feasibility_report_filename" readonly="1" string="Rapport de faisabilité"/>
+                      <field name="tech_feasibility_report_filename" invisible="1"/>
+                      
+                      <field name="tech_transmission_note_file" filename="tech_transmission_note_filename" readonly="1" string="Note de transmission technique"/>
+                      <field name="tech_transmission_note_filename" invisible="1"/>
+                    </group>
+                  </group>
+                  
+                  <group invisible="technical_support_id or state not in ['technical_support', 'review', 'final_decision', 'approuvee', 'rejected']">
+                    <p>Aucun appui technique créé pour cette demande.</p>
+                  </group>
+                </page>
+
+                <!-- Onglet Revue - Visible à partir de l'étape revue -->
+                <page string="Revue" invisible="state in ['draft', 'verification', 'technical_support']">
+                  <group>
+                    <label string="Rapport de revue" for="review_report_file"/>
+                    <div class="o_row">
+                      <field name="review_report_file" filename="review_report_filename" readonly="state != 'review'" nolabel="1"/>
+                      <field name="review_report_filename" invisible="1"/>
+                      <button name="preview_document" type="object" string="Prévisualiser" class="btn-secondary" invisible="not review_report_file or state == 'review'" context="{'document_field': 'review_report_file'}"/>
+                    </div>
+                    
+                    <field name="note_revue_onglet" required="state == 'review'" placeholder="Saisissez ici votre note de revue..." readonly="state != 'review'"/>
+                  </group>
+                </page>
+
+                <!-- Onglet Décision - Visible à l'étape décision finale -->
+                <page string="Décision"  invisible="state in ['draft', 'verification', 'technical_support','review']">
+                  <group>
+                    <group>
+                      <label string="PV de réception" for="reception_pv_file"/>
+                      <div class="o_row">
+                        <field name="reception_pv_file" filename="reception_pv_filename" readonly="state != 'final_decision'" string="PV de réception"/>
+                        <field name="reception_pv_filename" invisible="1"/>
+                        <button name="preview_document" type="object" string="Prévisualiser" class="btn-secondary" invisible="not reception_pv_file or state == 'final_decision'" context="{'document_field': 'reception_pv_file'}"/>
+                      </div>
+                    </group>
+                  </group>
+                </page>
+                
+
+                
+                <!-- (Q) Onglet Notes supprimé car remplacé par les onglets spécifiques par étape (Note Conformité, Avis Technique, Note de Revue) -->
+              </notebook>
+            </sheet>
+            <!-- (Q) Bloc chatter ajouté pour visualiser le tracking des actions -->
+            <div class="oe_chatter">
+              <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
+              <field name="activity_ids" widget="mail_activity" groups="base.group_user"/>
+              <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
+            </div>
+          </form>
+        </field>
+      </record>
+
+
+      <record id="view_infrastructure_financing_request_tree" model="ir.ui.view">
+        <field name="name">infrastructure.financing.request.tree</field>
+        <field name="model">infrastructure.financing.request</field>
+        <field name="arch" type="xml">
+          <tree>
+            <field name="name"/>
+            <field name="commune_id"/>
+            <field name="project_title"/>
+            <field name="estimated_budget"/>
+            <field name="state"/>
+            <field name="submission_date"/>
+          </tree>
+        </field>
+      </record>
+
+      <record id="view_infrastructure_financing_request_search" model="ir.ui.view">
+        <field name="name">infrastructure.financing.request.search</field>
+        <field name="model">infrastructure.financing.request</field>
+        <field name="arch" type="xml">
+          <search string="Rechercher Demandes">
+            <field name="name"/>
+            <field name="commune_id"/>
+            <field name="project_title"/>
+            <field name="localite_id"/>
+            <separator/>
+            <filter name="draft" string="Dépôt du dossier" domain="[('state', '=', 'draft')]"/>
+            <filter name="verification" string="En vérification" domain="[('state', '=', 'verification')]"/>
+            <filter name="technical_support" string="Appui technique" domain="[('state', '=', 'technical_support')]"/>
+            <filter name="review" string="En revue" domain="[('state', '=', 'review')]"/>
+            <filter name="final_decision" string="Décision finale" domain="[('state', '=', 'final_decision')]"/>
+            <filter name="approuvee" string="Approuvées" domain="[('state', '=', 'approuvee')]"/>
+            <filter name="rejected" string="Rejetées" domain="[('state', '=', 'rejected')]"/>
+            <separator/>
+
+            <separator/>
+            <filter name="my_requests" string="Mes demandes" domain="[('create_uid', '=', uid)]"/>
+            <group expand="0" string="Grouper par">
+              <filter name="group_commune" string="Commune" context="{'group_by': 'commune_id'}"/>
+              <filter name="group_delegation" string="Délégation" context="{'group_by': 'delegation_id'}"/>
+              <filter name="group_state" string="État" context="{'group_by': 'state'}"/>
+              <filter name="group_date" string="Date" context="{'group_by': 'submission_date'}"/>
+            </group>
+          </search>
+        </field>
+      </record>
+
+      <!-- (Q) action -->
+      <record id="action_infrastructure_financing_request" model="ir.actions.act_window">
+        <field name="name">Demandes de Financement</field>
+        <field name="res_model">infrastructure.financing.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+          <p>Soumettez ici vos demandes de financement pour les projets communaux.</p>
+        </field>
+      </record>
+
+  </data>
+
+  
+</odoo>

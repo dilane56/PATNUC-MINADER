@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <data>
+
+        <!-- Catégorie pour le module de financement des infrastructures -->
+        <record id="category_infrastructure_financing" model="ir.module.category">
+            <field name="name">Financement des Infrastructures Communales</field>
+            <field name="description">Gestion des demandes de financement pour la création/réhabilitation des infrastructures communales</field>
+        </record>
+
+        <!-- Groupes d'utilisateurs -->
+        <!-- Groupe de base (utilisateurs standards) -->
+        <record id="group_infrastructure_user" model="res.groups">
+            <field name="name">Demandeur De Financement/Usager</field>
+            <field name="category_id" ref="category_infrastructure_financing"/>
+            <!-- (Q) Ajout des droits de messagerie pour le chatter -->
+            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('mail.group_mail_template_editor'))]"/>
+        </record>
+
+
+        <!-- Agent Commune -->
+        <record id="agent_commune" model="res.groups">
+            <field name="name">Agent Commune</field>
+            <field name="category_id" ref="category_infrastructure_financing"/>
+            <!-- (Q) Ajout des droits de messagerie pour le chatter -->
+            <field name="implied_ids" eval="[(4, ref('group_infrastructure_user')), (4, ref('mail.group_mail_template_editor'))]"/>
+        </record>
+
+
+        <!-- Agent DGRCV -->
+        <record id="agent_DGRCV" model="res.groups">
+            <field name="name">Agent DGRCV</field>
+            <field name="category_id" ref="category_infrastructure_financing"/>
+            <!-- (Q) Ajout des droits de base et messagerie pour le chatter -->
+            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('mail.group_mail_template_editor'))]"/>
+        </record>
+
+
+        <!-- (Q) Agent Délégation - agit à l'étape verification & conformité -->
+        <record id="agent_Delegation" model="res.groups">
+            <field name="name">Agent Délégation</field>
+            <field name="category_id" ref="category_infrastructure_financing"/>
+            <!-- (Q) Ajout des droits de base et messagerie pour le chatter -->
+            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('mail.group_mail_template_editor'))]"/>
+        </record>
+
+        <!-- (Q) Cabinet Ministre - agit à l'étape décision finale -->
+        <record id="cabinet_Ministre" model="res.groups">
+            <field name="name">Cabinet Ministre</field>
+            <field name="category_id" ref="category_infrastructure_financing"/>
+            <!-- (Q) Ajout des droits de base et messagerie pour le chatter -->
+            <field name="implied_ids" eval="[(4, ref('base.group_user')), (4, ref('mail.group_mail_template_editor'))]"/>
+        </record>
+
+        <!-- Manager -->
+        <record id="manager" model="res.groups">
+            <field name="name">Gestionnaire Financement</field>
+            <field name="category_id" ref="category_infrastructure_financing"/>
+            <!-- (Q) Ajout des droits de messagerie pour le chatter -->
+            <field name="implied_ids" eval="[(4, ref('group_infrastructure_user')), (4, ref('mail.group_mail_template_editor'))]"/>
+        </record>
+
+
+        <!-- Règles de sécurité pour les documents d'infrastructure -->
+        <record id="rule_infrastructure_document_user" model="ir.rule">
+            <field name="name">Documents infrastructure - Demandeur</field>
+            <field name="model_id" ref="model_infrastructure_document"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_infrastructure_user'))]"/>
+        </record>
+        
+
+        <!-- Règles de sécurité optionnelles (à décommenter et adapter si nécessaire) -->
+        <!--
+        <record id="rule_financing_request_user" model="ir.rule">
+            <field name="name">Demandes de financement - Demandeur</field>
+            <field name="model_id" ref="model_infrastructure_financing_request"/>
+            <field name="domain_force">[('create_uid', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('group_infrastructure_user'))]"/>
+        </record>
+
+        <record id="rule_financing_request_agent_commune" model="ir.rule">
+            <field name="name">Demandes de financement - Agent Commune</field>
+            <field name="model_id" ref="model_infrastructure_financing_request"/>
+            <field name="domain_force">[('commune_id', 'in', user.commune_ids)]</field>
+            <field name="groups" eval="[(4, ref('agent_commune'))]"/>
+        </record>
+        -->
+    </data>
+</odoo>

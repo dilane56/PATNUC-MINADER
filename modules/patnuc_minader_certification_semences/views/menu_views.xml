@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Menu racine -->
+    <menuitem id="menu_certification_root" name="Certification Semences" 
+        web_icon="patnuc_minader_certification_semences,static/description/icon.svg" sequence="10"/>
+    
+    <menuitem id="menu_certification_agreements" name="Agréments" 
+              parent="menu_certification_root" action="action_certification_agreement" sequence="20"/>
+
+    <menuitem id="menu_certification_operator" name="Opérateurs" 
+              parent="menu_certification_root" action="action_certification_operator" sequence="21"/>          
+    
+    
+    <!-- Menu Demandes -->
+    <menuitem id="menu_certification_requests" name="Demandes" parent="menu_certification_root" sequence="10"/>
+    <menuitem id="menu_certification_request_all" name="Toutes les demandes" 
+              parent="menu_certification_requests" action="action_certification_request" sequence="10"/>
+    <menuitem id="menu_certification_request_pending" name="En attente" 
+              parent="menu_certification_requests" sequence="20"/>
+    <menuitem id="menu_certification_request_approved" name="Approuvées" 
+              parent="menu_certification_requests" sequence="30"/>
+    
+
+    
+    <!-- Menu Contrôles -->
+    <menuitem id="menu_certification_controls" name="Contrôles" parent="menu_certification_root" sequence="30"/>
+    <menuitem id="menu_certification_field_control" name="Contrôles terrain" 
+              parent="menu_certification_controls" action="action_certification_field_control" sequence="10"/>
+    <menuitem id="menu_certification_lot_prelevement" name="Echantillonage des lots" 
+              parent="menu_certification_controls" action="action_prelevement_lot_certification" sequence="15"/>
+    <menuitem id="menu_certification_laboratory_analysis" name="Analyses laboratoire" 
+              parent="menu_certification_controls" action="action_certification_laboratory_analysis" sequence="20"/>
+    <menuitem id="menu_certification_technical_review" name="Examen Technique" 
+              parent="menu_certification_controls" action="action_certification_technical_review" sequence="30"/>
+    
+    
+    
+    
+    <!-- Menu Certificats -->
+    <menuitem id="menu_certification_certificates" name="Certificats" parent="menu_certification_root" sequence="40"/>
+    <menuitem id="menu_certification_certificate_all" name="Tous les certificats" 
+              parent="menu_certification_certificates" action="action_certification_certificate" sequence="10"/>
+
+    <!-- Menu Gestion des parcelles -->
+    <menuitem id="menu_production_management_sites" name="Declaration des cultures" parent="menu_certification_root" sequence="50"/>
+    <menuitem id="menu_certification_parcelles" name="Parcelles"
+              parent="menu_production_management_sites" action="action_certification_parcelle" sequence="10"/>
+    
+    <!-- Menu Configuration laboratoires-->
+    <menuitem id="menu_certification_configuration" name="Configuration" parent="menu_certification_root" sequence="60"/>
+    <menuitem id="menu_certification_laboratory" name="Laboratoires" 
+              parent="menu_certification_configuration" action="action_certification_laboratory" sequence="10"/>
+
+<!--    menu pour les inspections-->
+
+    <menuitem id="menu_cert_inspection" parent="menu_certification_controls" name="Inspections" action="action_cert_inspection"/>
+    <menuitem id="menu_cert_lots" parent="menu_certification_controls" name="Lots Parcelle" action="action_cert_parcelle_lot"/>
+    <menuitem id="menu_cert_reports" parent="menu_certification_controls" name="Rapports finaux" action="action_inspection_final_report"/>
+
+
+    <!-- Menu Étiquetage -->
+    <menuitem id="menu_labelling_requests" name="Demandes Étiquetage" 
+              parent="menu_certification_root" action="action_labelling_request" sequence="45"/>
+</odoo>

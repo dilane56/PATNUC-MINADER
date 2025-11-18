@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_commune_form" model="ir.ui.view">
+        <field name="name">infrastructure.commune.form</field>
+        <field name="model">infrastructure.commune</field>
+        <field name="arch" type="xml">
+            <form string="Commune">
+                <sheet>
+                    <!-- (Q) Champ invisible pour contrôler la lecture seule -->
+                    <field name="is_readonly" invisible="1"/>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <!-- (Q) Nom grisé si demandes en cours à partir de verification -->
+                            <field name="name" placeholder="Nom de la commune..." readonly="is_readonly"/>
+                        </h1>
+                    </div>
+                    
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_requests" type="object" class="oe_stat_button" icon="fa-file-text-o">
+                            <field name="funding_request_count" widget="statinfo" string="Demandes"/>
+                        </button>
+                    </div>
+                    
+                    <group>
+                        <group name="general">
+                            <!-- (Q) Champs grisés si demandes en cours à partir de verification -->
+                            <field name="code" readonly="is_readonly"/>
+                            <field name="mayor_name" readonly="is_readonly"/>
+                            <field name="resp_commune" readonly="is_readonly"/>
+                            <field name="region" readonly="is_readonly"/>
+                            <field name="department" readonly="is_readonly"/>
+                            <field name="active" readonly="is_readonly"/>
+                        </group>
+                        <group name="contact">
+                            <field name="contact_email" widget="email" readonly="is_readonly"/>
+                            <field name="contact_phone" widget="phone" readonly="is_readonly"/>
+                        </group>
+                        <group string="Adresse">
+                            <field name="address" nolabel="1" readonly="is_readonly"/>
+                        </group>
+                    </group>
+                    
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <!-- (Q) Vue commune readonly pour les demandes à partir de l'étape verification -->
+    <record id="view_commune_form_readonly" model="ir.ui.view">
+        <field name="name">infrastructure.commune.form.readonly</field>
+        <field name="model">infrastructure.commune</field>
+        <field name="arch" type="xml">
+            <form string="Commune" create="false" edit="false" delete="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group name="general">
+                            <field name="code" readonly="1"/>
+                            <field name="mayor_name" readonly="1"/>
+                            <field name="region" readonly="1"/>
+                            <field name="department" readonly="1"/>
+                            <field name="active" readonly="1"/>
+                        </group>
+                        <group name="contact">
+                            <field name="contact_email" widget="email" readonly="1"/>
+                            <field name="contact_phone" widget="phone" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Adresse">
+                        <field name="address" nolabel="1" readonly="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    
+    <record id="view_commune_tree" model="ir.ui.view">
+        <field name="name">infrastructure.commune.tree</field>
+        <field name="model">infrastructure.commune</field>
+        <field name="arch" type="xml">
+            <tree string="Communes">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="mayor_name"/>
+                <field name="region"/>
+                <field name="department"/>
+                <field name="contact_email"/>
+                <field name="funding_request_count"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+    
+    <record id="view_commune_search" model="ir.ui.view">
+        <field name="name">infrastructure.commune.search</field>
+        <field name="model">infrastructure.commune</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher Communes">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="mayor_name"/>
+                <field name="region"/>
+                <field name="department"/>
+                <group expand="0" string="Grouper par">
+                    <filter name="group_region" string="Région" context="{'group_by': 'region'}"/>
+                    <filter name="group_department" string="Département" context="{'group_by': 'department'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_commune" model="ir.actions.act_window">
+        <field name="name">Communes</field>
+        <field name="res_model">infrastructure.commune</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Ajouter une commune
+            </p>
+            <p>
+                Gérez la liste des communes qui peuvent soumettre des demandes de financement.
+            </p>
+        </field>
+    </record>
+    
+    <!-- (Q) Action commune readonly pour les demandes à partir de l'étape verification -->
+    <record id="action_commune_readonly" model="ir.actions.act_window">
+        <field name="name">Commune (Lecture seule)</field>
+        <field name="res_model">infrastructure.commune</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_commune_form_readonly"/>
+        <field name="target">new</field>
+    </record>
+</odoo>

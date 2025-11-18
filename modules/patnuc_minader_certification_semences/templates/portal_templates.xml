@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Page des certifications dans le portail -->
+    <template id="portal_my_certifications" name="My Certifications">
+        <t t-call="portal.portal_layout">
+            <t t-set="breadcrumbs_searchbar" t-value="True"/>
+            <t t-call="portal.portal_searchbar">
+                <t t-set="title">Mes Certifications</t>
+            </t>
+            <t t-if="not certifications">
+                <div class="alert alert-info">
+                    <p>Vous n'avez encore aucune demande de certification.</p>
+                    <a href="/web#action=certification_semences.action_certification_request" class="btn btn-primary">
+                        Nouvelle demande
+                    </a>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="row">
+                    <div class="col-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Référence</th>
+                                    <th>Variété</th>
+                                    <th>Date soumission</th>
+                                    <th>État</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="certifications" t-as="cert">
+                                    <tr>
+                                        <td>
+                                            <a t-attf-href="/my/certification/#{cert.id}">
+                                                <t t-esc="cert.name"/>
+                                            </a>
+                                        </td>
+                                        <td t-esc="cert.seed_variety"/>
+                                        <td t-esc="cert.submission_date"/>
+                                        <td>
+                                            <span t-attf-class="badge badge-#{cert.state == 'certificate_issued' and 'success' or cert.state == 'rejected' and 'danger' or 'warning'}">
+                                                <t t-esc="dict(cert._fields['state'].selection)[cert.state]"/>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <a t-attf-href="/my/certification/#{cert.id}" class="btn btn-sm btn-primary">
+                                                Voir détails
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+    
+    <!-- Page de vérification de certificat -->
+    <template id="certificate_verification" name="Certificate Verification">
+        <t t-call="website.layout">
+            <div class="container mt-4">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header bg-success text-white">
+                                <h3 class="mb-0">Vérification de Certificat</h3>
+                            </div>
+                            <div class="card-body">
+                                <t t-if="certificate">
+                                    <div class="alert alert-success">
+                                        <h4><i class="fa fa-check-circle"></i> Certificat Valide</h4>
+                                    </div>
+                                    <table class="table">
+                                        <tr>
+                                            <td><strong>Numéro :</strong></td>
+                                            <td t-esc="certificate.name"/>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Opérateur :</strong></td>
+                                            <td t-esc="certificate.operator_id.name"/>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Variété :</strong></td>
+                                            <td t-esc="certificate.seed_variety"/>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Date d'émission :</strong></td>
+                                            <td t-esc="certificate.issue_date"/>
+                                        </tr>
+                                        <tr>
+                                            <td><strong>Quantité certifiée :</strong></td>
+                                            <td><t t-esc="certificate.certified_quantity"/> kg</td>
+                                        </tr>
+                                    </table>
+                                </t>
+                                <t t-else="">
+                                    <div class="alert alert-danger">
+                                        <h4><i class="fa fa-times-circle"></i> Certificat Non Trouvé</h4>
+                                        <p>Le numéro de certificat saisi n'existe pas ou n'est pas valide.</p>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+</odoo>

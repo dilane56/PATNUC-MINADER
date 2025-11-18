@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <!-- 1. VUE EN LISTE (Tree View) -->
+    <record id="fertilizer_suspend_homologation_view_tree" model="ir.ui.view">
+        <field name="name">fertilizer.suspend.homologation.view.tree</field>
+        <field name="model">fertilizer.suspend.homologation</field>
+        <field name="arch" type="xml">
+            <tree string="Dossiers de Suspension d'Homologation">
+                <field name="name"/>
+                <field name="arrete_id" string="Arrêté Initial"/>
+                <field name="old_product_hom"/>
+                <field name="applicant_id"/>
+                <field name="submission_date"/>
+                <field name="state" widget="badge" decoration-warning="state == 'draft'" decoration-success="state == 'decision'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- 2. VUE EN FORMULAIRE (Form View) -->
+    <record id="fertilizer_suspend_homologation_view_form" model="ir.ui.view">
+        <field name="name">fertilizer.suspend.homologation.view.form</field>
+        <field name="model">fertilizer.suspend.homologation</field>
+        <field name="arch" type="xml">
+            <form string="Suspension d'Homologation">
+                <header>
+                    <!-- Bouton d'AVANCEMENT du Workflow (Draft -> Decision) -->
+                    <!-- Le modèle Python utilise 'action_suspend' pour passer de 'draft' à 'verification'. 
+                         J'adapte le bouton pour passer à l'état de décision.
+                         NOTE : J'ai renommé l'action pour correspondre au statut de fin 'decision' défini dans votre modèle Python. -->
+                    <button name="action_suspend" string="Confirmer la Suspension" type="object"
+                        invisible="state!='draft'" class="oe_highlight"/>
+
+                    <field name="state" widget="statusbar" statusbar_visible="draft,decision"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name" readonly="1"/></h1>
+                    </div>
+
+                    <group string="Informations de l'Homologation Ciblée">
+                        <group>
+                            <!-- Arrêté lié (clé de la suspension) -->
+                            <field name="arrete_id" 
+                                string="Arrêté (Référence)" 
+                                options="{'no_create': True, 'no_open': True}" />
+                            
+                            <!-- Champs liés en lecture seule -->
+                            <field name="old_product_hom" readonly="1"/>
+                            <field name="applicant_id" readonly="1"/>     
+                        </group>
+                        <group>
+                            <field name="date_suspension" readonly="1"/>
+                            <field name="submission_date" readonly="1"/>
+                            <field name="assigned_to" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        
+                        <!-- TAB 1: Motif et Documents de Suspension -->
+                        <page string="Motif et PV de Suspension" name="suspension_details">
+                            <group string="Documents et Raisons (Requis en état 'draft')">
+                                <field name="reason_suspension" required="1" placeholder="Veuillez décrire en détail le motif légal de cette suspension..."/>
+
+                                <field name="pv_suspension" filename="pv_suspension_filename" required="1"/>
+                                <field name="pv_suspension_filename" invisible="1" />
+                            </group>
+                        </page>
+
+                        <!-- TAB 2: Confirmation de la Décision (Visible une fois suspendu) -->
+                        <page string="Confirmation de la Décision" name="decision_confirmation" invisible="state!='decision'">
+                            <group>
+                                <field name="date_confirm_suspens" readonly="1"/>
+                                <p>
+                                    La suspension est confirmée. Cet arrêté (
+                                    <field name="arrete_id" nolabel="1" class="oe_inline" readonly="1"/>
+                                    ) n'est plus valide.
+                                </p>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- 3. ACTION DE FENÊTRE -->
+    <record id="action_fertilizer_suspend_homologation" model="ir.actions.act_window">
+        <field name="name">Suspensions d'Homologation</field>
+        <field name="res_model">fertilizer.suspend.homologation</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Créer un nouveau dossier pour suspendre une homologation existante.
+            </p>
+        </field>
+    </record>
+
+    <!-- 4. MENU ITEM (À placer sous un menu parent approprié dans menu_views.xml) -->
+    <!-- Exemple d'ajout dans votre fichier menu_views.xml -->
+    <!--
+    <menuitem id="menu_fertilizer_suspend_homologation"
+              name="Suspensions"
+              parent="menu_homologation_parent_configuration" (A adapter)
+              action="action_fertilizer_suspend_homologation"
+              sequence="20"/>
+    -->
+
+</odoo>

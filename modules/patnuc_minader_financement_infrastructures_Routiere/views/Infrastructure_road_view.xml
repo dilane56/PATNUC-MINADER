@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_infrastructure_road_form" model="ir.ui.view">
+            <field name="name">infrastructure.road.form</field>
+            <field name="model">infrastructure.road</field>
+            <field name="arch" type="xml">
+                <form string="Fiche Technique - Route">
+                    <sheet>
+                        <group>
+                            <field name="request_id" readonly="1"/>
+                            <field name="technical_info_date" readonly="1"/>
+                            <group string="Type d'intervention">
+                                <field name="intervention_type" required="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Caractéristiques de la route">
+                                <field name="linear_km"/>
+                                <field name="start_point"/>
+                                <field name="end_point"/>
+                                <field name="slope"/>
+                            </group>
+                            <group string="Environnement">
+                                <field name="villages_served"/>
+                                <field name="soil_type"/>
+                                <field name="traffic"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group string="Conditions techniques">
+                                <field name="hydrology"/>
+                                <field name="environment"/>
+                                <field name="maintenance_needs"/>
+                            </group>
+                        </group>
+                        <footer>
+                            <button string="Enregistrer" type="object" name="action_save_and_close" class="btn-primary"/>
+                            <button string="Annuler" class="btn-secondary" special="cancel"/>
+                        </footer>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        
+        <!-- Vue liste pour les routes -->
+        <record id="view_infrastructure_road_tree" model="ir.ui.view">
+            <field name="name">infrastructure.road.tree</field>
+            <field name="model">infrastructure.road</field>
+            <field name="arch" type="xml">
+                <tree string="Routes">
+                    <field name="intervention_type"/>
+                    <field name="linear_km"/>
+                    <field name="start_point"/>
+                    <field name="end_point"/>
+                    <field name="villages_served"/>
+                    <field name="soil_type"/>
+                </tree>
+            </field>
+        </record>
+        
+        <!-- Action pour le menu -->
+        <record id="action_infrastructure_road" model="ir.actions.act_window">
+            <field name="name">Infrastructure Routière</field>
+            <field name="res_model">infrastructure.road</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Créer une fiche technique d'infrastructure routière
+                </p>
+            </field>
+        </record>
+        
+    </data>
+</odoo>

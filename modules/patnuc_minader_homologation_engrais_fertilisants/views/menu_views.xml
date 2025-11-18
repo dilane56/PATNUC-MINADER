@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_fertilizer_homologation_root" name="Homologation Engrais" 
+        web_icon="patnuc_minader_homologation_engrais_fertilisants,static/description/icon.svg" sequence="10"/>
+    
+    <menuitem id="menu_fertilizer_homologation" name="Demandes d'homologation" 
+              parent="menu_fertilizer_homologation_root" action="action_fertilizer_homologation" sequence="10"/>
+    
+     <!-- 2. Demandes de modification (NOUVEAU) -->
+    <menuitem id="menu_fertilizer_mod_homologation" 
+              name="Demandes de modification" 
+              parent="menu_fertilizer_homologation_root" 
+              action="action_fertilizer_mod_homologation" 
+              sequence="15"/> 
+    
+    <menuitem id="menu_fertilizer_renew_homologation"
+        name="Demandes de renouvellement"
+        parent="menu_fertilizer_homologation_root"
+        action="action_fertilizer_renew_homologation"
+        sequence="16"/>
+
+    <menuitem id="menu_fertilizer_suspend_homologation"
+        name="Demandes de suspension"
+        parent="menu_fertilizer_homologation_root"
+        action="action_fertilizer_suspend_homologation"
+        sequence="16"/>
+    
+    
+    <menuitem id="menu_fertilizer_decrees" 
+              name="Arrêtés délivrés" 
+              parent="menu_fertilizer_homologation_root" 
+              action="action_fertilizer_decree" 
+              sequence="18"/> 
+
+    <menuitem id="menu_fertilizer_products" name="Produits" 
+              parent="menu_fertilizer_homologation_root" action="action_fertilizer_product" sequence="20"/>
+
+    <menuitem id="menu_laboratory_analysis" name="Analyse laboratoire" 
+              parent="menu_fertilizer_homologation_root" action="action_laboratory_analysis" sequence="25"/>
+
+    <menuitem id="menu_field_test" name="Tests agronomiques" 
+              parent="menu_fertilizer_homologation_root" action="action_field_test" sequence="26"/>
+
+    <menuitem id="menu_economic_evaluation" name="Éval. agro-économique" 
+              parent="menu_fertilizer_homologation_root" action="action_economic_evaluation" sequence="27"/>
+    
+    <menuitem id="menu_configuration" name="Configuration" 
+              parent="menu_fertilizer_homologation_root" sequence="30"/>
+    
+    <menuitem id="menu_field_test_locations" name="Sites de test" 
+              parent="menu_configuration" action="action_field_test_location" sequence="10"/>
+</odoo>

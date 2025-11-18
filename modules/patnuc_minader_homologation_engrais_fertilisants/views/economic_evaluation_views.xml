@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    
+    <record id="view_economic_evaluation_form" model="ir.ui.view">
+        <field name="name">economic.evaluation.form</field>
+        <field name="model">economic.evaluation</field>
+        <field name="arch" type="xml">
+            <form>
+                <!-- <header>
+                    <button name="action_complete_evaluation" string="Terminer évaluation" type="object" class="oe_highlight" invisible="state != 'draft'"/>
+                    <field name="state" widget="statusbar"/>
+                </header> -->
+                <sheet>
+                    <group col="4" string="Informations générales">
+                        <group colspan="2">
+                            <field name="name"/>
+                            <field name="homologation_id" options="{'no_create': True}"/>
+                            <field name="product_id" options="{'no_create': True}"/>
+                        </group>
+                        <group colspan="2">
+                            <field name="evaluation_date"/>
+                            <field name="responsible_id"/>
+                            <!-- <field name="state"/> -->
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page col="4" string="Critères d'evaluations">
+<!--                            <group colspan="2">-->
+<!--                                <field name="product_price"/>-->
+<!--                                <field name="application_cost"/>-->
+<!--                                <field name="yield_increase_value"/>-->
+<!--                            </group>-->
+<!--                            <group colspan="2">-->
+<!--                                <field name="net_benefit" readonly="1"/>-->
+<!--                                <field name="benefit_cost_ratio" readonly="1"/>-->
+<!--                                <field name="payback_period"/>-->
+<!--                            </group>-->
+                        </page>
+                        
+                        <page string="Documents">
+                            <group>
+                                <field name="economic_evalutation_report" filename="economic_evalutation_report_filename"/>
+                                <field name="economic_evalutation_report_filename" invisible="1"/>
+                            </group>
+                        </page>
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Enregistrer et fermer" class="oe_highlight" special="save"/>
+                    <button string="Ignorer" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_economic_evaluation_tree" model="ir.ui.view">
+        <field name="name">economic.evaluation.tree</field>
+        <field name="model">economic.evaluation</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="homologation_id"/>
+                <field name="product_id"/>
+                <field name="evaluation_date"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_economic_evaluation" model="ir.actions.act_window">
+        <field name="name">Évaluations Économiques</field>
+        <field name="res_model">economic.evaluation</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

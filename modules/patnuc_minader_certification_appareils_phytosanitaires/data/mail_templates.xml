@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Template de confirmation de soumission -->
+        <record id="phytosanitary_certification_submitted" model="mail.template">
+            <field name="name">Confirmation de soumission - Certification Phytosanitaire</field>
+            <field name="model_id" ref="model_phytosanitary_certification_request"/>
+            <field name="subject">Confirmation de réception - Demande ${object.name}</field>
+            <field name="body_html"><![CDATA[
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Bonjour ${object.partner_id.name},</p>
+                    <p>Nous accusons réception de votre demande de certification pour l'appareil phytosanitaire <strong>${object.equipment_id.name}</strong>.</p>
+                    <p><strong>Numéro de demande:</strong> ${object.name}</p>
+                    <p><strong>Date de soumission:</strong> ${object.submission_date}</p>
+                    <p><strong>Date prévue de traitement:</strong> ${object.expected_completion_date}</p>
+                    <p>Votre dossier sera traité dans les délais réglementaires. Vous recevrez des notifications à chaque étape du processus.</p>
+                    <p>Cordialement,<br/>Direction de la Réglementation des Intrants et Produits Agricoles (DRIPA)</p>
+                </div>
+            ]]></field>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Template de vérification administrative -->
+        <record id="phytosanitary_certification_admin_check" model="mail.template">
+            <field name="name">Vérification Administrative - Certification Phytosanitaire</field>
+            <field name="model_id" ref="model_phytosanitary_certification_request"/>
+            <field name="subject">Vérification administrative en cours - Demande ${object.name}</field>
+            <field name="body_html"><![CDATA[
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Bonjour ${object.partner_id.name},</p>
+                    <p>Votre demande de certification <strong>${object.name}</strong> est actuellement en cours de vérification administrative.</p>
+                    <p>Nos services procèdent à la vérification de la conformité et de la validité des documents fournis.</p>
+                    <p>Délai estimé: 48 heures</p>
+                    <p>Vous serez informé(e) de la suite du processus.</p>
+                    <p>Cordialement,<br/>Service de Réglementation des Intrants</p>
+                </div>
+            ]]></field>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Template d'instruction technique -->
+        <record id="phytosanitary_certification_technical_review" model="mail.template">
+            <field name="name">Instruction Technique - Certification Phytosanitaire</field>
+            <field name="model_id" ref="model_phytosanitary_certification_request"/>
+            <field name="subject">Instruction technique démarrée - Demande ${object.name}</field>
+            <field name="body_html"><![CDATA[
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Bonjour ${object.partner_id.name},</p>
+                    <p>La vérification administrative de votre demande <strong>${object.name}</strong> est terminée avec succès.</p>
+                    <p>Votre dossier est maintenant transmis à nos experts techniques pour instruction approfondie.</p>
+                    <p>Délai estimé: 5 jours ouvrés</p>
+                    <p>Cordialement,<br/>Direction de la Réglementation des Intrants et Produits Agricoles (DRIPA)</p>
+                </div>
+            ]]></field>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Template d'évaluation technique -->
+        <record id="phytosanitary_certification_technical_eval" model="mail.template">
+            <field name="name">Évaluation Technique - Certification Phytosanitaire</field>
+            <field name="model_id" ref="model_phytosanitary_certification_request"/>
+            <field name="subject">Évaluation technique en cours - Demande ${object.name}</field>
+            <field name="body_html"><![CDATA[
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Bonjour ${object.partner_id.name},</p>
+                    <p>L'évaluation technique de votre appareil <strong>${object.equipment_id.name}</strong> a débuté.</p>
+                    <p>Nos experts procèdent à l'analyse des performances, de la sécurité et de la conformité aux normes.</p>
+                    <p>Des tests terrain peuvent être programmés si nécessaire.</p>
+                    <p>Délai estimé: 5 à 10 jours ouvrés</p>
+                    <p>Cordialement,<br/>Service de la Réglementation des Appareils de Traitement (SRAT)</p>
+                </div>
+            ]]></field>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Template de rapport technique -->
+        <record id="phytosanitary_certification_technical_report" model="mail.template">
+            <field name="name">Rapport Technique - Certification Phytosanitaire</field>
+            <field name="model_id" ref="model_phytosanitary_certification_request"/>
+            <field name="subject">Rapport technique finalisé - Demande ${object.name}</field>
+            <field name="body_html"><![CDATA[
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Bonjour ${object.partner_id.name},</p>
+                    <p>Le rapport technique de votre demande <strong>${object.name}</strong> a été finalisé.</p>
+                    <p>L'évaluation technique est terminée et le dossier est transmis pour décision finale.</p>
+                    <p>Délai estimé pour la décision: 3 à 5 jours ouvrés</p>
+                    <p>Cordialement,<br/>Direction de la Réglementation des Intrants et Produits Agricoles (DRIPA)</p>
+                </div>
+            ]]></field>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Template de décision finale -->
+        <record id="phytosanitary_certification_final_decision" model="mail.template">
+            <field name="name">Décision Finale - Certification Phytosanitaire</field>
+            <field name="model_id" ref="model_phytosanitary_certification_request"/>
+            <field name="subject">Décision finale prise - Demande ${object.name}</field>
+            <field name="body_html"><![CDATA[
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Bonjour ${object.partner_id.name},</p>
+                    <p>La décision finale concernant votre demande <strong>${object.name}</strong> a été prise.</p>
+                    <p>Le dossier est en cours de finalisation pour signature officielle.</p>
+                    <p>Vous recevrez prochainement la notification finale avec le certificat.</p>
+                    <p>Cordialement,<br/>Cabinet du MINADER</p>
+                </div>
+            ]]></field>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Template de certificat signé -->
+        <record id="phytosanitary_certification_signed" model="mail.template">
+            <field name="name">Certificat Signé - Certification Phytosanitaire</field>
+            <field name="model_id" ref="model_phytosanitary_certification_request"/>
+            <field name="subject">Certificat signé - Demande ${object.name}</field>
+            <field name="body_html"><![CDATA[
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Bonjour ${object.partner_id.name},</p>
+                    <p>Nous avons le plaisir de vous informer que votre certificat a été signé officiellement.</p>
+                    <p><strong>Numéro de certificat:</strong> ${object.certificate_number}</p>
+                    <p><strong>Validité:</strong> du ${object.certificate_validity_start} au ${object.certificate_validity_end}</p>
+                    <p>La notification officielle avec le certificat vous parviendra sous peu.</p>
+                    <p>Cordialement,<br/>Cabinet du MINADER</p>
+                </div>
+            ]]></field>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Template de notification finale -->
+        <record id="phytosanitary_certification_final_notification" model="mail.template">
+            <field name="name">Notification Finale - Certification Phytosanitaire</field>
+            <field name="model_id" ref="model_phytosanitary_certification_request"/>
+            <field name="subject">Certificat délivré - ${object.certificate_number}</field>
+            <field name="body_html"><![CDATA[
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Bonjour ${object.partner_id.name},</p>
+                    <p>Nous avons l'honneur de vous notifier que votre demande de certification a été approuvée.</p>
+                    <p><strong>Appareil certifié:</strong> ${object.equipment_id.name}</p>
+                    <p><strong>Numéro de certificat:</strong> ${object.certificate_number}</p>
+                    <p><strong>Période de validité:</strong> du ${object.certificate_validity_start} au ${object.certificate_validity_end}</p>
+                    <p>Vous pouvez désormais commercialiser et utiliser cet appareil sur le territoire national.</p>
+                    <p>Le certificat officiel est joint à ce message.</p>
+                    <p>Cordialement,<br/>Ministère de l'Agriculture et du Développement Rural (MINADER)</p>
+                </div>
+            ]]></field>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="auto_delete" eval="True"/>
+            <!-- <field name="report_template" ref="report_certification_certificate"/> -->
+        </record>
+
+        <!-- Template de rejet -->
+        <record id="phytosanitary_certification_rejected" model="mail.template">
+            <field name="name">Demande Rejetée - Certification Phytosanitaire</field>
+            <field name="model_id" ref="model_phytosanitary_certification_request"/>
+            <field name="subject">Demande rejetée - ${object.name}</field>
+            <field name="body_html"><![CDATA[
+                <div style="margin: 0px; padding: 0px;">
+                    <p>Bonjour ${object.partner_id.name},</p>
+                    <p>Nous avons le regret de vous informer que votre demande <strong>${object.name}</strong> a été rejetée.</p>
+                    <p><strong>Motif du rejet:</strong></p>
+                    <p>${object.rejection_reason or 'Non spécifié'}</p>
+                    <p>Pour toute clarification, vous pouvez contacter nos services.</p>
+                    <p>Vous avez la possibilité de soumettre une nouvelle demande après correction des points mentionnés.</p>
+                    <p>Cordialement,<br/>Direction de la Réglementation des Intrants et Produits Agricoles (DRIPA)</p>
+                </div>
+            ]]></field>
+            <field name="email_to">${object.partner_id.email}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

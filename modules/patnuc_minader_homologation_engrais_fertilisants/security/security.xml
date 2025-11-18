@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="module_homologation_engrais_fertilisants" model="ir.module.category">
+            <field name="name">Gestion des Homologations d'Engrais</field>
+            <field name="description">Gestion des Homologation d'Engrais</field>
+        </record>
+
+        <record id="group_fertilizer_homologation_user" model="res.groups">
+            <field name="name">Utilisateur Homologation Engrais</field>
+            <field name="category_id" ref="module_homologation_engrais_fertilisants"/>
+        </record>
+        
+        <!-- (Q) Groupes spécifiques pour chaque étape du workflow -->
+        <record id="group_promoteur_demandeur" model="res.groups">
+            <field name="name">Promoteur/Demandeur</field>
+            <field name="category_id" ref="module_homologation_engrais_fertilisants"/>
+        </record>
+        
+        <record id="group_agent_SRE" model="res.groups">
+            <field name="name">Agent SRE</field>
+            <field name="category_id" ref="module_homologation_engrais_fertilisants"/>
+        </record>
+        
+        <record id="group_agent_LNAD" model="res.groups">
+            <field name="name">Agent LNAD</field>
+            <field name="category_id" ref="module_homologation_engrais_fertilisants"/>
+        </record>
+        
+        <record id="group_agent_SRC" model="res.groups">
+            <field name="name">Agent SRC</field>
+            <field name="category_id" ref="module_homologation_engrais_fertilisants"/>
+        </record>
+        
+        <record id="group_agent_DRCQ" model="res.groups">
+            <field name="name">Agent DRCQ</field>
+            <field name="category_id" ref="module_homologation_engrais_fertilisants"/>
+        </record>
+        
+        <record id="group_agent_CABINET_MINADER" model="res.groups">
+            <field name="name">Agent Cabinet MINADER</field>
+            <field name="category_id" ref="module_homologation_engrais_fertilisants"/>
+        </record>
+        
+        <!-- (Q) Groupe manager avec accès à toutes les étapes -->
+        <record id="group_manager" model="res.groups">
+            <field name="name">Manager Homologation</field>
+            <field name="category_id" ref="module_homologation_engrais_fertilisants"/>
+            <field name="implied_ids" eval="[(4, ref('group_fertilizer_homologation_user'))]"/>
+        </record>
+        
+        <!-- Règles d'accès supplémentaires si nécessaire -->
+    </data>
+</odoo>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+    <!-- Lot : tree -->
+    <record id="view_cert_parcelle_lot_tree" model="ir.ui.view">
+      <field name="name">cert.parcelle.lot.tree</field>
+      <field name="model">certification.parcelle.lot</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="parcelle_id"/>
+          <field name="area"/>
+          <field name="inspections_count"/>
+          <field name="state"/>
+        </tree>
+      </field>
+    </record>
+
+    <!-- Lot : form (Mise à jour avec le workflow et le bouton de certification) -->
+    <record id="view_cert_parcelle_lot_form" model="ir.ui.view">
+      <field name="name">cert.parcelle.lot.form</field>
+      <field name="model">certification.parcelle.lot</field>
+      <field name="arch" type="xml">
+        <form string="Lot de parcelle">
+          <header>
+            <!-- Affiche la barre de statut du workflow -->
+            <field name="state" widget="statusbar" statusbar_visible="draft,in_certification,cancel"/>
+            
+            <!-- Bouton pour passer à l'état Certifié -->
+            <button name="action_certify_lot"
+                    string="Certifier Lot"
+                    type="object"
+                    class="oe_highlight"
+                    invisible="state!= 'draft'"
+            />
+            
+            <button string="Retour à la liste" class="btn-secondary" type="object" name="action_close_and_return"/>
+          </header>
+          <sheet>
+            <group>
+              <field name="name"/>
+              <field name="parcelle_id"/>
+              <field name="area"/>
+            </group>
+            <notebook>
+              <page string="Inspections">
+                <field name="inspection_ids">
+                  <tree editable="bottom">
+                    <field name="name"/>
+                    <field name="inspector_id"/>
+                    <field name="scheduled_date"/>
+                    <field name="state"/>
+                    <field name="conclusion"/>
+                  </tree>
+                </field>
+              </page>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="action_cert_parcelle_lot" model="ir.actions.act_window">
+      <field name="name">Lots Parcelle</field>
+      <field name="res_model">certification.parcelle.lot</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+
+    </data>
+</odoo>

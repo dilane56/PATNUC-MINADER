@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vue formulaire Évaluation Technique -->
+        <record id="view_technical_evaluation_form" model="ir.ui.view">
+            <field name="name">phytosanitary.technical.evaluation.form</field>
+            <field name="model">phytosanitary.technical.evaluation</field>
+            <field name="arch" type="xml">
+                <form string="Évaluation Technique">
+
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" readonly="1"/>
+                            </h1>
+                        </div>
+
+                        <!-- Informations générales -->
+                        <group string="Informations générales">
+                            <group>
+                                <field name="request_id"/>
+                                <field name="equipment_id"/>
+                            </group>
+                            <group>
+                                <field name="evaluator_id"/>
+                                <field name="evaluation_date"/>
+                            </group>
+                        </group>
+
+                        <notebook>
+                            <!-- Critères d’évaluation -->
+                            <page string="Critères d’évaluation" name="criteria">
+                                <group>
+                                    <group>
+                                        <field name="functionality_score"/>
+                                        <field name="safety_score"/>
+                                        <field name="compliance_score"/>
+                                    </group>
+                                    <group>
+                                        <field name="environmental_impact_score"/>
+                                        <field name="durability_score"/>
+                                        <field name="maintenance_score"/>
+                                    </group>
+                                </group>
+                                <group>
+                                    <field name="overall_score" readonly="1" widget="float_progress" options="{'max_field': 100}"/>
+                                </group>
+                            </page>
+
+                            <!-- Évaluation détaillée -->
+                            <page string="Évaluation détaillée" name="details">
+                                <group>
+                                    <group string="Commentaires sur les critères">
+                                        <field name="functionality_comments"/>
+                                        <field name="safety_comments"/>
+                                        <field name="compliance_comments"/>
+                                        <field name="environmental_comments"/>
+                                        <field name="durability_comments"/>
+                                        <field name="maintenance_comments"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <!-- Tests effectués -->
+                            <page string="Tests effectués" name="tests">
+                                <group>
+                                    <group string="Test sur le terrain">
+                                        <field name="field_test_performed"/>
+                                        <field name="field_test_date" invisible="not field_test_performed"/>
+                                        <field name="field_test_results" invisible="not field_test_performed"/>
+                                    </group>
+                                    <group string="Test en laboratoire">
+                                        <field name="laboratory_test_performed"/>
+                                        <field name="laboratory_test_results" invisible="not laboratory_test_performed"/>
+                                    </group>
+                                </group>
+                            </page>
+
+                            <!-- Recommandation finale -->
+                            <page string="Recommandation" name="recommendation">
+                                <group>
+                                    <field name="recommendation"/>
+                                    <field name="conditions" invisible="recommendation != 'conditional'"/>
+                                </group>
+                            </page>
+
+                            <!-- Rapport technique -->
+                            <page string="Rapport technique" name="technical_report">
+                                <group>
+                                    <field name="technical_report" placeholder="Saisissez ici la note d’évaluation technique complète..."/>
+                                    <field name="technical_report_file" filename="technical_report_filename"/>
+                                    <field name="technical_report_filename" invisible="1"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vue liste (Tree) Évaluations Techniques -->
+        <record id="view_technical_evaluation_tree" model="ir.ui.view">
+            <field name="name">phytosanitary.technical.evaluation.tree</field>
+            <field name="model">phytosanitary.technical.evaluation</field>
+            <field name="arch" type="xml">
+                <tree string="Évaluations Techniques">
+                    <field name="name"/>
+                    <field name="request_id"/>
+                    <field name="equipment_id"/>
+                    <field name="evaluator_id"/>
+                    <field name="evaluation_date"/>
+                    <field name="overall_score"/>
+                    <field name="recommendation"/>
+                   
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action vers le modèle -->
+        <record id="action_technical_evaluation" model="ir.actions.act_window">
+            <field name="name">Évaluations Techniques</field>
+            <field name="res_model">phytosanitary.technical.evaluation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Enregistrez vos évaluations techniques ici !
+                </p>
+            </field>
+        </record>
+    </data>
+</odoo>

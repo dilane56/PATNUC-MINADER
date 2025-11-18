@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="certificate_document">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="certificate">
+                <div class="page">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-6 text-center">
+                                <t t-if="certificate.qr_code">
+                                    <img t-att-src="'data:image/png;base64,%s' % certificate.qr_code.decode('utf-8')" 
+                                         style="width: 150px; height: 150px;"/>
+                                    <p><small>Code QR pour vérification</small></p>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col-6">
+                            <div class="text-center">
+                                <p><strong>Validateur Technique</strong></p>
+                                <br/><br/>
+                                <p t-field="certificate.technical_validator_id.name"/>
+                                <hr style="width: 200px;"/>
+                                <p><small>Signature et cachet</small></p>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="text-center">
+                                <p><strong>Directeur DRCQ</strong></p>
+                                <br/><br/>
+                                <p t-field="certificate.final_signatory_id.name"/>
+                                <hr style="width: 200px;"/>
+                                <p><small>Signature et cachet</small></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col-12">
+                            <p style="font-size: 12px; color: #666; text-align: center;">
+                                Ce certificat est délivré dans le cadre du projet PATNUC pour garantir 
+                                la qualité des semences certifiées au Cameroun.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

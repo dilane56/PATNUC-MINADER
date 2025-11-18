@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+    <record id="view_document_preview_wizard_form" model="ir.ui.view">
+        <field name="name">document.preview.wizard.form</field>
+        <field name="model">document.preview.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Prévisualisation du document">
+                <group>
+                    <field name="name" readonly="1"/>
+                    <field name="pdf_data" widget="pdf_viewer" options="{'height': 600}"/>
+                </group>
+                <footer>
+                    <button name="action_open_pdf" string="Ouvrir dans un nouvel onglet" type="object" class="btn-primary"/>
+                    <button string="Fermer" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

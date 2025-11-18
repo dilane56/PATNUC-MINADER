@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue formulaire pour rapport final d'inspection -->
+    <record id="view_inspection_final_report_form" model="ir.ui.view">
+        <field name="name">certification.inspection.final.form</field>
+        <field name="model">certification.inspection.final</field>
+        <field name="arch" type="xml">
+            <form string="Rapport final d'inspection">
+                <header>
+                    <button name="action_save_and_close" string="Sauvegarder et fermer" type="object" class="btn-success"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group col="4">
+                        <group colspan="2" string="Informations générales">
+                            <field name="request_id" readonly="1"/>
+                            <field name="parcelle_id" readonly="1"/>
+                            <field name="created_by" readonly="1"/>
+                            <field name="created_date" readonly="1"/>
+                        </group>
+                        <group colspan="2" string="Statistiques">
+                            <field name="total_inspections" readonly="1"/>
+                            <field name="lots_inspected" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Inspections incluses dans le rapport">
+                        <field name="inspection_ids" widget="many2many_tags" readonly="1"/>
+                    </group>
+                    
+                    <group col="4">
+                        <group colspan="2" string="Synthèse du rapport">
+                            <field name="summary" placeholder="Saisissez votre synthèse du rapport d'inspection..."/>
+                        </group>
+                        <group colspan="2" string="Décision et documents">
+                            <field name="decision" required="1"/>
+                            <field name="final_report" filename="final_report_filename"/>
+                            <field name="final_report_filename" placeholder="Nom du fichier PDF"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vue liste pour rapports finaux -->
+    <record id="view_inspection_final_report_tree" model="ir.ui.view">
+        <field name="name">certification.inspection.final.tree</field>
+        <field name="model">certification.inspection.final</field>
+        <field name="arch" type="xml">
+            <tree string="Rapports finaux d'inspection">
+                <field name="name"/>
+                <field name="request_id"/>
+                <field name="created_by"/>
+                <field name="created_date"/>
+                <field name="decision"/>
+                <field name="total_inspections"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Action pour rapports finaux -->
+    <record id="action_inspection_final_report" model="ir.actions.act_window">
+        <field name="name">Rapports finaux d'inspection</field>
+        <field name="res_model">certification.inspection.final</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>

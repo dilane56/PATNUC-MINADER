@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Séquence pour les demandes de certification -->
+        <record id="seq_certification_request" model="ir.sequence">
+            <field name="name">Demande de Certification</field>
+            <field name="code">certification.request</field>
+            <field name="prefix">CERT-SEM-%(y)s-</field>
+            <field name="padding">5</field>
+        </record>
+        
+        <!-- Séquence pour les certificats -->
+        <record id="seq_certification_certificate" model="ir.sequence">
+            <field name="name">Certificat de Conformité</field>
+            <field name="code">certification.certificate</field>
+            <field name="prefix">CERT-CONF-SEM-%(y)s-</field>
+            <field name="padding">6</field>
+        </record>
+
+        <record id="seq_cert_parcelle_lot" model="ir.sequence">
+          <field name="name">Seq Lots Parcelle</field>
+          <field name="code">certification.parcelle.lot</field>
+          <field name="prefix">LOT-</field>
+          <field name="padding">4</field>
+        </record>
+
+        <record id="seq_cert_inspection" model="ir.sequence">
+          <field name="name">Seq Inspection</field>
+          <field name="code">certification.inspection</field>
+          <field name="prefix">INS-</field>
+          <field name="padding">5</field>
+        </record>
+
+        <record id="seq_cert_prelevement" model="ir.sequence">
+          <field name="name">Echantillonage</field>
+          <field name="code">prelevement.lot.certification</field>
+          <field name="prefix">PRE-LOT-</field>
+          <field name="padding">6</field>
+        </record>
+
+        <record id="seq_cert_inspection_final" model="ir.sequence">
+          <field name="name">Seq Rapport final</field>
+          <field name="code">certification.inspection.final</field>
+          <field name="prefix">RIF-</field>
+          <field name="padding">4</field>
+        </record>
+
+        <record id="seq_operator" model="ir.sequence">
+            <field name="name">Operateur de semences et plants</field>
+            <field name="code">certification.operator</field>
+            <field name="prefix">OPT-SEP-%(y)s-</field>
+            <field name="padding">5</field>
+        </record>
+
+         <!-- Séquence pour les agréments -->
+        <record id="seq_certification_agreement" model="ir.sequence">
+            <field name="name">Agrément Opérateur Semencier</field>
+            <field name="code">certification.agreement</field>
+            <field name="prefix">AGR-SEM-%(y)s-</field>
+            <field name="padding">5</field>
+        </record>
+    </data>
+</odoo>

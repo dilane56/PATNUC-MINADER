@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Régions -->
+        <record id="region_centre" model="minader.region">
+            <field name="name">Centre</field>
+            <field name="code">CE</field>
+        </record>
+        <record id="region_littoral" model="minader.region">
+            <field name="name">Littoral</field>
+            <field name="code">LT</field>
+        </record>
+        <record id="region_ouest" model="minader.region">
+            <field name="name">Ouest</field>
+            <field name="code">OU</field>
+        </record>
+
+        <!-- Exemple de départements -->
+        <record id="departement_mfoundi" model="minader.departement">
+            <field name="name">Mfoundi</field>
+            <field name="code">MF</field>
+            <field name="region_id" ref="region_centre"/>
+        </record>
+        <record id="departement_wouri" model="minader.departement">
+            <field name="name">Wouri</field>
+            <field name="code">WO</field>
+            <field name="region_id" ref="region_littoral"/>
+        </record>
+
+        <!-- Exemple d'arrondissements -->
+        <record id="arrondissement_yaounde1" model="minader.arrondissement">
+            <field name="name">Yaoundé 1er</field>
+            <field name="code">Y1</field>
+            <field name="departement_id" ref="departement_mfoundi"/>
+        </record>
+        <record id="arrondissement_douala1" model="minader.arrondissement">
+            <field name="name">Douala 1er</field>
+            <field name="code">D1</field>
+            <field name="departement_id" ref="departement_wouri"/>
+        </record>
+    </data>
+</odoo>

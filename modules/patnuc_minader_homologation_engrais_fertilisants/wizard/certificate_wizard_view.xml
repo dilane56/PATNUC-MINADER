@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_fertilizer_certificate_wizard_form" model="ir.ui.view">
+        <field name="name">fertilizer.certificate.wizard.form</field>
+        <field name="model">fertilizer.certificate.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="homologation_id" readonly="1"/>
+                    <field name="certificate_signature" filename="certificate_signature_filename" required="1"/>
+                    <field name="certificate_signature_filename" placeholder="Nom du fichier" invisible="1"/>
+                </group>
+                <footer>
+                    <button name="action_sign_certificate" string="Signer le certificat" type="object" class="oe_highlight"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

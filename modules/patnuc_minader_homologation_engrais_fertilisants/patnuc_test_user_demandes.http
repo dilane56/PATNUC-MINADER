@@ -1,0 +1,5 @@
+### Liste des demandes de laissez-passer pour l'utilisateur connecté
+GET http://localhost:8001/api/fertilizer_homologations
+Content-Type: application/json
+Authorization: Bearer 05bd4427592fddd11d32d14fe171831f833536ad
+

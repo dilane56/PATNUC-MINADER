@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Opérateurs de démonstration -->
+        <record id="demo_operator_1" model="certification.operator">
+            <field name="name">Coopérative Agricole du Nord</field>
+            <field name="operator_type">cooperative</field>
+            <field name="professional_card">COOP-001-2024</field>
+            <field name="phone">+237 690 XX XX XX</field>
+            <field name="email">contact@coop-nord.cm</field>
+            <field name="address">Garoua, Région du Nord</field>
+            <field name="state">approved</field>
+        </record>
+        
+        <record id="demo_operator_2" model="certification.operator">
+            <field name="name">Semences du Cameroun SARL</field>
+            <field name="operator_type">company</field>
+            <field name="professional_card">ENT-045-2024</field>
+            <field name="phone">+237 677 XX XX XX</field>
+            <field name="email">info@semences-cameroun.cm</field>
+            <field name="address">Douala, Région du Littoral</field>
+            <field name="state">approved</field>
+        </record>
+        
+        <!-- Sites de production -->
+        <record id="demo_site_1" model="certification.production.site">
+            <field name="name">Site Garoua Est</field>
+            <field name="operator_id" ref="demo_operator_1"/>
+            <field name="location">Garoua, Quartier Est</field>
+            <field name="surface_area">25.5</field>
+            <field name="coordinates">9.3014° N, 13.3978° E</field>
+        </record>
+        
+        <record id="demo_site_2" model="certification.production.site">
+            <field name="name">Exploitation Douala-Bassa</field>
+            <field name="operator_id" ref="demo_operator_2"/>
+            <field name="location">Douala, Zone Bassa</field>
+            <field name="surface_area">15.2</field>
+            <field name="coordinates">4.0511° N, 9.7679° E</field>
+        </record>
+        
+        <!-- Demandes de certification exemple -->
+        <record id="demo_request_1" model="certification.request">
+            <field name="operator_id" ref="demo_operator_1"/>
+            <field name="production_site_id" ref="demo_site_1"/>
+            <field name="seed_variety">Maïs KASSAI</field>
+            <field name="production_area">20.0</field>
+            <field name="seed_origin">Semences de base IRAD</field>
+            <field name="cultivation_plan">Culture pluviale, semis direct, densité 62500 plants/ha</field>
+            <field name="state">field_control</field>
+            <field name="submission_date">2024-06-01 08:00:00</field>
+            <field name="reception_date">2024-06-03 10:30:00</field>
+            <field name="expected_completion_date">2024-07-15</field>
+        </record>
+        
+        <record id="demo_request_2" model="certification.request">
+            <field name="operator_id" ref="demo_operator_2"/>
+            <field name="production_site_id" ref="demo_site_2"/>
+            <field name="seed_variety">Riz NERICA L-14</field>
+            <field name="production_area">12.0</field>
+            <field name="seed_origin">Semences certifiées IRAD</field>
+            <field name="cultivation_plan">Riziculture de bas-fond, repiquage, densité 250000 plants/ha</field>
+            <field name="state">laboratory_analysis</field>
+            <field name="submission_date">2024-05-15 14:00:00</field>
+            <field name="reception_date">2024-05-17 09:15:00</field>
+            <field name="expected_completion_date">2024-07-01</field>
+        </record>
+    </data>
+</odoo>

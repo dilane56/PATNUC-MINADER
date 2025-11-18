@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Ajout dans le portail -->
+        <template id="portal_my_home_menu_certification" name="Portal layout : certification menu entries" inherit_id="portal.portal_breadcrumbs" priority="25">
+            <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+                <li t-if="page_name == 'certification'" t-attf-class="breadcrumb-item #{'active ' if not certification else ''}">
+                    <a t-if="certification" t-attf-href="/my/certifications?{{ keep_query() }}">Certifications</a>
+                    <t t-else="">Certifications</t>
+                </li>
+                <li t-if="certification" class="breadcrumb-item active">
+                    <span t-field="certification.name"/>
+                </li>
+            </xpath>
+        </template>
+
+        <!-- Page liste des certifications -->
+        <template id="portal_my_certifications" name="My Certifications">
+            <t t-call="portal.portal_layout">
+                <t t-set="breadcrumbs_searchbar" t-value="True"/>
+                <t t-call="portal.portal_searchbar">
+                    <t t-set="title">Certifications</t>
+                </t>
+                
+                <div t-if="not certifications" class="alert alert-warning mt-3" role="alert">
+                    Aucune certification trouvée.
+                </div>
+                
+                <div t-if="certifications" class="row mt-3">
+                    <div class="col-12">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Référence</th>
+                                    <th>Appareil</th>
+                                    <th>Date de Soumission</th>
+                                    <th>État</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr t-foreach="certifications" t-as="cert">
+                                    <td>
+                                        <a t-attf-href="/my/certification/#{cert.id}">
+                                            <span t-field="cert.name"/>
+                                        </a>
+                                    </td>
+                                    <td><span t-field="cert.equipment_id.name"/></td>
+                                    <td><span t-field="cert.submission_date"/></td>
+                                    <td>
+                                        <span t-field="cert.state" 
+                                              t-attf-class="badge badge-#{cert.state == 'notified' and 'success' or cert.state == 'rejected' and 'danger' or 'warning'}"/>
+                                    </td>
+                                    <td>
+                                        <a t-attf-href="/my/certification/#{cert.id}" class="btn btn-sm btn-outline-primary">Voir</a>
+                                        <a t-if="cert.certificate_number" 
+                                           t-attf-href="/report/pdf/phytosanitary_certification.certificate_template/#{cert.id}" 
+                                           class="btn btn-sm btn-outline-success">Certificat</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div t-if="pager" class="o_portal_pager text-center">
+                    <t t-call="portal.pager"/>
+                </div>
+            </t>
+        </template>
+
+        <!-- Page détail certification -->
+        <template id="portal_certification_detail" name="Certification Detail">
+            <t t-call="portal.portal_layout">
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>Demande de Certification <span t-field="certification.name"/></h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h5>Informations Générales</h5>
+                                        <p><strong>Appareil:</strong> <span t-field="certification.equipment_id.name"/></p>
+                                        <p><strong>Date de soumission:</strong> <span t-field="certification.submission_date"/></p>
+                                        <p><strong>État:</strong> 
+                                            <span t-field="certification.state" 
+                                                  t-attf-class="badge badge-#{certification.state == 'notified' and 'success' or certification.state == 'rejected' and 'danger' or 'warning'}"/>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6" t-if="certification.certificate_number">
+                                        <h5>Certificat</h5>
+                                        <p><strong>Numéro:</strong> <span t-field="certification.certificate_number"/></p>
+                                        <p><strong>Validité:</strong> 
+                                            <span t-field="certification.certificate_validity_start"/> - 
+                                            <span t-field="certification.certificate_validity_end"/>
+                                        </p>
+                                        <a t-attf-href="/report/pdf/phytosanitary_certification.certificate_template/#{certification.id}" 
+                                           class="btn btn-success">
+                                            <i class="fa fa-download"/> Télécharger le Certificat
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <div class="row mt-4" t-if="certification.rejection_reason">
+                                    <div class="col-12">
+                                        <div class="alert alert-danger">
+                                            <h5>Motif de rejet</h5>
+                                            <p t-field="certification.rejection_reason"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+    </data>
+</odoo>

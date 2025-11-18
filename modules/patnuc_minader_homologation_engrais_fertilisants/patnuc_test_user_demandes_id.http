@@ -1,0 +1,5 @@
+### Détail demande 1
+GET http://localhost:8001/api/fertilizer_homologation/detail/1
+Content-Type: application/json
+Authorization: Bearer 05bd4427592fddd11d32d14fe171831f833536ad
+

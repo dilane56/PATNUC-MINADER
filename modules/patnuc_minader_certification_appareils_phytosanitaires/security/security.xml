@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- GROUPES DE BASE -->
+        
+        <!-- Demandeur / Utilisateur de base -->
+        <record model="res.groups" id="group_phytosanitary_user">
+            <field name="name">Certification Phytosanitaire / 1. Demandeur</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <!-- Agent Global (Pour les droits génériques sur les objets liés) -->
+        <record model="res.groups" id="group_phytosanitary_agent">
+            <field name="name">Certification Phytosanitaire / 2. Agent (Niveau Accès)</field>
+            <field name="implied_ids" eval="[(4, ref('group_phytosanitary_user'))]"/>
+        </record>
+
+        <!-- Manager Global (Pour les droits administratifs et la suppression) -->
+        <record model="res.groups" id="group_phytosanitary_manager">
+            <field name="name">Certification Phytosanitaire / 3. Manager (Niveau Supervision)</field>
+            <field name="implied_ids" eval="[(4, ref('group_phytosanitary_agent'))]"/>
+            <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        </record>
+        
+        <!-- GROUPES SPECIALISES PAR ETAPE (Héritent de Agent ou Manager Global) -->
+        
+        <!-- Agents : N'ont pas le droit de transition vers l'étape suivante, sauf si spécifié (ex: Réception) -->
+        
+        <record model="res.groups" id="group_phytosanitary_agent_reception">
+            <field name="name">Certification Phytosanitaire / Agent Réception</field>
+            <field name="implied_ids" eval="[(4, ref('group_phytosanitary_agent'))]"/>
+        </record>
+        
+        <record model="res.groups" id="group_phytosanitary_agent_instruction">
+            <field name="name">Certification Phytosanitaire / Agent Instruction Technique</field>
+            <field name="implied_ids" eval="[(4, ref('group_phytosanitary_agent'))]"/>
+        </record>
+
+        <record model="res.groups" id="group_phytosanitary_agent_evaluation">
+            <field name="name">Certification Phytosanitaire / Agent Évaluation Technique</field>
+            <field name="implied_ids" eval="[(4, ref('group_phytosanitary_agent'))]"/>
+        </record>
+        
+        <record model="res.groups" id="group_phytosanitary_agent_treatment">
+            <field name="name">Certification Phytosanitaire / Agent Traitement du Dossier</field>
+            <field name="implied_ids" eval="[(4, ref('group_phytosanitary_agent'))]"/>
+        </record>
+        
+        <record model="res.groups" id="group_phytosanitary_agent_cabinet">
+            <field name="name">Certification Phytosanitaire / Personnel Cabinet Ministre (Signature)</field>
+            <field name="implied_ids" eval="[(4, ref('group_phytosanitary_agent'))]"/>
+        </record>
+
+        <!-- Superviseurs : Gèrent les transitions et les retours (pouvoir de 'Manager') -->
+        
+        <record model="res.groups" id="group_phytosanitary_supervisor_instruction">
+            <field name="name">Certification Phytosanitaire / Superviseur Instruction Technique</field>
+            <field name="implied_ids" eval="[(4, ref('group_phytosanitary_manager'))]"/>
+        </record>
+        
+        <record model="res.groups" id="group_phytosanitary_supervisor_evaluation">
+            <field name="name">Certification Phytosanitaire / Superviseur Évaluation Technique</field>
+            <field name="implied_ids" eval="[(4, ref('group_phytosanitary_manager'))]"/>
+        </record>
+        
+        <record model="res.groups" id="group_phytosanitary_supervisor_treatment">
+            <field name="name">Certification Phytosanitaire / Superviseur Traitement Dossier &amp; Décision</field>
+            <field name="implied_ids" eval="[(4, ref('group_phytosanitary_manager'))]"/>
+        </record>
+        
+    </data>
+</odoo>

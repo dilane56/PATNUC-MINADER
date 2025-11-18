@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  erp:
+    build: .
+    ports:
+      - "8006:8069"
+    volumes:
+      - ./modules:/mnt/extra-addons/
+      - ./odoo_dev_conf:/etc/odoo
+      - odoo-data:/var/lib/odoo
+    depends_on:
+      - db
+
+    container_name: patnuc_erp
+
+    #command: odoo -u base
+    #command: odoo scaffold minader_procédure /mnt/extra-addons/
+
+
+    networks:
+      - erpnet
+
+  db:
+    image: postgres:15
+    ports:
+      - "5449:5432"
+    env_file: .env
+    container_name: patnuc_postgres
+    networks:
+      - erpnet
+
+networks:
+  erpnet:
+    driver: bridge
+
+volumes:
+  odoo-data:

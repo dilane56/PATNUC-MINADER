@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<odoo>
+
+    <data >
+        <!-- Vue formulaire des documents d'infrastructure -->
+         <record id="view_infrastructure_document_form" model="ir.ui.view">
+            <field name="name">infrastructure.document.form</field>
+            <field name="model">infrastructure.document</field>
+            <field name="arch" type="xml">
+                <form string="Document de Financement d'Infrastructure">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="request_id" readonly="1"/>
+                                <field name="support_id" readonly="1"/>
+                                <field name="document_type"/>
+                                <field name="name"/>
+                                <field name="is_required" readonly="1"/>
+                                <field name="state" widget="statusbar" statusbar_visible="draft,submitted,approved,rejected"/>
+                            </group>
+                            <group>
+                                <field name="file_data" filename="file_name"/>
+                                <field name="file_name" invisible="1"/>
+                                <field name="is_provided" readonly="1"/>
+                            </group>
+                        </group>
+                        <group string="Métadonnées">
+                            <group>
+                                <field name="uploaded_by" readonly="1"/>
+                                <field name="upload_date" readonly="1"/>
+                            </group>
+                        </group>
+                        <group string="État">
+                            <field name="state" widget="radio" options="{'horizontal': true}"/>
+                        </group>
+                    </sheet>
+                    <footer>
+                        <button name="action_submitted" string="Soumettre" type="object" class="btn-primary" invisible="state != 'draft'"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vue liste des documents d'infrastructure -->
+        <record id="view_infrastructure_document_tree" model="ir.ui.view">
+            <field name="name">infrastructure.document.tree</field>
+            <field name="model">infrastructure.document</field>
+            <field name="arch" type="xml">
+                <tree string="Documents d'Infrastructure">
+                    <field name="request_id"/>
+                    <field name="document_type"/>
+                    <field name="name"/>
+                    <field name="is_required"/>
+                    <field name="is_provided" decoration-success="is_provided == True"/>
+                    <field name="state" widget="badge"/>
+                    <field name="upload_date"/>
+                    <field name="uploaded_by"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Action pour les documents d'infrastructure -->
+        <record id="action_infrastructure_document" model="ir.actions.act_window">
+            <field name="name">Documents d'Infrastructure</field>
+            <field name="res_model">infrastructure.document</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Enregistrez vos documents de demande de financement ici !
+                </p>
+            </field>
+        </record> 
+
+    </data>
+</odoo>

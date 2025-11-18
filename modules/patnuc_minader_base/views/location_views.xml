@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Vue des Régions -->
+        <record id="view_minader_region_tree" model="ir.ui.view">
+            <field name="name">minader.region.tree</field>
+            <field name="model">minader.region</field>
+            <field name="arch" type="xml">
+                <tree string="Régions">
+                    <field name="name"/>
+                    <field name="code"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_minader_region_form" model="ir.ui.view">
+            <field name="name">minader.region.form</field>
+            <field name="model">minader.region</field>
+            <field name="arch" type="xml">
+                <form string="Région">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                        </group>
+                        <notebook>
+                            <page string="Départements">
+                                <field name="departement_ids">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="code"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vue des Départements -->
+        <record id="view_minader_departement_tree" model="ir.ui.view">
+            <field name="name">minader.departement.tree</field>
+            <field name="model">minader.departement</field>
+            <field name="arch" type="xml">
+                <tree string="Départements">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="region_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_minader_departement_form" model="ir.ui.view">
+            <field name="name">minader.departement.form</field>
+            <field name="model">minader.departement</field>
+            <field name="arch" type="xml">
+                <form string="Département">
+                    <sheet>
+                        <group>
+                            <field name="region_id"/>
+                            <field name="name"/>
+                            <field name="code"/>
+                        </group>
+                        <notebook>
+                            <page string="Arrondissements">
+                                <field name="arrondissement_ids">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="code"/>
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Vue des Arrondissements -->
+        <record id="view_minader_arrondissement_tree" model="ir.ui.view">
+            <field name="name">minader.arrondissement.tree</field>
+            <field name="model">minader.arrondissement</field>
+            <field name="arch" type="xml">
+                <tree string="Arrondissements">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="departement_id"/>
+                    <field name="region_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_minader_arrondissement_form" model="ir.ui.view">
+            <field name="name">minader.arrondissement.form</field>
+            <field name="model">minader.arrondissement</field>
+            <field name="arch" type="xml">
+                <form string="Arrondissement">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="departement_id"/>
+                            <field name="region_id" readonly="1"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Actions -->
+        <record id="action_minader_region" model="ir.actions.act_window">
+            <field name="name">Régions</field>
+            <field name="res_model">minader.region</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_minader_departement" model="ir.actions.act_window">
+            <field name="name">Départements</field>
+            <field name="res_model">minader.departement</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <record id="action_minader_arrondissement" model="ir.actions.act_window">
+            <field name="name">Arrondissements</field>
+            <field name="res_model">minader.arrondissement</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <!-- Menu principal -->
+        <menuitem id="menu_minader_base_root" name="MINADER Base" sequence="10"/>
+
+        <menuitem id="menu_minader_location" name="Zones administratives" parent="menu_minader_base_root"/>
+
+        <menuitem id="menu_minader_region" name="Régions" parent="menu_minader_location" action="action_minader_region"/>
+        <menuitem id="menu_minader_departement" name="Départements" parent="menu_minader_location" action="action_minader_departement"/>
+        <menuitem id="menu_minader_arrondissement" name="Arrondissements" parent="menu_minader_location" action="action_minader_arrondissement"/>
+
+    </data>
+</odoo>

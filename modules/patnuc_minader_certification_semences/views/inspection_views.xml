@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <record id="view_cert_inspection_tree" model="ir.ui.view">
+      <field name="name">cert.inspection.tree</field>
+      <field name="model">certification.inspection</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="lot_id"/>
+          <field name="inspector_id"/>
+          <field name="scheduled_date"/>
+          <field name="state"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="view_cert_inspection_form" model="ir.ui.view">
+      <field name="name">cert.inspection.form</field>
+      <field name="model">certification.inspection</field>
+      <field name="arch" type="xml">
+        <form string="Inspection de lot">
+          <header>
+            <button string="Démarrer" type="object" name="action_start" class="btn-primary"
+                    invisible="state != 'draft'"/>
+            <button string="Terminer" type="object" name="action_done" class="btn-success"
+                    invisible="state != 'in_progress'"/>
+<!--            <button string="retour a l'etat precedant" invisible="state != 'done'" type="object" name="action_back_to_previous_state" class="btn-warning"/>-->
+            <button string="Annuler" type="object" name="action_cancel" class="btn-secondary"
+                   invisible="state == 'done'"/>
+            <button string="Retour à la liste" class="btn-secondary" type="object" name="action_close_and_return"/>
+            <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
+          </header>
+          <sheet>
+            <group>
+              <field name="name" readonly="1"/>
+              <field name="lot_id" readonly="1"/>
+              <field name="parcelle_id" readonly="1"/>
+            </group>
+            <group>
+              <field name="scheduled_date" readonly="state !='in_progress'"/>
+              <field name="inspection_date" readonly="state !='in_progress'"/>
+              <field name="visit_stage" readonly="state !='in_progress'"/>
+              <field name="inspector_id" readonly="state !='in_progress'"/>
+            </group>
+            <group>
+              <field name="gps_coords" readonly="state !='in_progress'"/>
+              <field name="report_attachment" filename="report_filename" readonly="state !='in_progress'"/>
+              <field name="report_filename" invisible="1"/>
+            </group>
+            <group>
+              <field name="observations" readonly="state !='in_progress'"/>
+              <field name="problems" readonly="state !='in_progress'"/>
+              <field name="recommendation" readonly="state !='in_progress'"/>
+              <field name="conclusion" readonly="state !='in_progress'"/>
+              <field name="report_signed_by_farmer" readonly="state !='in_progress'"/>
+            </group>
+          </sheet>
+          <footer>
+            <button string="Retour à la liste" class="oe_highlight btn-secondary" special="cancel"/>
+          </footer>
+        </form>
+      </field>
+    </record>
+
+       <record id="action_cert_inspection" model="ir.actions.act_window">
+      <field name="name">Inspections</field>
+      <field name="res_model">certification.inspection</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+    </data>
+</odoo>

@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+      <!-- Vue formulaire des demandes de certification -->
+      <record id="view_certification_request_form" model="ir.ui.view">
+          <field name="name">phytosanitary.certification.request.form</field>
+          <field name="model">phytosanitary.certification.request</field>
+          <field name="arch" type="xml">
+              <form string="Demande de Certification">
+                   <header>
+                    <!-- BOUTONS D'AVANCEMENT : Réservé aux Agents/Superviseurs selon l'étape -->
+                    <button name="action_submit" type="object" string="Soumettre" invisible="state != 'draft'" class="btn-primary"/>
+                    
+                    <!-- Réception -> Instruction Technique : Réservé à l'Agent de Réception -->
+                    <button name="action_reception" type="object" string="passer a l'instruction technique" 
+                            invisible="state != 'reception' or not (official_request_letter_verified and homologation_certificate_verified and import_agreement_copy_verified and identity_document_copy_verified)" 
+                            class="btn-primary" 
+                            groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_agent_reception"/>
+
+                    <!-- Instruction Technique -> Évaluation Technique : Réservé au Superviseur d'Instruction -->
+                    <button name="action_technical_evaluation" type="object" string="passer a l'Évaluation Technique" 
+                            invisible="state != 'technical_review'" class="btn-primary" 
+                            groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_supervisor_instruction"/>
+                    
+                    <!-- Lancer Evaluation Technique (peut être fait par un Agent d'Instruction Technique) -->
+                    <button name="action_launch_technical_evaluation" type="object" string="lancer evaluation technique" 
+                            invisible="state != 'technical_eval' or bool(technical_evaluation_id)" class="btn-primary" 
+                            groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_agent_instruction"/>
+                    
+                    <!-- Evaluation Technique -> Traitement Dossier : Réservé au Superviseur d'Évaluation -->
+                    <button name="action_check_admin" type="object" string="passer au Traitement du dossier" 
+                            invisible="state != 'technical_eval' or not bool(technical_evaluation_id)" class="btn-primary" 
+                            groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_supervisor_evaluation"/>
+                    
+                    <!-- Traitement Dossier -> Décision Finale : Réservé au Superviseur Traitement -->
+                    <button name="action_final_decision" type="object" string="passer a la decision finale" 
+                            invisible="state != 'admin_check'" class="btn-primary" 
+                            groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_supervisor_treatment"/>
+                    
+                    <!-- Décision Finale : Réservé au Superviseur Traitement -->
+                    <button name="action_approve_decision" type="object" string="Approuver Décision" 
+                            invisible="state != 'final_decision'" class="btn-success" 
+                            groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_supervisor_treatment"/>
+                    <button name="action_reject" type="object" string="Rejeter" 
+                            invisible="state not in ['final_decision']" class="btn-danger" 
+                            groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_supervisor_treatment"/>
+                            
+                    <!-- Signature : Réservé au Personnel Cabinet Ministre (Agent Cabinet) -->
+                    <button name="action_confirm_signed" type="object" string="Confirmer la signature de l'arêté" 
+                            invisible="state != 'certificate_signed' or not is_signed" class="btn-primary" 
+                            groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_agent_cabinet"/>
+                    
+                    
+                    <!-- Réservés au Superviseur Traitement (autorité maximale) -->
+                    
+                    <!-- Retour depuis reception vers draft -->
+                    <button name="action_return_to_draft" type="object" string="Retour au dépôt" class="btn-warning" 
+                            invisible="state != 'reception'" 
+                            groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_agent_reception"/>
+                    
+                    <!-- Retour depuis technical_review vers reception -->
+                    <button name="action_return_to_reception" type="object" string="Retour à la Réception" class="btn-warning" 
+                            invisible="state != 'technical_review'" 
+                            groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_supervisor_instruction"/>
+
+                    <!-- Retour depuis technical_eval vers technical_review -->
+                    <button name="action_return_to_technical_review" type="object" string="Retour à l'Instruction" class="btn-warning" 
+                            invisible="state != 'technical_eval'" 
+                            groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_supervisor_evaluation"/>
+                    
+                    <!-- Retour depuis admin_check vers technical_eval -->
+                    <button name="action_return_to_technical_eval" type="object" string="Retour aux Évaluations" class="btn-warning" 
+                            invisible="state != 'admin_check'" 
+                            groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_supervisor_treatment"/>
+
+                    <!-- Retour depuis final_decision vers admin_check -->
+                    <button name="action_return_to_admin_check" type="object" string="Retour au Traitement" class="btn-warning" 
+                            invisible="state != 'final_decision'" 
+                            groups="patnuc_minader_certification_appareils_phytosanitaires.group_phytosanitary_supervisor_treatment"/>
+                    
+                    <field name="state" widget="statusbar" statusbar_visible="draft,reception,technical_review,technical_eval,admin_check,final_decision,certificate_signed,approved,rejected" statusbar_colors="{'rejected':'red'}"/>
+                </header>
+                  <sheet>
+                      <div class="oe_button_box" name="button_box">
+                          <button class="oe_stat_button" type="object" name="action_view_documents" icon="fa-files-o">
+                              <field string="Documents" name="document_ids" widget="statinfo"/>
+                          </button>
+                      </div>
+                      <div class="oe_title">
+                          <h1>
+                              <field name="name" readonly="1"/>
+                          </h1>
+                      </div>
+                      <group>
+                          <group name="main_info">
+                              <field name="user_id" options="{'no_create': True, 'no_edit': True}" readonly="state != 'draft'"/>
+                              <field name="legal_representative" readonly="state != 'draft'"/>
+                              <field name="equipment_id" options="{'no_create': True}" readonly="state != 'draft'"/>
+                              <field name="submission_date" readonly="1"/>
+                          </group>
+                          <group name="status_info">
+                              
+                              <field name="technical_evaluation_id" invisible="1"/>
+                              <field name="is_signed" invisible="1"/>
+                          </group>
+                      </group>
+                      <notebook>
+                        <page string="Documents requis" name="documents">
+                            <!-- Adaptation à la structure 'group' et 'preview_document' pour l'alignement en ligne -->
+                            <group style="display:flex; flex-direction: column ">
+                                
+                                <!-- Document 1 : official_request_letter -->
+                                <label string="Lettre de demande officielle" for="official_request_letter"/>
+                                <group style="display:flex; ">
+                                    <field name="official_request_letter" filename="official_request_letter_filename" readonly="state != 'draft'" nolabel="1"/>
+                                    <field name="official_request_letter_filename" readonly="1" invisible="1" />
+                                    <button name="preview_document" 
+                                            string="Prévisualiser" 
+                                            type="object" 
+                                            class="btn-link col-md-2" 
+                                            context="{'document_field': 'official_request_letter'}" 
+                                            invisible="not official_request_letter" 
+                                            style="display:inline;"/>
+                                </group>
+                                
+                                <!-- Document 2 : homologation_certificate -->
+                                <label string="Certificat d'homologation" for="homologation_certificate"/>
+                                <group style="display:flex; ">
+                                    <field name="homologation_certificate" filename="homologation_certificate_filename" readonly="state != 'draft'" nolabel="1"/>
+                                    <field name="homologation_certificate_filename" readonly="1" invisible="1"/>
+                                    <button name="preview_document" 
+                                            string="Prévisualiser" 
+                                            type="object" 
+                                            class="btn-link col-md-2" 
+                                            context="{'document_field': 'homologation_certificate'}" 
+                                            invisible="not homologation_certificate" 
+                                            style="display:inline;"/>
+                                </group>
+                                
+                                <!-- Document 3 : import_agreement_copy -->
+                                <label string="Copie de l'accord d'importation" for="import_agreement_copy"/>
+                                <group style="display:flex; ">
+                                    <field name="import_agreement_copy" filename="import_agreement_copy_filename" readonly="state != 'draft'" nolabel="1"/>
+                                    <field name="import_agreement_copy_filename" readonly="1" invisible="1"/>
+                                    <button name="preview_document" 
+                                            string="Prévisualiser" 
+                                            type="object" 
+                                            class="btn-link col-md-2" 
+                                            context="{'document_field': 'import_agreement_copy'}" 
+                                            invisible="not import_agreement_copy" 
+                                            style="display:inline;"/>
+                                </group>
+                                
+                                <!-- Document 4 : identity_document_copy -->
+                                <label string="Copie du document d'identité" for="identity_document_copy"/>
+                                <group style="display:flex; ">
+                                    <field name="identity_document_copy" filename="identity_document_copy_filename" readonly="state != 'draft'" nolabel="1"/>
+                                    <field name="identity_document_copy_filename" readonly="1" invisible="1"/>
+                                    <button name="preview_document" 
+                                            string="Prévisualiser" 
+                                            type="object" 
+                                            class="btn-link col-md-2" 
+                                            context="{'document_field': 'identity_document_copy'}" 
+                                            invisible="not identity_document_copy" 
+                                            style="display:inline;"/>
+                                </group>
+                                
+                                <!-- Document 5 : invoice_payment_cert_atp -->
+                                <label string="Facture de paiement/Certificat ATP" for="invoice_payment_cert_atp"/>
+                                <group style="display:flex; ">
+                                    <field name="invoice_payment_cert_atp" filename="invoice_payment_cert_atp_filename" readonly="state != 'draft'" nolabel="1"/>
+                                    <field name="invoice_payment_cert_atp_filename" readonly="1" invisible="1"/>
+                                    <button name="preview_document" 
+                                            string="Prévisualiser" 
+                                            type="object" 
+                                            class="btn-link col-md-2" 
+                                            context="{'document_field': 'invoice_payment_cert_atp'}" 
+                                            invisible="not invoice_payment_cert_atp" 
+                                            style="display:inline;"/>
+                                </group>
+                            </group>
+                            <!-- Fin de la modification -->
+                        </page>
+
+
+                        <page string="Reception du dossier" name="reception" invisible="state in ['draft']">
+                            <group>
+                                <group string="Vérification des documents" invisible="state != 'reception'">
+                                    <field name="official_request_letter_verified"/>
+                                    <field name="homologation_certificate_verified"/>
+                                    <field name="import_agreement_copy_verified"/>
+                                    <field name="identity_document_copy_verified"/>
+                                    <field name="invoice_payment_copy_verified"/>  
+                                </group>
+                                <group string="Informations" invisible="state == 'reception'">
+                                    <field name="official_request_letter_verified" readonly="1"/>
+                                    <field name="homologation_certificate_verified" readonly="1"/>
+                                    <field name="import_agreement_copy_verified" readonly="1"/>
+                                    <field name="identity_document_copy_verified" readonly="1"/>
+                                    <field name="invoice_payment_copy_verified" readonly="1"/>  
+                                    <field name="reception_agent" readonly="1"/>
+                                    <field name="reception_date" readonly="1"/>
+                                </group>
+                                
+                                <field name="admin_verification_comment" placeholder="Commentaire obligatoire pour passer à l'étape suivante..." readonly="state != 'reception'" nolabel="1"/>
+                            </group>
+                        </page>
+
+                        <page string="Instruction Technique" name="technical_instruction" invisible="state in ['draft', 'reception']">
+                            <group>
+                                <group string="Instruction Technique" invisible="state != 'technical_review'" >
+                                    <field name="technical_instruction_note" placeholder="Saisir la note d'instruction technique..."/> 
+                                    <field name="technical_instruction_doc" filename="technical_instruction_doc_filename"  readonly="state != 'technical_review'"
+                                    string="Rapport d'instruction technique"/>
+                                    <field name="technical_instruction_doc_filename" invisible="1"/> 
+
+                                </group>
+                                <group string="Informations" invisible="state == 'technical_review'">
+                                    <field name="technical_instruction_note" readonly="1"/>
+                                    <field name="technical_instruction_doc" filename="technical_instruction_doc_filename" readonly="1"/>
+                                    <field name="technical_instruction_doc_filename" invisible="1"/> 
+                                    <field name="instruction_technical_agent" readonly="1"/>
+                                    <field name="instruction_technical_date" readonly="1"/>
+                                </group>
+                            </group>
+                        </page>
+
+                        <page string="Évaluations" name="evaluations" invisible="state in ['draft', 'reception', 'technical_review']">
+                            <group>
+                                <group string="Rapport Technique" invisible="state!='technical_eval or bool(technical_evaluation_id)'">
+                                    <field name="technical_report" placeholder="Saisir la note d'evaluation technique..." readonly="1" />
+                                    <field name="tech_eval_report_file" filename="tech_eval_report_filename" readonly="1"/>
+                                    <field name="tech_eval_report_filename" invisible="1"/>
+                                </group>
+                                <group string="Informations" invisible="state=='technical_eval or or bool(technical_evaluation_id)'">
+                                    <field name="technical_report" readonly="1" />
+                                    <field name="tech_eval_report_file" filename="tech_eval_report_filename" readonly="1"/>
+                                    <field name="tech_eval_report_filename" invisible="1"/>
+                                    <field name="evaluator_id" readonly="1"/>
+                                    <field name="evaluation_date" readonly="1"/>
+                                    <field name="overall_score" readonly="1"/>
+                                    <field name="technical_evaluation_id" readonly="1"/>
+                                </group>
+                                
+                            </group>
+                        </page>
+
+                        <page string="Traitement du dossier" name="admin_check" invisible="state in ['draft', 'reception', 'technical_review', 'technical_eval']">
+                            <group >
+
+                                <group string="Vérification du dossier " invisible="state!='admin_check'">
+                                    <field name="conformite_official_request_letter_verified"/>
+                                    <field name="conformite_homologation_certificate_verified"/>
+                                    <field name="conformite_import_agreement_copy_verified"/>
+                                    <field name="conformite_identity_document_copy_verified"/>
+                                    <field name="conformite_invoice_payment_copy_verified"/>
+                                    <field name="conformite_technical_report_verified"/>
+                                    <field name="conformite_technical_eval_report_verified"/>   
+                                </group>
+
+                                <group string="Note de conformité du dossier" invisible="state!='admin_check'">
+                                    <field name="note_conformite" placeholder="Saisir la note de conformité du dossier..." readonly="state != 'admin_check'" />
+                                    <field name="conformite_report" filename="conformite_report_filename" readonly="state != 'admin_check'" string ="Rapport de conformité du dossier"/>
+                                    <field name="conformite_report_filename" invisible="1"/>
+                                </group>
+                                <group string="Informations" invisible="state=='admin_check'" >
+                                    <field name="conformite_official_request_letter_verified" readonly="1"/>
+                                    <field name="conformite_homologation_certificate_verified" readonly="1"/>
+                                    <field name="conformite_import_agreement_copy_verified" readonly="1"/>
+                                    <field name="conformite_identity_document_copy_verified" readonly="1"/>
+                                    <field name="conformite_invoice_payment_copy_verified" readonly="1"/>
+                                    <field name="conformite_technical_report_verified" readonly="1"/>
+                                    <field name="conformite_technical_eval_report_verified" readonly="1"/> 
+                                    <field name="note_conformite" readonly="1"/>
+                                    <field name="conformite_report" filename="conformite_report_filename" readonly="1" string ="Rapport de conformité du dossier"/>
+                                    <field name="conformite_report_filename" invisible="1"/>
+                                    <field name="conformite_agent" readonly="1"/>
+                                    <field name="conformite_date" readonly="1"/>
+                                </group>
+                            </group>
+                            
+                        </page>
+                        
+                        <page string="Décision finale" name="final_decision" invisible="state in ['draft','reception','technical_review','technical_eval','admin_check']">
+                            <group>     
+                                <group string="Documents d'approbation" invisible="state!='final_decision'">        
+                                <field name="certificat_delivr_report" placeholder="Saisir la note de décision finale..." readonly="state != 'final_decision'" />
+                                <field name="certificat_deliv" filename="certificat_deliv_filename" readonly="state != 'final_decision'" string=" Certificat délivré"/>
+                                <field name="certificat_deliv_filename" invisible="1"/>
+                                <field name="reception_pv" filename="reception_pv_filename" readonly="state != 'final_decision'" string="PV de reception"/>
+                                <field name="reception_pv_filename" invisible="1"/>      
+                            </group>   
+                            <group string="Informations" invisible="state=='final_decision'">        
+                                <field name="certificat_delivr_report"  readonly="1" />
+                                <field name="certificat_deliv" filename="certificat_deliv_filename" readonly="1" string=" Certificat délivré"/>
+                                <field name="certificat_deliv_filename" invisible="1"/>
+                                <field name="reception_pv" filename="reception_pv_filename" readonly="1" string="PV de reception"/>
+                                <field name="reception_pv_filename" invisible="1"/>   
+                                <field name="decision_agent" readonly="1"/>
+                                <field name="decision_date" readonly="1"/>   
+                            </group>
+                                   
+                            </group>
+                        </page>
+
+                        <page string="Insertion du certificat signé par le Ministre" name="signature" invisible="state not in ['certificate_signed','approved','notified']">
+                             <group string="Certificat signé par le Ministre" invisible="state!='certificate_signed'">
+                                    <field name="certificat_signed" filename="certificat_signed_filename" readonly="state != 'certificate_signed'" string="Certificat signé par le Ministre"/>
+                                    <field name="certificat_signed_filename" invisible="1"/>
+                            </group>
+                            <group string="Informations supplementaires sur la verification" invisible="state=='certificate_signed'">
+                                    <field name="certificat_signed" filename="certificat_signed_filename" readonly="1" string="Certificat signé par le Ministre"/>
+                                    <field name="certificat_signed_filename" invisible="1"/>
+                                    <field name="signature_agent" readonly="1"/>
+                                    <field name="signature_date" readonly="1"/>
+                                </group>
+                         
+                        </page>
+
+                        <page string="Rejet" name="rejection" invisible="state != 'rejected'">
+                            <field name="rejection_reason" readonly="1"/>
+                        </page>
+                    </notebook>
+                  </sheet>
+                  <div class="oe_chatter">
+                      <field name="message_follower_ids"/>
+                      <field name="activity_ids"/>
+                      <field name="message_ids"/>
+                  </div>
+              </form>
+          </field>
+      </record>
+
+      <record id="certification_request_view_tree" model="ir.ui.view">
+        <field name="name">phytosanitary.certification.request.view.tree</field>
+        <field name="model">phytosanitary.certification.request</field>
+        <field name="arch" type="xml">
+            <tree string="Demandes de Certification">
+                
+                <field name="user_id" />
+                <field name="legal_representative"/>
+                <field name="equipment_id"/> 
+                <field name="state" 
+                    widget="badge"
+                    decoration-success="state in ('approved', 'notified', 'certificate_signed')" 
+                    decoration-warning="state in ('final_decision','technical_eval', 'admin_check')" 
+                    decoration-info="state in ('technical_review', 'reception')" 
+                    decoration-danger="state == 'rejected'"/>         
+            </tree>
+                </field>
+    </record>
+
+      <record id="action_certification_request" model="ir.actions.act_window">
+        <field name="name">Demande de Certification</field>
+        <field name="res_model">phytosanitary.certification.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Déposer votre demande de certification d'un appareil phytosanitaire
+            </p>
+        </field>
+      </record>
+    
+  </data>
+</odoo>
+        

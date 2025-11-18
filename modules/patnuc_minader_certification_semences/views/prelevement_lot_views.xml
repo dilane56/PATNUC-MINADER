@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <data>
+
+        <!-- Vue Liste (Tree) pour les analyses de prélèvement -->
+        <record id="view_prelevement_lot_certification_tree" model="ir.ui.view">
+            <field name="name">prelevement.lot.certification.tree</field>
+            <field name="model">prelevement.lot.certification</field>
+            <field name="arch" type="xml">
+                <tree string="Analyses de Prélèvement">
+                    <field name="name"/>
+                    <field name="request_id"/>
+                    <field name="lot_id"/>
+                    <field name="analysis_date"/>
+                    <field name="analyste_lot_id"/>
+                    <field name="result" decoration-success="result == 'compliant'" 
+                           decoration-danger="result == 'non_compliant'"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <!-- Vue Formulaire pour l'analyse de prélèvement -->
+        <record id="view_prelevement_lot_certification_form" model="ir.ui.view">
+            <field name="name">prelevement.lot.certification.form</field>
+            <field name="model">prelevement.lot.certification</field>
+            <field name="arch" type="xml">
+                <form string="Analyse de Prélèvement de Lot">
+                    <header>
+                        <!-- Boutons du Workflow -->
+                        <button string="Démarrer l'Analyse" type="object" name="action_start" class="btn-primary"
+                                invisible="state != 'draft'"/>
+                        <button string="Terminer l'Analyse" type="object" name="action_complete" class="btn-success"
+                                invisible="state != 'in_progress'"
+                                confirm="Confirmez-vous que tous les résultats et le rapport sont prêts pour finaliser cette analyse de lot ?"/>
+                        <button string="Annuler" type="object" name="action_cancel" class="btn-secondary"
+                                invisible="state in ('done', 'cancel')"/>
+                        <button string="Remettre en Planifiée" type="object" name="action_draft" class="btn-warning"
+                                invisible="state != 'cancel'"/>
+                        
+                        <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1><field name="name" readonly="1"/></h1>
+                        </div>
+                        
+                        <!-- Informations de base (Lecture seule) -->
+                        <group string="Références">
+                            <group>
+                                <field name="request_id" readonly="1" options="{'no_open': True}"/>
+                                <field name="lot_id" readonly="1" options="{'no_open': True}"/>
+                            </group>
+                            <group>
+                                <field name="analyse_id" readonly="1" options="{'no_open': True}" string="Analyse Globale"/>
+                                <field name="analyste_lot_id" readonly="state != 'draft'"/>
+                            </group>
+                        </group>
+                        
+                        <group string="Chronologie et Rapport">
+                            <group>
+                                <field name="analysis_date" readonly="state != 'in_progress'"/>
+                                <field name="sequence" readonly="1" string="Numéro Séquentiel"/>
+                            </group>
+                            <group>
+                                <field name="lot_analysis_report" filename="lot_analysis_report_filename" 
+                                       readonly="state != 'in_progress'"/>
+                                <field name="lot_analysis_report_filename" invisible="1"/>
+                            </group>
+                        </group>
+
+                        <separator string="Résultats et Conformité des Tests"/>
+                        
+                        <!-- Tests réalisés et Taux mesurés -->
+                        <group col="4">
+                            <group string="Tests Qualité">
+                                <field name="germination_test" readonly="state != 'in_progress'"/>
+                                <field name="humidity_test" readonly="state != 'in_progress'"/>
+                                <field name="purity_test" readonly="state != 'in_progress'"/>
+                                <field name="varietal_purity" readonly="state != 'in_progress'"/>
+                            </group>
+                            <group string="Taux Mesurés (%)">
+                                <field name="germination_rate" readonly="state != 'in_progress'"/>
+                                <field name="humidity_rate" readonly="state != 'in_progress'"/>
+                                <field name="purity_rate" readonly="state != 'in_progress'"/>
+                                <field name="varietal_purity_rate" readonly="state != 'in_progress'"/>
+                            </group>
+                        </group>
+                        
+                        <group>
+                             <field name="result" 
+                                    readonly="state != 'in_progress'" 
+                                    required="state == 'in_progress'"
+                                    decoration-success="result == 'compliant'" 
+                                    decoration-danger="result == 'non_compliant'"/>
+                        </group>
+                        
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <!-- Action pour les analyses de prélèvement -->
+        <record id="action_prelevement_lot_certification" model="ir.actions.act_window">
+            <field name="name">Analyses de Prélèvement de Lots</field>
+            <field name="res_model">prelevement.lot.certification</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+    </data>
+</odoo>

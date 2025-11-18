@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_field_test_tree" model="ir.ui.view">
+        <field name="name">field.test.tree</field>
+        <field name="model">field.test</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="homologation_id"/>
+                <field name="product_id"/>
+                <field name="start_date"/>
+                <field name="state"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_field_test_form" model="ir.ui.view">
+        <field name="name">field.test.form</field>
+        <field name="model">field.test</field>
+        <field name="arch" type="xml">
+            <form>
+                <!-- <header>
+                    <button name="action_start_test" string="Démarrer test" type="object" class="oe_highlight" invisible="state != 'draft'" />
+                    <button name="action_complete_test" string="Terminer test" type="object" class="oe_highlight" invisible="state != 'in_progress'"/>
+                    <field name="state" widget="statusbar"/>
+                </header> -->
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="homologation_id" options="{'no_create': True}"/>
+                            <field name="product_id" options="{'no_create': True}"/>
+                        </group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="responsible_id"/>
+                            <!-- <field name="state"/> -->
+                        </group>
+                    </group>
+                    
+                    <notebook>
+
+                        
+<!--                        <page string="Résultats">-->
+<!--                            <group>-->
+<!--                                <field name="yield_increase"/>-->
+<!--                                <field name="quality_improvement"/>-->
+<!--                                <field name="soil_impact"/>-->
+<!--                                <field name="plant_health"/>-->
+<!--                                <field name="observations"/>-->
+<!--                            </group>-->
+<!--                        </page>-->
+                        
+                        <page string="Documents">
+                            <group>
+                                <field name="test_results_file" filename="test_results_filename"/>
+                                <field name="test_results_filename" placeholder="Nom du fichier" invisible="1"/>
+                                <field name="agronomic_test_report" filename="agronomic_test_report_filename"/>
+                                <field name="agronomic_test_report_filename" placeholder="Nom du fichier" invisible="1"/>
+                            </group>
+                        </page>
+
+                    </notebook>
+                </sheet>
+                <footer>
+                    <button string="Enregistrer et fermer" class="oe_highlight" special="save"/>
+                    <button string="Ignorer" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_field_test" model="ir.actions.act_window">
+        <field name="name">Tests en Champ</field>
+        <field name="res_model">field.test</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <record id="view_field_test_location_tree" model="ir.ui.view">
+        <field name="name">field.test.location.tree</field>
+        <field name="model">field.test.location</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="region"/>
+                <field name="soil_type"/>
+                <field name="climate_zone"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_field_test_location_form" model="ir.ui.view">
+        <field name="name">field.test.location.form</field>
+        <field name="model">field.test.location</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="region"/>
+                        <field name="soil_type"/>
+                        <field name="climate_zone"/>
+                        <field name="coordinates"/>
+                        <field name="description"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_field_test_location" model="ir.actions.act_window">
+        <field name="name">Sites de Test</field>
+        <field name="res_model">field.test.location</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+</odoo>
