@@ -6,7 +6,11 @@
     
     <menuitem id="menu_certification_agreements" name="Agréments" 
               parent="menu_certification_root" action="action_certification_agreement" sequence="20"/>
-              
+
+    <menuitem id="menu_certification_operator" name="Opérateurs" 
+              parent="menu_certification_root" action="action_certification_operator" sequence="21"/>          
+    
+    
     <!-- Menu Demandes -->
     <menuitem id="menu_certification_requests" name="Demandes" parent="menu_certification_root" sequence="10"/>
     <menuitem id="menu_certification_request_all" name="Toutes les demandes" 
@@ -31,6 +35,7 @@
     
     
     
+    
     <!-- Menu Certificats -->
     <menuitem id="menu_certification_certificates" name="Certificats" parent="menu_certification_root" sequence="40"/>
     <menuitem id="menu_certification_certificate_all" name="Tous les certificats" 
@@ -51,4 +56,9 @@
     <menuitem id="menu_cert_inspection" parent="menu_certification_controls" name="Inspections" action="action_cert_inspection"/>
     <menuitem id="menu_cert_lots" parent="menu_certification_controls" name="Lots Parcelle" action="action_cert_parcelle_lot"/>
     <menuitem id="menu_cert_reports" parent="menu_certification_controls" name="Rapports finaux" action="action_inspection_final_report"/>
+
+
+    <!-- Menu Étiquetage -->
+    <menuitem id="menu_labelling_requests" name="Demandes Étiquetage" 
+              parent="menu_certification_root" action="action_labelling_request" sequence="45"/>
 </odoo>

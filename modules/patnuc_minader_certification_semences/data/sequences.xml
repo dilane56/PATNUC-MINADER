@@ -46,6 +46,13 @@
           <field name="padding">4</field>
         </record>
 
+        <record id="seq_operator" model="ir.sequence">
+            <field name="name">Operateur de semences et plants</field>
+            <field name="code">certification.operator</field>
+            <field name="prefix">OPT-SEP-%(y)s-</field>
+            <field name="padding">5</field>
+        </record>
+
          <!-- Séquence pour les agréments -->
         <record id="seq_certification_agreement" model="ir.sequence">
             <field name="name">Agrément Opérateur Semencier</field>

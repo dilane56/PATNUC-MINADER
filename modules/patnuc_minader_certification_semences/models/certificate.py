@@ -10,7 +10,7 @@ class Certificate(models.Model):
                       default=lambda self: self.env['ir.sequence'].next_by_code('certification.certificate'))
     
     request_id = fields.Many2one('certification.request', string='Demande', required=True)
-    operator_id = fields.Many2one('res.partner', string='Opérateur', required=True)
+    operator_id = fields.Many2one('certification.operator', string='Opérateur', required=True)
     
     # Dates
     issue_date = fields.Date('Date d\'émission', required=True, default=fields.Date.today)

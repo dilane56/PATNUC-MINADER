@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from odoo import http
+from odoo import http, fields
 from odoo.http import request
 from odoo.tools import config
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, AccessError , UserError
 import json
 import logging
 import base64
@@ -45,6 +45,95 @@ class CertificationSemencesController(http.Controller):
             'Access-Control-Allow-Headers': 'Origin, Content-Type, Accept, Authorization',
             'Access-Control-Allow-Credentials': 'true'
         }
+    
+    @http.route('/api/certification_request/download/<int:procedure_id>', type='http', auth='none', methods=['POST', 'OPTIONS'], csrf=False)
+    def get_files_final(self,procedure_id, **kwargs):
+        cors_headers = self._cors_headers()
+
+        # 1. Réponse à la requête préflight (OPTIONS)
+        if request.httprequest.method == 'OPTIONS':
+            return request.make_response('', headers=cors_headers)
+
+        try:
+            # 2. Vérification du token JWT et authentification de l'utilisateur
+            auth_header = request.httprequest.headers.get('Authorization')
+            if not auth_header or not auth_header.startswith('Bearer '):
+                return self._make_json_response({
+                    "success": False,
+                    "message": "Token manquant ou mal formé",
+                    "code": 401
+                }, status=401)
+
+            token = auth_header.split(" ")[1]
+            payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+            user_id = payload.get("user_id")
+            
+            # Utiliser .env(user=user) pour que toutes les opérations Odoo se fassent en tant que cet utilisateur
+            user = request.env['res.users'].sudo().browse(user_id)
+            if not user.exists():
+                return self._make_json_response({
+                    "success": False,
+                    "message": "Utilisateur introuvable",
+                    "code": 404
+                }, status=404)
+            
+            request.env =  request.env(user=user)
+            # 
+            procedure = request.env['certification.request'].sudo().search([
+                ('id', '=', procedure_id),
+                ('user_id', '=', user_id) # S'assurer que seul le demandeur peut télécharger
+            ], limit=1)
+            #check procedure 
+            if not procedure:
+                return self._make_json_response({
+                    "success": False,
+                    "message": "Demande de certification introuvable ou non autorisée.",
+                    "code": 404
+                }, status=404)
+            authorized_states = ['labelling', 'approved']
+            if procedure.state not in authorized_states:
+                return self._make_json_response({
+                    "success": False,
+                    "message": f"Le certificat n'est pas encore disponible pour le téléchargement. État actuel: {procedure.state}",
+                    "code": 400
+                }, status=400)
+            #load files 
+            file_data_b64 = procedure.certificat_document
+            file_name = procedure.certificat_document_filename
+
+            if not file_data_b64 or not file_name:
+                return self._make_json_response({
+                    "success": False,
+                    "message": "Le certificat signé n'a pas encore été attaché au dossier.",
+                    "code": 404
+                }, status=404)
+            # download file 
+            file_content = base64.b64decode(file_data_b64)
+            
+            response = request.make_response(
+                file_content,
+                headers=[
+                    ('Content-Type', 'application/pdf'),
+                    ('Content-Disposition', 'attachment; filename="%s"' % file_name),
+                ]
+            )
+            
+            return response
+            
+        except jwt.ExpiredSignatureError:
+            return self._make_json_response({"success": False, "message": "Token expiré.", "code": 401}, status=401)
+        except jwt.InvalidTokenError:
+            return self._make_json_response({"success": False, "message": "Token invalide.", "code": 401}, status=401)
+        except AccessError as ae:
+            _logger.warning("Erreur d'accès lors du téléchargement: %s", str(ae))
+            return self._make_json_response({"success": False, "error": "Accès non autorisé.", "code": 403}, status=403)
+        except Exception as e:
+            _logger.error("Erreur serveur lors du téléchargement du certificat : %s", str(e))
+            return self._make_json_response({
+                "success": False,
+                "error": f"Erreur serveur interne : {str(e)}",
+                "code": 500
+            }, status=500)
 
 
     @http.route('/api/certification_request/create', type='http', auth='none', methods=['POST', 'OPTIONS'], csrf=False)
@@ -77,13 +166,42 @@ class CertificationSemencesController(http.Controller):
             
             # Utilisation de l'environnement avec l'utilisateur authentifié
             request.env = request.env(user=user)
-            operator_partner_id = user.partner_id.id
+            #recuperation de l'operateur rattaché a l'utilisateur effectuant la demande 
+            operator_partner_id = request.env['certification.operator'].sudo().search([
+                ('user_id', '=', user.id),
+                ('actif', '=', True) 
+            ], limit=1)
+
+           
+            if not operator_partner_id : 
+                return self._make_json_response({
+                    "success": False,
+                    "message": "Cet utilisateur n'est pas rattaché a un opérateur agrée"
+                }, status=401)
+            
+            # verifie si operateur agrée
+
+            today = fields.Date.today()
+            agreement = request.env['certification.agreement'].sudo().search([
+                ('operator_id', '=', operator_partner_id.id),
+                ('state', '=', 'active'),
+                ('expiry_date', '>=', today)
+            ], limit=1)
+
+            if not agreement:
+                return self._make_json_response({
+                    "success": False,
+                    "message": "Aucun agrément actif trouvé pour cet opérateur. Impossible de continuer."
+                }, status=401)
+
+
+            # verifier si l'utilisateur est un operateur habilité 
             data = request.params
 
             # --- 2. Préparation des données de la Parcelle ---
-            parcelle_required_fields = ['espece', 'variete', 'categorie', 'production_attendue', 'origine_semence_mere']
+            parcelle_required_fields = ['espece', 'variete', 'categorie', 'production_attendue']
             parcelle_data = {
-                'operator_id': operator_partner_id,
+                'operator_id': operator_partner_id.id,
                 'espece': data.get('espece'),
                 'variete': data.get('variete'),
                 'categorie': data.get('categorie'),
@@ -91,10 +209,11 @@ class CertificationSemencesController(http.Controller):
                 'quantite_semences_meres': float(data.get('quantite_semences_meres', 0.0)),
                 'type_semence_mere': data.get('type_semence_mere'),
                 'production_attendue': float(data.get('production_attendue', 0.0)),
-                'origine_semence_mere': data.get('origine_semence_mere'),
-                'numero_facture': data.get('numero_facture'),
-                'date_facture': data.get('date_facture'),
-                'numero_etiquette': data.get('numero_etiquette'),
+                'region_id': int(data.get('region_id')),
+                'departement_id': int(data.get('departement_id')),
+                'arrondissement_id': int(data.get('arrondissement_id')),
+                'localite_id': data.get('localite_id'),
+               
             }
 
             missing_parcelle_fields = [f for f in parcelle_required_fields if not parcelle_data.get(f)]
@@ -109,7 +228,7 @@ class CertificationSemencesController(http.Controller):
             parcelle_record = request.env['certification.parcelle'].sudo().create(parcelle_data)
 
             # --- 4. Préparation des données de la Demande de Certification ---
-            request_required_fields = ['departement_id', 'arrondissement_id', 'localite_id', 'agricole_campain', 'encadrement_structure']
+            request_required_fields = ['agricole_campain', 'encadrement_structure']
             file_fields = {
                 'declaration_activite_semenciere_timbre': 'declaration_activite_semenciere_timbre_filename',
                 'redevance_semenciere_payement_receipt': 'redevance_semenciere_payement_receipt_filename',
@@ -121,12 +240,9 @@ class CertificationSemencesController(http.Controller):
                 raise UserError(f"Fichiers manquants : {', '.join(missing_files)}")
 
             request_vals = {
-                'operator_id': operator_partner_id,
+                'operator_id': operator_partner_id.id,
                 'parcelle_id': parcelle_record.id,
-                'region_id': data.get('region_id'),
-                'departement_id': data.get('departement_id'),
-                'arrondissement_id': data.get('arrondissement_id'),
-                'localite_id': data.get('localite_id'),
+                
                 'agricole_campain': data.get('agricole_campain'),
                 'encadrement_structure': data.get('encadrement_structure'),
             }
@@ -217,13 +333,16 @@ class CertificationSemencesController(http.Controller):
                 return response
 
             # ID du partenaire de l'utilisateur (le champ Many2one operator_id pointe vers res.partner)
-            operator_partner_id = user.partner_id.id
+            operator_partner_id = request.env['certification.operator'].sudo().search([
+                ('user_id', '=', user.id),
+                ('actif', '=', True) 
+            ], limit=1)
             
             requests_list = []
             
             # --- 2. FILTRE CORRIGÉ : Utilisation de operator_id ---
             requests_records = request.env['certification.request'].sudo().search([
-                ('operator_id', '=', operator_partner_id)
+                ('operator_id', '=', operator_partner_id.id)
             ], order='create_date desc')
 
             for rec in requests_records:
@@ -292,13 +411,16 @@ class CertificationSemencesController(http.Controller):
                 return response
 
             # ID du partenaire de l'utilisateur
-            operator_partner_id = user.partner_id.id
+            operator_partner_id = request.env['certification.operator'].sudo().search([
+                ('user_id', '=', user.id),
+                ('actif', '=', True) 
+            ], limit=1)
 
             # On filtre par l'ID de l'utilisateur qui fait la requête (sécurité)
             rec = request.env['certification.request'].sudo().search([
                 ('id', '=', request_id),
                 # --- FILTRE CORRIGÉ : Utilisation de operator_id ---
-                ('operator_id', '=', operator_partner_id) 
+                ('operator_id', '=', operator_partner_id.id) 
             ], limit=1)
             
             if not rec.exists():
@@ -316,7 +438,6 @@ class CertificationSemencesController(http.Controller):
                 'operator': rec.operator_id.name if rec.operator_id else '',
                 'parcelle_reference': rec.parcelle_id.parcelle_name if rec.parcelle_id else '',
                 'variete_semence': rec.parcelle_variete,
-                'origine_semence': rec.parcelle_origine,
                 'plan_culture': rec.agricole_campain,
                 'superficie': rec.parcelle_superficie,
                 'etat': rec.state,

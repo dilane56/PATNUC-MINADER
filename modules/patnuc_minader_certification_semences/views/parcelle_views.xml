@@ -46,24 +46,18 @@
                     <separator string="Traçabilité et Origine de la Semence Mère"/>
                     <group>
                         <group>
-                             <field name="region_id" />
+                           
+                            <field name="region_id" />
                             <field name="departement_id" domain="[('region_id', '=', region_id)]" />
                             <field name="arrondissement_id" domain="[('departement_id', '=', departement_id)]" />
                             <field name="localite_id" />
-                            <field name="origine_semence_mere" />
-
+                    
                         </group>
-                        <group>
-                            <field name="numero_facture"/>
-                            <field name="date_facture"/>
-                            <field name="numero_etiquette"/>
-                        </group>
+                        
                     </group>
 
                     <group string="Informations supplementaire">
                         <field name="operator_id" />
-                          <field name="agricole_campain" />
-                            <field name="encadrement_structure" />
                         <field name="request_id" readonly="1"/>
                     </group>
 

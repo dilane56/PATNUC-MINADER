@@ -42,6 +42,8 @@
         'views/technical_review_views.xml',
         'views/agreement_views.xml',
         'views/prelevement_lot_views.xml',
+        'views/operator_views.xml',
+        'views/labelling_request_views.xml',
         
         'views/menu_views.xml',
         'security/ir.model.access.csv',
@@ -56,7 +58,7 @@
         #reports
         'reports/certificate_report.xml',
         'reports/certificate_template.xml',
-
+        'reports/labels_report.xml',
         
         
     ],

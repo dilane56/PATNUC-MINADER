@@ -49,7 +49,7 @@ class SeedOperatorAgreement(models.Model):
     )
     
     # Lien vers l'opérateur (référence de l'opérateur/producteur)
-    operator_id = fields.Many2one('res.partner', string='Opérateur',required=True, tracking=True)
+    operator_id = fields.Many2one('certification.operator', string='Opérateur',required=True, tracking=True)
     # Fichier d'agrément uploadé depuis le frontend React
     agreement_file = fields.Binary(
         string='Fichier d\'agrément',
@@ -204,7 +204,7 @@ class SeedOperatorAgreement(models.Model):
             'context': {'dialog_size': 'large'},
         }
     
-    """
+    
     @api.model
     def _cron_check_expiring_agreements(self):
       
@@ -286,7 +286,7 @@ class SeedOperatorAgreement(models.Model):
         return True
     
     #  méthode qui personnalise la façon dont un enregistrement d'agrément s’affiche
-    """
+    
     def name_get(self):
         """Personnalisation de l'affichage du nom"""
         result = []

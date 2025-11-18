@@ -10,6 +10,7 @@
           <field name="name"/>
           <field name="lot_id"/>
           <field name="inspector_id"/>
+          <field name="scheduled_date"/>
           <field name="state"/>
         </tree>
       </field>
@@ -28,6 +29,7 @@
 <!--            <button string="retour a l'etat precedant" invisible="state != 'done'" type="object" name="action_back_to_previous_state" class="btn-warning"/>-->
             <button string="Annuler" type="object" name="action_cancel" class="btn-secondary"
                    invisible="state == 'done'"/>
+            <button string="Retour à la liste" class="btn-secondary" type="object" name="action_close_and_return"/>
             <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,done"/>
           </header>
           <sheet>
@@ -36,69 +38,24 @@
               <field name="lot_id" readonly="1"/>
               <field name="parcelle_id" readonly="1"/>
             </group>
-            <group string="Informations Générales">
-              <group>
-                 <field name="inspection_date" readonly="state !='in_progress'"/>
-                <field name="visit_stage" readonly="state !='in_progress'"/>
-                <field name="inspector_id" readonly="state !='in_progress'"/>
-                  <field name="inspector_code" readonly="state !='in_progress'"/>
-                <field name="multiplacator_name" readonly="state !='in_progress'"/>
-                <field name="addresse" readonly="state !='in_progress'"/>
-              </group>
-              <group>
-                <field name="seed_buyer" readonly="state !='in_progress'"/>
-                <field name="lot_number_attribution" readonly="state !='in_progress'"/>
-                <field name="support_structure" readonly="state !='in_progress'"/>
-                <field name="gps_coordinates" readonly="state !='in_progress'"/>
-                <field name="is_pancarte_implanted" widget="radio" options="{'horizontal': true}" readonly="state !='in_progress'"/>
-              </group>
-
+            <group>
+              <field name="scheduled_date" readonly="state !='in_progress'"/>
+              <field name="inspection_date" readonly="state !='in_progress'"/>
+              <field name="visit_stage" readonly="state !='in_progress'"/>
+              <field name="inspector_id" readonly="state !='in_progress'"/>
             </group>
-            <group string="Informations sur le lot">
-              <group>
-                 <field name="espece" readonly="state !='in_progress'" />
-                <field name="variety" readonly="state !='in_progress'"/>
-                <field name="category" readonly="state !='in_progress'" />
-                <field name="mother_seed_source" readonly="state !='in_progress'"/>
-                <field name="is_mother_seed_certified" widget="radio" options="{'horizontal': true}"/>
-              </group>
-              <group>
-
-                 <field name="region" readonly="state !='in_progress'"/>
-                <field name="departement" readonly="state !='in_progress'"/>
-                <field name="arrondissement" readonly="state !='in_progress'"/>
-                <field name="inspected_area" widget="float_time" readonly="state !='in_progress'"/>
-              <field name="seeding_date" readonly="state !='in_progress'"/>
-              <field name="estimated_harvest_date" readonly="state !='in_progress'"/>
-              <field name="estimated_yield" readonly="state !='in_progress'"/>
-              </group>
-
+            <group>
+              <field name="gps_coords" readonly="state !='in_progress'"/>
+              <field name="report_attachment" filename="report_filename" readonly="state !='in_progress'"/>
+              <field name="report_filename" invisible="1"/>
             </group>
-
-
-             <group string="Observations détaillées de l'Inspecteur" >
-               <group>
-                 <field name="isolation_status" widget="radio" options="{'horizontal': true}"/>
-                 <field name="culture_maintenance_status"/>
-                 <field name="multiplicator_present" widget="radio" options="{'horizontal': true}"/>
-               </group>
-               <group>
-                 <field name="dangerous_weeds_names"/>
-                 <field name="seed_transmissible_diseases_names"/>
-                 <field name="non_transmissible_diseases_names"/>
-               </group>
-             </group>
-
-            <group string="Suivi, Recomendations et Conclusion">
-              <field name="is_last_inspection" widget="radio" options="{'horizontal': true}"/>
-              <field name="next_inspection_date" invisible="is_last_inspection=='oui'"/>
+            <group>
+              <field name="observations" readonly="state !='in_progress'"/>
+              <field name="problems" readonly="state !='in_progress'"/>
               <field name="recommendation" readonly="state !='in_progress'"/>
               <field name="conclusion" readonly="state !='in_progress'"/>
               <field name="report_signed_by_farmer" readonly="state !='in_progress'"/>
-               <field name="report_attachment" filename="report_filename" readonly="state !='in_progress'"/>
-              <field name="report_filename" invisible="1"/>
             </group>
-
           </sheet>
           <footer>
             <button string="Retour à la liste" class="oe_highlight btn-secondary" special="cancel"/>

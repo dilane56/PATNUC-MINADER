@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Vue formulaire -->
+    <record id="view_labelling_request_form" model="ir.ui.view">
+        <field name="name">labelling.request.form</field>
+        <field name="model">labelling.request</field>
+        <field name="arch" type="xml">
+            <form string="Demande d'Étiquetage">
+                <header>
+                    <button name="action_submit" type="object" string="Soumettre" 
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_next_label" type="object" string="passer a l'etiquettage" 
+                            class="btn-success" invisible="state != 'in_progress'"/>
+                    <button name="action_complete" type="object" string="Générer étiquettes et terminer" 
+                            class="btn-primary" invisible="state != 'completed'"/>
+                    <button name="action_reject" type="object" string="Annuler" 
+                            class="btn-danger" invisible="state in ['draft', 'completed', 'canceled']"/>
+                    
+                    <field name="state" widget="statusbar" statusbar_visible="draft,in_progress,completed,canceled"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group name="certification_info">
+                            <field name="certification_request_id" readonly="state != 'draft'"/>
+                            <field name="selected_lot_id" readonly="state != 'draft'" options="{'no_create': True}"/>
+                            <field name="parcelle_id" readonly="1"/>
+                            <field name="operator_name" readonly="1"/>
+                            <field name="submission_date" readonly="1" invisible="not submission_date"/>
+                            <field name="completion_date" readonly="1" invisible="not completion_date"/>
+                        </group>
+                        
+                        <group name="location_info">
+                            <field name="region_id" readonly="1"/>
+                            <field name="departement_id" readonly="1"/>
+                            <field name="arrondissement_id" readonly="1"/>
+                            <field name="localite_id" readonly="1"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <group name="seed_info">
+                            <field name="variete_semence" readonly="1"/>
+                            <field name="categorie" readonly="1"/>
+                            <field name="campagne" readonly="1"/>
+                            <!-- <field name="production" readonly="1"/> -->
+
+                        </group>
+                                
+                        <group name="production_info">
+                            <field name="production_tonne" readonly="1"/>
+                            <field name="superficie" readonly="1"/>
+                            <field name="traitement_chimique" readonly="state != 'draft'"/>
+                            <field name="label_type" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Lots certifiés">
+                            <field name="selected_lot_display_ids" readonly="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="area" string="Superficie (ha)"/>
+                                    <field name="inspections_count" string="Nb Inspections"/>
+                                    <field name="parcelle_id" string="Parcelle"/>
+                                    <field name="request_id" string="Demande"/>
+                                    <field name="sequence" string="N°"/>
+                                    <field name="state" widget="badge" decoration-success="state == 'in_certification'"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <page string="Demande d'étiquetage">
+                            <!-- À l'état draft : seulement les conditionnements -->
+                            <separator string="Conditionnements" invisible="state != 'draft'"/>
+                            <field name="packaging_ids" nolabel="1" invisible="state != 'draft'" colspan="2">
+                                <tree editable="bottom" create="true" delete="true">
+                                    <field name="packaging_weight" string="Poids du conditionnement (kg)" width="200px"/>
+                                    <field name="quantity_packages" string="Nombre d'étiquete" width="200px"/>
+                                    <field name="total_weight" string="Poids total (kg)" readonly="1" width="150px"/>
+                                </tree>
+                            </field>
+                            
+                            <!-- À l'état in_progress : tous les groupes d'infos -->
+                            <group invisible="state != 'in_progress'">
+                                <group name="labelling_details">
+                                    <field name="production_lot_kg" readonly="state != 'in_progress'"/>
+                                    <field name="total_packaging_weight" readonly="1"/>
+                                    <field name="nombre_etiquettes" readonly="1"/>
+                                </group>
+                            </group>
+                            
+                            <separator string="Conditionnements" invisible="state != 'in_progress'"/>
+                            <field name="packaging_ids" nolabel="1" invisible="state != 'in_progress'" colspan="2">
+                                <tree editable="bottom" create="true" delete="true">
+                                    <field name="packaging_weight" string="Poids du conditionnement (kg)" width="200px"/>
+                                    <field name="quantity_packages" string="Nombre d'étiquete" width="200px"/>
+                                    <field name="total_weight" string="Poids total (kg)" readonly="1" width="150px"/>
+                                </tree>
+                            </field>
+                            
+                            <!-- À l'état completed : affichage readonly -->
+                            <group invisible="state != 'completed'">
+                                <group name="labelling_details">
+                                    <field name="production_lot_kg" readonly="1"/>
+                                    <field name="total_packaging_weight" readonly="1"/>
+                                    <field name="nombre_etiquettes" readonly="1"/>
+                                </group>
+                            </group>
+                            
+                            <separator string="Conditionnements" invisible="state != 'completed'"/>
+                            <field name="packaging_ids" nolabel="1" readonly="1" invisible="state != 'completed'" colspan="2">
+                                <tree>
+                                    <field name="packaging_weight" string="Poids du conditionnement (kg)" width="200px"/>
+                                    <field name="quantity_packages" string="Nombre de conditionnements" width="200px"/>
+                                    <field name="total_weight" string="Poids total (kg)" width="150px"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <page string="Étiquettes générées" invisible="state not in ['completed']">
+                            <div class="row mb-3">
+                                <div class="col-6">
+                                    <span><strong>Total : </strong><field name="labels_count" readonly="1"/> étiquettes générées</span>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <button name="action_print_labels" type="object" string="Imprimer les étiquettes" class="btn-primary" icon="fa-print"/>
+                                </div>
+                            </div>
+                            <field name="label_ids" readonly="1">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="lot_name"/>
+                                    <field name="espece"/>
+                                    <field name="variete"/>
+                                    <field name="poids_lot"/>
+                                    <field name="poids_net"/>
+                                    <field name="lieu_production"/>
+                                    <field name="annee_production"/>
+                                    <field name="traitement_chimique"/>
+                                    <field name="nom_producteur"/>
+                                    <field name="code_inspecteur"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    
+    <!-- Vue liste -->
+    <record id="view_labelling_request_tree" model="ir.ui.view">
+        <field name="name">labelling.request.tree</field>
+        <field name="model">labelling.request</field>
+        <field name="arch" type="xml">
+            <tree string="Demandes d'Étiquetage">
+                <field name="name"/>
+                <field name="operator_name"/>
+                <field name="variete_semence"/>
+                <field name="total_packaging_weight" string="Poids total (kg)"/>
+                <field name="nombre_etiquettes"/>
+                <field name="label_type"/>
+                <field name="submission_date"/>
+                <field name="state" widget="badge" 
+                       decoration-success="state == 'completed'" 
+                       decoration-warning="state in ['draft', 'in_progress']" 
+                       decoration-danger="state == 'canceled'"/>
+            </tree>
+        </field>
+    </record>
+    
+    <!-- Vue recherche -->
+    <record id="view_labelling_request_search" model="ir.ui.view">
+        <field name="name">labelling.request.search</field>
+        <field name="model">labelling.request</field>
+        <field name="arch" type="xml">
+            <search string="Rechercher Demandes d'Étiquetage">
+                <field name="name"/>
+                <field name="operator_name"/>
+                <field name="variete_semence"/>
+                <field name="certification_request_id"/>
+                
+                <separator/>
+                <filter name="draft" string="Brouillon" domain="[('state', '=', 'draft')]"/>
+                <filter name="in_progress" string="En cours" domain="[('state', '=', 'in_progress')]"/>
+                <filter name="completed" string="Terminées" domain="[('state', '=', 'completed')]"/>
+                <filter name="canceled" string="Annulées" domain="[('state', '=', 'canceled')]"/>
+                
+                <group expand="0" string="Grouper par">
+                    <filter name="group_state" string="État" context="{'group_by': 'state'}"/>
+                    <filter name="group_operator" string="Producteur" context="{'group_by': 'operator_name'}"/>
+                    <filter name="group_variety" string="Variété" context="{'group_by': 'variete_semence'}"/>
+                    <filter name="group_date" string="Date de soumission" context="{'group_by': 'submission_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+    
+    <!-- Action -->
+    <record id="action_labelling_request" model="ir.actions.act_window">
+        <field name="name">Demandes d'Étiquetage</field>
+        <field name="res_model">labelling.request</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="view_labelling_request_tree"/>
+        <field name="search_view_id" ref="view_labelling_request_search"/>
+    </record>
+
+</odoo> 
+
+
