@@ -12,8 +12,3 @@ from . import inspection_final_report
 from . import pacelle_lot
 from . import agreement
 from . import prelevement_lot
-from . import operator
-from . import labelling_request
-from .import labelling_packaging
-from . import labelling_label
-

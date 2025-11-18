@@ -9,7 +9,7 @@ class CertificationParcelle(models.Model):
     _order = 'espece, variete'
     
     # Relation avec l'opérateur
-    operator_id = fields.Many2one('certification.operator', string='Opérateur/proprietaire',
+    operator_id = fields.Many2one('res.partner', string='Opérateur/proprietaire',
                                  required=True, ondelete='cascade')
     
     # Relation optionnelle avec une demande (quand la parcelle est utilisée)
@@ -17,6 +17,16 @@ class CertificationParcelle(models.Model):
                                 ondelete='set null')
     parcelle_name = fields.Char(string='Référence', copy=False, readonly=True,
                       default=lambda self: self.env['ir.sequence'].next_by_code('certification.parcelle'))
+
+    # Informations de localisation
+    region_id = fields.Many2one("minader.region", string="Région")
+    departement_id = fields.Many2one("minader.departement", string="Département", required=True)
+    arrondissement_id = fields.Many2one("minader.arrondissement", string="Arrondissement", required=True)
+    localite_id = fields.Char(string="Localité", required=True)
+
+    # Informations complémentaires
+    agricole_campain = fields.Char(string="Campagne agricole", required=True)
+    encadrement_structure = fields.Char(string="Structure d'encadrement et/ou d'appui", required=True)
     
     # Champs de la déclaration de culture semencière
     espece = fields.Selection([
@@ -181,14 +191,16 @@ class CertificationParcelle(models.Model):
                                      help='En tonnes pour semences sèches, en nombre de plants pour arbres fruitiers')
     
     # Origine de la semence mère - informations détaillées
-    region_id = fields.Many2one("minader.region", string="Région")
-    departement_id = fields.Many2one("minader.departement", string="Département", required=True)
-    arrondissement_id = fields.Many2one("minader.arrondissement", string="Arrondissement",required=True)
-    localite_id = fields.Char(string="Localité", required=True)
+    origine_semence_mere = fields.Text(string='Origine de la semence mère', required=True,
+                                      help='Adresse du producteur, N° et date de la facture ou du bordereau de livraison, N° de l\'étiquette officielle de semences')
     
     # Champs additionnels pour traçabilité
     # producteur_origine = fields.Char(string='Producteur d\'origine')
+    numero_facture = fields.Char(string='N° Facture/Bordereau(optionnel)')
+    date_facture = fields.Date(string='Date Facture/Bordereau(optionnel)')
+    numero_etiquette = fields.Char(string='N° Étiquette officielle(optionnel)')
     
+
     # Calcul des frais de redevance semencière
     frais_redevance = fields.Float(string='Frais de redevance (FCFA)', compute='_compute_frais_redevance', store=True)
 

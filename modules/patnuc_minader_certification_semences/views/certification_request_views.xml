@@ -14,7 +14,7 @@
                     <button name="action_submit" string="Soumettre" type="object" class="btn-primary" invisible="state != 'draft'"/>
                     <button name="action_verified_documents" string="Valider verification" type="object" class="btn-primary" invisible="state != 'doc_verification'"/>
                     <button name="action_open_lot_form" string="Créer un lot" type="object" class="btn-primary" invisible="state !='inspection'"/>
-
+/>
 <!--                    <button name="action_start_inspection" string="Démarrer Inspection" type="object" class="btn-info" invisible="state != 'inspection'"/>-->
                     <button name="action_complete_field_inspection" string="Terminer Inspection" type="object" class="btn-info" invisible="state != 'inspection'" 
                             confirm="Êtes-vous sûr de vouloir terminer l'inspection ? Toutes les conditions doivent être remplies (lots créés, 3 inspections terminées par lot, rapport final avec décision)."/>
@@ -25,12 +25,7 @@
                     <button name="action_complete_sampling" string="Terminer Échantillonnage" type="object" class="btn-success" invisible="state != 'sampling'"
                             confirm="Êtes-vous sûr de vouloir valider l'étape Échantillonnage ? Tous les lots doivent avoir une analyse de prélèvement terminée et le rapport général validé."/>
                     
-                    <button name="action_approve"
-                        string="Approuver la Certification"
-                        type="object"
-                        class="btn-success"
-                        icon="fa-check"
-                        invisible="state != 'labelling'"/>
+                    
                     <button name="action_complete_certification" string="Terminer Certification" type="object" class="btn-info" invisible="state != 'certification'"/>
                    
                       <!-- BOUTONS DE RETOUR (secondaires) -->
@@ -47,7 +42,7 @@
                         confirm="Êtes-vous sûr de vouloir annuler cette demande ?"/>
                     <button name="action_reset_to_draft" string="Remettre en brouillon" type="object" class="btn-warning" invisible="state not in ['rejected', 'cancelled']"/>
                     
-                    <field name="state" widget="statusbar" statusbar_visible="draft,doc_verification,inspection,sampling,certification,labelling,approved"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,doc_verification,inspection,sampling,certification,labelling"/>
                 </header>
                 <sheet>
                     <field name="all_documents_verified" invisible="1"/>
@@ -60,20 +55,11 @@
                     <group col="4">
                         <group colspan="2">
                             <field name="operator_id" options="{'no_create': True}" readonly="state !='draft'"/>
-                            <field name="region_id" readonly="1"/>
-                            <field name="departement_id" domain="[('region_id', '=', region_id)]" readonly="1"/>
-                            <field name="arrondissement_id" domain="[('departement_id', '=', departement_id)]" readonly="1"/>
-                            <field name="localite_id" readonly="1"/>
-
+                            <field name="parcelle_id" domain="[('operator_id', '=', operator_id), ('request_id', '=', False)]" options="{'no_create': True}" readonly="state != 'draft'"/>
                         </group>
                         <group colspan="2">
-
-                            <field name="parcelle_id" domain="[('operator_id', '=', operator_id), ('request_id', '=', False)]" options="{'no_create': True}" readonly="state != 'draft'"/>
-                            <field name="agricole_campain" readonly="state !='draft'"/>
-                            <field name="encadrement_structure" readonly="state !='draft'"/>
                             <field name="submission_date" readonly="1"/>
                             <field name="return_reason" invisible=" not return_reason" readonly="1"/>
-
                         </group>
                     </group>
                     <notebook>
@@ -104,21 +90,17 @@
                                     <field name="parcelle_superficie" readonly="1"/>
                                     <field name="parcelle_qte_sem_meres" readonly="1"/>
                                     <field name="parcelle_production" readonly="1"/>
-                                    <field name="region_id" readonly="1"/>
-                                    <field name="departement_id" readonly="1"/>
-                                    <field name="arrondissement_id" readonly="1"/>
-                                    <field name="localite_id" readonly="1"/>
+                                    <field name="parcelle_origine" readonly="1"/>
                                     <field name="parcelle_categorie" readonly="1"/>
                                 </group>
-                                <group colspan="2" string="Résumé des frais de redevance semencière">
-                                    <group >
+                                <group colspan="2" string="Informations supplementaires">
                                         <field name="parcelle_superficie" readonly="1" string="Superficie déclarée (ha)"/>
-                                        <div class="o_form_label">Tarif: 10 000 FCFA / hectare</div>
-                                    </group>
-                                     <group >
-                                        <field name="parcelle_frais" readonly="1"  options="{'currency_field': False}" string="Total à payer (FCFA)"/>
-                                    </group>
-                                    <field name="parcelle_frais" readonly="1" widget="monetary" options="{'currency_field': False}"/>
+<!--                                        <div  >Tarif: 10 000 FCFA / hectare</div>-->
+                                        <field name="parcelle_frais" readonly="1"   string="Total à payer (FCFA)"/>
+                                        <field name="parcelle_region" readonly="1"/>
+                                        <field name="parcelle_departement" readonly="1" />
+                                        <field name="parcelle_arrondissement" readonly="1"/>
+                                        <field name="parcelle_support_structure" readonly="1"/>
                                 </group>
                             </group>
                         </page>
@@ -175,8 +157,7 @@
                                         <field name="name"/>
                                         <field name="lot_id"/>
                                         <field name="inspector_id"/>
-                                        <field name="scheduled_date"/>
-                                        <field name="visit_stage"/>
+                                        <field name="inspector_code"/>
                                         <field name="state"/>
                                         <field name="conclusion"/>
                                     </tree>
@@ -262,7 +243,7 @@
                         </group>
                     </page>
                         <page string="Certification des lots" >
-                            <group string="Lots Conformés (Analyses Terminées et Conformes)">
+                            <group string="Lots Conformés (Analyses Terminées et Compliantes)">
                                 <!-- Utilisation directe du champ Many2many calculé compliant_lots_ids -->
                                 <field name="compliant_lots_ids" readonly="state not in ['certification', 'labelling']" mode="tree,form">
                                     <tree string="Lots Conformés">
@@ -274,35 +255,9 @@
                                 </field>
                             </group>
                         </page>
-                        <page string="Certificat délivré" invisible="state not in ['labelling', 'approved']">
-                            <group string="Décision finale de certification" col="4">
-                                <group colspan="2">
-                                    <field name="final_decision_by" readonly="1"/>
-                                    <field name="final_decision_date" readonly="1"/>
-                                    <field name="final_comment" placeholder="Observations et recommandations..." 
-                                        readonly="state == 'approved'"/>
-                                </group>
-                            </group>
-
-                            <group string="Arrêté final de décision" col="2">
-                                <field name="certificate_document" 
-                                    filename="certificate_document_filename"
-                                    widget="binary" 
-                                    string="Arrêté ou décision finale"
-                                    readonly="1"
-                                    invisible="not certificate_document and state != 'labelling'"/>
-                            <field name="certificate_document_filename" invisible="1"/>
-
-                            <group>
-                                <button name="preview_document"
-                                        string="Prévisualiser l'arrêté"
-                                        type="object"
-                                        class="oe_highlight"
-                                        context="{'document_field': 'certificate_document'}"
-                                        invisible="not certificate_document"/>
-                            </group>
-                        </group>
-                    </page>
+                        <page string="Certificat délivré" invisible="state != 'labelling'">
+                           
+                        </page>
                     </notebook>
                 </sheet>
                 <div class="oe_chatter">
@@ -323,6 +278,7 @@
                 <field name="name"/>
                 <field name="operator_id"/>
                 <field name="submission_date"/>
+                <field name="regional_officer_id"/>
                 <field name="state" decoration-success="state == 'labelling'" 
                        decoration-warning="state in ('doc_verification', 'inspection', 'sampling', 'certification')"
                        decoration-info="state == 'draft'"

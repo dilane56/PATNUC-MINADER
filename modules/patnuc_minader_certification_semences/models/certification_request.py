@@ -2,9 +2,6 @@ from odoo import models, fields, api, _
 from odoo.exceptions import UserError 
 import logging
 import base64
-from datetime import datetime, timedelta
-
-
 _logger = logging.getLogger(__name__)
 
 class CertificationRequest(models.Model):
@@ -17,28 +14,17 @@ class CertificationRequest(models.Model):
                       default=lambda self: self.env['ir.sequence'].next_by_code('certification.request'))
     
     # Informations générales
-    operator_id = fields.Many2one('certification.operator', string='Opérateur',required=True, tracking=True)
+    operator_id = fields.Many2one('res.partner', string='Opérateur',required=True, tracking=True)
     
     # Informations automatiques de l'opérateur (res.partner)
-    operator_name = fields.Char(related='operator_id.partner_name', string='Nom complet', readonly=True)
-    operator_email = fields.Char(related='operator_id.partner_email', string='Email', readonly=True)
-    operator_phone = fields.Char(related='operator_id.partner_phone', string='Téléphone', )
-    operator_statut= fields.Selection([
-        ('personne morale','personne morale'),
-        ('personne physique','personne physique'),
-    ],string='Statut',)
-    operator_raison_sociale = fields.Selection([
-        ('sa','sa'),
-        ('sarl','sarl'),
-        ('association','association'),
-        ('coopérative','coopérative'),
-        ('gic','gic'),
-    ], string='Raison sociale')
+    operator_name = fields.Char(related='operator_id.name', string='Nom complet', readonly=True)
+    operator_email = fields.Char(related='operator_id.email', string='Email', readonly=True)
+    operator_phone = fields.Char(related='operator_id.phone', string='Téléphone', )
+    operator_statut= fields.Char( string='Statut',)
+    operator_raison_sociale = fields.Char( string='Raison sociale')
 
+    
 
-    # Informations complémentaires
-    agricole_campain = fields.Char(string="Campagne agricole", required=True)
-    encadrement_structure = fields.Char(string="Structure d'encadrement et/ou d'appui", required=True)
 
 
     # Champs related de la parcelle
@@ -48,8 +34,13 @@ class CertificationRequest(models.Model):
     parcelle_frais = fields.Float(related='parcelle_id.frais_redevance', string='Frais de redevance (FCFA)', readonly=True)
     parcelle_qte_sem_meres = fields.Float(related='parcelle_id.quantite_semences_meres', string='Quantité de célèves mères', readonly=True)
     parcelle_production = fields.Float(related='parcelle_id.production_attendue', string='Production attendue (ha)', readonly=True)
-    
+    parcelle_origine = fields.Text(related='parcelle_id.origine_semence_mere', string='Origine de la semence mère', readonly=True)
     parcelle_categorie = fields.Selection(related='parcelle_id.categorie', string='Catégorie', readonly=True)
+    parcelle_region = fields.Many2one(related='parcelle_id.region_id', string='Région', readonly=True)
+    parcelle_departement = fields.Many2one(related='parcelle_id.departement_id', string='Département', readonly=True)
+    parcelle_arrondissement = fields.Many2one(related='parcelle_id.arrondissement_id', string='Arrondissement', readonly=True)
+    parcelle_support_structure = fields.Char(related='parcelle_id.encadrement_structure', string="Structure d'encadrement ou d'appui", readonly=True)
+
 
 
     # Documents requis
@@ -120,7 +111,6 @@ class CertificationRequest(models.Model):
         ('sampling', 'Echantillonage et Analyse'),
         ('certification', 'Certification des lots de semences'),
         ('labelling', 'Certificat délivré'),
-        ('approved', 'Certificat Approuvé'),
         ('rejected', 'Rejetée'),
         ('cancelled', 'Annulée')
     ], string='État', default='draft', tracking=True)
@@ -142,14 +132,6 @@ class CertificationRequest(models.Model):
        
        
                                     string='Contrôles terrain')
-    
-    # Informations de localisation
-    region_id = fields.Many2one("minader.region", string="Région", related='parcelle_id.region_id', readonly=True,store=True)
-    departement_id = fields.Many2one("minader.departement", string="Département",related='parcelle_id.departement_id',readonly=True,store=True )
-    arrondissement_id = fields.Many2one("minader.arrondissement", string="Arrondissement",related='parcelle_id.arrondissement_id',readonly=True,store=True)
-    localite_id = fields.Char(string="Localité", related='parcelle_id.localite_id',readonly=True,store=True)
-    
-    
     
     # elements de labo 
     laboratory_analysis_ids = fields.One2many('certification.laboratory.analysis', 'request_id',
@@ -224,40 +206,14 @@ class CertificationRequest(models.Model):
      #champs calculés lots 
     compliant_lots_ids = fields.Many2many(
         comodel_name='certification.parcelle.lot',
-        string="Lots Conformés (Analyses Terminées et Conformes)",
+        string="Lots Conformés (Analyses Terminées et Compliantes)",
         compute='_compute_compliant_lots_ids',
         store=False 
     )
     # arrete final 
-    # --- Avis final ---
-    certificate_document = fields.Binary(
-    string="Certificat signé ",
-    help="Copie PDF ou image du certificat délivré."
-    )
-    certificate_document_filename = fields.Char(
-    string="Nom du fichier " )
+    cert_report = fields.Binary('Arrêté signé', required=True)
+    cert_report_filename = fields.Char('Nom du fichier')
     
-    final_comment = fields.Text(
-        string="Commentaire final",
-        help="Observations et recommandations formulées lors de la décision finale."
-    )
-
-    final_decision_date = fields.Date(
-        string="Date de décision finale",
-        help="Date de la réunion ou de la validation de l'avis final."
-    )
-
-    final_decision_by = fields.Many2one(
-        'res.users',
-        string="Décision prise par",
-        help="Responsable ayant émis l'avis final."
-    )
-    def action_approve(self):
-        for record in self:
-            record.state = 'approved'
-            record.final_decision_by= self.env.user
-            record.final_decision_date = fields.Datetime.now()
-        
     @api.depends('lot_ids')
     def _compute_compliant_lots_ids(self):
         """
