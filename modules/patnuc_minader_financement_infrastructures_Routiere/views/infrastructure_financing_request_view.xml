@@ -72,31 +72,23 @@
 
               <group>
                 <group>
-                  <!-- (Q) Champs grisés à partir de l'étape verification, sauf pour les demandes rejetées où seul le demandeur peut modifier -->
-                  <!-- (Q) Commune qui effectue la demande - vue readonly à partir de l'étape verification -->
                   <field name="commune_id" required="1" readonly="state not in ['draft'] and not (state == 'rejected' and create_uid == uid)" domain="[('active', '=', True)]" context="{'form_view_ref': 'patnuc_minader_financement_infrastructures_Routiere.view_commune_form_readonly' if state not in ['draft'] and not (state == 'rejected' and create_uid == uid) else False}"/>
-                  <!-- <field name="location" required="1" readonly="state not in ['draft'] and not (state == 'rejected' and create_uid == uid)"/> -->
                   <field name="infrastructure_type" required="1" readonly="state not in ['draft'] and not (state == 'rejected' and create_uid == uid)"/>
-                  <!-- (Q) Date de soumission toujours en lecture seule - remplie automatiquement -->
-                  <field name="submission_date" readonly="1" invisible="not submission_date"/>
+                  <field name="estimated_budget" readonly="state not in ['draft'] and not (state == 'rejected' and create_uid == uid)"/>
 
                 </group>
                 <group >
-                 
                   <field name="localite_id" readonly="state not in ['draft'] and not (state == 'rejected' and create_uid == uid)"/>
-                </group>
-
-                <group>
-                  <!-- <field name="delegation_id" readonly="state not in ['verification', 'technical_support']" domain="[('active', '=', True)]"/> -->
-                  <!-- (Q) Budget grisé à partir de l'étape verification -->
-                  <field name="estimated_budget" readonly="state not in ['draft'] and not (state == 'rejected' and create_uid == uid)"/>
-                  <field name="currency_id" invisible="1"/>
-                  <field name="state" readonly="1"/>
+                  <field name="submission_date" readonly="1" invisible="not submission_date"/>
+                   <field name="currency_id" invisible="1"/>
+<!--                  <field name="state" readonly="1"/>-->
                   <field name="decision_date" readonly="1" invisible="not decision_date"/>
                   <field name="approval_date" readonly="1" invisible="not approval_date"/>
                   <field name="processing_days" readonly="1" invisible="not processing_days"/>
 
-                  <!-- (Q) Champ motif de rejet ajouté, visible uniquement s'il y a un motif -->
+                </group>
+
+                <group >
                   <field name="rejection_reason" readonly="1" invisible="not rejection_reason"/>
 
                   <!-- (Q) Champs d'information sur le rejet ajoutés -->
@@ -268,21 +260,37 @@
                     </group>
                   </group>
                   
-                  <group string="Documents Techniques" invisible="state not in ['technical_support', 'review', 'final_decision', 'approuvee', 'rejected'] or not technical_support_id" col="4">
-                    <group colspan="2">
-                      <field name="tech_plan_file" filename="tech_plan_filename" readonly="1" string="Plan technique"/>
-                      <field name="tech_plan_filename" invisible="1"/>
-                      
-                      <field name="tech_cost_estimate_file" filename="tech_cost_estimate_filename" readonly="1" string="Devis"/>
-                      <field name="tech_cost_estimate_filename" invisible="1"/>
-                    </group>
-                    <group colspan="2">
-                      <field name="tech_feasibility_report_file" filename="tech_feasibility_report_filename" readonly="1" string="Rapport de faisabilité"/>
-                      <field name="tech_feasibility_report_filename" invisible="1"/>
-                      
-                      <field name="tech_transmission_note_file" filename="tech_transmission_note_filename" readonly="1" string="Note de transmission technique"/>
-                      <field name="tech_transmission_note_filename" invisible="1"/>
-                    </group>
+                  <group string="Documents Techniques" invisible="state not in ['technical_support', 'review', 'final_decision', 'approuvee', 'rejected'] or not technical_support_id" >
+
+                    <label string="Plan technique" for="tech_plan_file"/>
+                      <div class="o_row">
+                         <field name="tech_plan_file" filename="tech_plan_filename" readonly="state !='technical_support'"  nolabel="1"/>
+                         <field name="tech_plan_filename" invisible="1"/>
+                         <button name="preview_document" type="object" string="Prévisualiser" class="btn-secondary" invisible="not tech_plan_file or state == 'technical_support'" context="{'document_field': 'tech_plan_file'}"/>
+                      </div>
+
+                    <label string="Devis" for="tech_cost_estimate_file"/>
+                      <div class="o_row">
+                         <field name="tech_cost_estimate_file" filename="tech_cost_estimate_filename" readonly="state !='technical_support'"  nolabel="1"/>
+                         <field name="tech_cost_estimate_filename" invisible="1"/>
+                         <button name="preview_document" type="object" string="Prévisualiser" class="btn-secondary" invisible="not tech_cost_estimate_file or state == 'technical_support'" context="{'document_field': 'tech_cost_estimate_file'}"/>
+                      </div>
+
+                      <label string="Rapport de faisabilité" for="tech_feasibility_report_file"/>
+                      <div class="o_row">
+                          <field name="tech_feasibility_report_file" filename="tech_feasibility_report_filename" readonly="state !='technical_support'" nolabel="1"/>
+                          <field name="tech_feasibility_report_filename" invisible="1"/>
+                          <button name="preview_document" type="object" string="Prévisualiser" class="btn-secondary" invisible="not tech_feasibility_report_file or state == 'technical_support'" context="{'document_field': 'tech_feasibility_report_file'}"/>
+                      </div>
+
+                       <label string="Note de transmission technique" for="tech_transmission_note_file"/>
+                      <div class="o_row">
+                          <field name="tech_transmission_note_file" filename="tech_transmission_note_filename" readonly="state !='technical_support'" nolabel="1"/>
+                          <field name="tech_transmission_note_filename" invisible="1"/>
+                          <button name="preview_document" type="object" string="Prévisualiser" class="btn-secondary" invisible="not tech_transmission_note_file or state == 'technical_support'" context="{'document_field': 'tech_transmission_note_file'}"/>
+                      </div>
+
+
                   </group>
                   
                   <group invisible="technical_support_id or state not in ['technical_support', 'review', 'final_decision', 'approuvee', 'rejected']">

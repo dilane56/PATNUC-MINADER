@@ -429,6 +429,10 @@ class InfrastructureFinancingRequest(models.Model):
     # === ACTION : Bouton "Passer à l'appui technique" ===
     def action_technical_support(self):
         """Étape 2: Passer à l'appui technique après vérification"""
+        if self.return_reason:
+            self.return_reason = False
+            self.returned_by_user_id = False
+            self.returned_from_state = False
 
         # Vérifier que tous les documents sont vérifiés
         if not self.all_documents_verified:

@@ -49,9 +49,8 @@
                   <tree editable="bottom">
                     <field name="name"/>
                     <field name="inspector_id"/>
-                    <field name="scheduled_date"/>
+                    <field name="inspector_code"/>
                     <field name="state"/>
-                    <field name="conclusion"/>
                   </tree>
                 </field>
               </page>

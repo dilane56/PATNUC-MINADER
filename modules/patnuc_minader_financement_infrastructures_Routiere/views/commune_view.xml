@@ -28,8 +28,9 @@
                             <field name="code" readonly="is_readonly"/>
                             <field name="mayor_name" readonly="is_readonly"/>
                             <field name="resp_commune" readonly="is_readonly"/>
-                            <field name="region" readonly="is_readonly"/>
-                            <field name="department" readonly="is_readonly"/>
+                             <field name="region_id" />
+                            <field name="departement_id" domain="[('region_id', '=', region_id)]" />
+                            <field name="arrondissement_id" domain="[('departement_id', '=', departement_id)]" />
                             <field name="active" readonly="is_readonly"/>
                         </group>
                         <group name="contact">
@@ -64,8 +65,9 @@
                         <group name="general">
                             <field name="code" readonly="1"/>
                             <field name="mayor_name" readonly="1"/>
-                            <field name="region" readonly="1"/>
-                            <field name="department" readonly="1"/>
+                            <field name="region_id" readonly="1"/>
+                            <field name="departement_id" readonly="1"/>
+                            <field name="arrondissement_id" readonly="1"/>
                             <field name="active" readonly="1"/>
                         </group>
                         <group name="contact">
@@ -90,8 +92,8 @@
                 <field name="name"/>
                 <field name="code"/>
                 <field name="mayor_name"/>
-                <field name="region"/>
-                <field name="department"/>
+                <field name="region_id"/>
+                <field name="departement_id"/>
                 <field name="contact_email"/>
                 <field name="funding_request_count"/>
                 <field name="active"/>
@@ -107,11 +109,11 @@
                 <field name="name"/>
                 <field name="code"/>
                 <field name="mayor_name"/>
-                <field name="region"/>
-                <field name="department"/>
+                <field name="region_id"/>
+                <field name="departement_id"/>
                 <group expand="0" string="Grouper par">
-                    <filter name="group_region" string="Région" context="{'group_by': 'region'}"/>
-                    <filter name="group_department" string="Département" context="{'group_by': 'department'}"/>
+                    <filter name="group_region" string="Région" context="{'group_by': 'region_id'}"/>
+                    <filter name="group_department" string="Département" context="{'group_by': 'departement_id'}"/>
                 </group>
             </search>
         </field>

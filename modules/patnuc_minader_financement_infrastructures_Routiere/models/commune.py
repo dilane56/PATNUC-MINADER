@@ -24,59 +24,10 @@ class Commune(models.Model):
     active = fields.Boolean('Actif', default=True)
     
     # Relations
-    region = fields.Selection([
-        ('nord_ouest', 'Nord-Ouest'),
-        ('sud_ouest', 'Sud-Ouest'),
-        ('sud', 'Sud'),
-        ('nord', 'Nord'),
-        ('centre', 'Centre'),
-        ('est', 'Est'),
-        ('littoral', 'Littoral'),
-        ('adamaoua', 'Adamaoua'),
-        ('extreme_nord', 'Extrême-Nord'),
-        ('ouest', 'Ouest'),
-    ], string='Région', required=True)
-    department = fields.Selection([
-        ('wouri', 'Wouri'),
-        ('mfoundi', 'Mfoundi'),
-        ('nyong_et_kelle', 'Nyong-et-Kellé'),
-        ('sanaga_maritime', 'Sanaga-Maritime'),
-        ('moungo', 'Moungo'),
-        ('nkam', 'Nkam'),
-        ('diamare', 'Diamaré'),
-        ('mayo_danay', 'Mayo-Danay'),
-        ('logone_et_chari', 'Logone-et-Chari'),
-        ('mezam', 'Mezam'),
-        ('momo', 'Momo'),
-        ('fako', 'Fako'),
-        ('ndian', 'Ndian'),
-        ('manyu', 'Manyu'),
-        ('dja_et_lobo', 'Dja-et-Lobo'),
-        ('mvila', 'Mvila'),
-        ('ocean', 'Océan'),
-        ('valle_du_ntem', 'Vallée-du-Ntem'),
-        ('lom_et_djerem', 'Lom-et-Djérem'),
-        ('kadey', 'Kadéï'),
-        ('haut_nyong', 'Haut-Nyong'),
-        ('boumba_et_ngoko', 'Boumba-et-Ngoko'),
-        ('vina', 'Vina'),
-        ('mbere', 'Mbéré'),
-        ('djerem', 'Djérem'),
-        ('faro_et_deo', 'Faro-et-Déo'),
-        ('mayo_rey', 'Mayo-Rey'),
-        ('benoue', 'Bénoué'),
-        ('mayo_louti', 'Mayo-Louti'),
-        ('mayo_kani', 'Mayo-Kani'),
-        ('mifi', 'Mifi'),
-        ('bamboutos', 'Bamboutos'),
-        ('hauts_plateaux', 'Hauts-Plateaux'),
-        ('koung_khi', 'Koung-Khi'),
-        ('menoua', 'Menoua'),
-        ('noun', 'Noun'),
-        ('nde', 'Ndé'),
-        ('haut_nkam', 'Haut-Nkam'),
-    ], string='Département', required=True)
-    
+    region_id = fields.Many2one("minader.region", string="Région")
+    departement_id = fields.Many2one("minader.departement", string="Département", required=True)
+    arrondissement_id = fields.Many2one("minader.arrondissement", string="Arrondissement", required=True)
+
     # Relations inverses
     financing_request_ids = fields.One2many(
         'infrastructure.financing.request', 

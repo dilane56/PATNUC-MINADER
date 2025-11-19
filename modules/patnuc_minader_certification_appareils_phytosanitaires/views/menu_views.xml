@@ -20,6 +20,9 @@
                   action="action_equipment" 
                   sequence="20"/>
 
+         <menuitem id="menu_certification_operator" name="Opérateurs"
+              parent="menu_phytosanitary_main" action="action_certification_operator" sequence="21"/>
+
         <menuitem id="menu_phytosanitary_evaluations" 
                   name="Évaluations" 
                   parent="menu_phytosanitary_main" 

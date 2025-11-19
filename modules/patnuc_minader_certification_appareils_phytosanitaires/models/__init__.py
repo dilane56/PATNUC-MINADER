@@ -8,3 +8,5 @@ from . import technical_evaluation
 from . import ir_attachment
 from . import mail_template
 from . import res_partner
+from . import operator
+from . import agreement

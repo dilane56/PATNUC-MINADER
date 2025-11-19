@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
-        <record id="view_certification_return_wizard_form" model="ir.ui.view">
-            <field name="name">certification.return.wizard.form</field>
-            <field name="model">certification.return.wizard</field>
+        <record id="view_phytosanitary_return_wizard_form" model="ir.ui.view">
+            <field name="name">phytosanitary.return.wizard.form</field>
+            <field name="model">phytosanitary.return.wizard</field>
             <field name="arch" type="xml">
                 <form string="Retour de la Demande de Certification">
                     <group>
                         <!-- Les champs request_id, current_state et target_state sont remplis par le contexte lors de l'appel de l'action -->
-                        <field name="request_id" invisible="1"/>
+                        <field name="certification_request_id" invisible="1"/>
                         <field name="current_state" invisible="1"/>
                         <!-- AJOUTÉ : target_state doit être présent dans la vue pour être correctement initialisé par le contexte, si la méthode Python souhaite y accéder directement (self.target_state) -->
                         <field name="target_state" invisible="1"/> 

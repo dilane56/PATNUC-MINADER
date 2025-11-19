@@ -185,14 +185,24 @@ class CertificationParcelle(models.Model):
     departement_id = fields.Many2one("minader.departement", string="Département", required=True)
     arrondissement_id = fields.Many2one("minader.arrondissement", string="Arrondissement",required=True)
     localite_id = fields.Char(string="Localité", required=True)
-    
+
     # Champs additionnels pour traçabilité
     # producteur_origine = fields.Char(string='Producteur d\'origine')
     
     # Calcul des frais de redevance semencière
     frais_redevance = fields.Float(string='Frais de redevance (FCFA)', compute='_compute_frais_redevance', store=True)
 
+
     lot_ids = fields.One2many('certification.parcelle.lot', 'parcelle_id', string='Lots')
+
+    # Informations complémentaires
+
+    agricole_campain = fields.Char(string="Campagne agricole", required=True)
+
+    encadrement_structure = fields.Char(string="Structure d'encadrement et/ou d'appui", required=True)
+    origine_semence_mere = fields.Text(string='Origine de la semence mère', required=True,
+
+                                       help='Adresse du producteur, N° et date de la facture ou du bordereau de livraison, N° de l\'étiquette officielle de semences')
 
     state = fields.Selection([
         ('draft', 'Draft'),

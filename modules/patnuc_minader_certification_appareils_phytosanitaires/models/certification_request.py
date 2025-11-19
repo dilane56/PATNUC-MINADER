@@ -23,7 +23,7 @@ class CertificationRequest(models.Model):
         ('expired', 'expiré'),
     ], string='État', default='draft', tracking=True)
 
-    user_id = fields.Many2one('res.users', string='Demandeur', required=True, tracking=True)
+    user_id = fields.Many2one('phytosanitary.certification.operator', string='Demandeur', required=True, tracking=True)
     #company_type = fields.Selection(related='partner_id.company_type', tracking=True)
     legal_representative = fields.Char('Représentant légal', tracking=True)
     
@@ -215,7 +215,10 @@ class CertificationRequest(models.Model):
     def action_submit(self):
         """
         Vérifie si tous les documents requis sont chargés avant de passer à l'état reception'.
+
         """
+        if self.return_reason:
+            self.return_reason = False
         # Liste des champs binaires obligatoires à vérifier
         required_files = [
             self.official_request_letter,
@@ -236,6 +239,8 @@ class CertificationRequest(models.Model):
         self.write({'state': 'reception', 'submission_date': fields.Datetime.now()})
     
     def action_reception(self):
+        if self.return_reason:
+            self.return_reason = False
         for record in self : 
             if not all([    record.official_request_letter_verified,
                             record.homologation_certificate_verified,
@@ -244,6 +249,7 @@ class CertificationRequest(models.Model):
                             record.invoice_payment_copy_verified,
                             ]):
                 raise ValidationError(_("Tous les documents requis doivent être vérifiés avant de passer à l'étape suivante."))
+
             
             if not record.admin_verification_comment:
                 raise ValidationError(_("Le commentaire de vérification est obligatoire avant de passer à l'instruction technique."))
@@ -253,6 +259,8 @@ class CertificationRequest(models.Model):
             record.state = 'technical_review'
     
     def action_technical_evaluation(self):
+        if self.return_reason:
+            self.return_reason = False
         for record in self : 
 
             if not record.technical_instruction_note or not record.technical_instruction_doc:
@@ -371,7 +379,7 @@ class CertificationRequest(models.Model):
             'type': 'ir.actions.act_window',
             'name': 'Retour de la Demande',
             # Changer le modèle résolu pour notre nouveau modèle de wizard
-            'res_model': 'certification.return.wizard', 
+            'res_model': 'phytosanitary.return.wizard',
             'view_mode': 'form',
             'views': [(False, 'form')],
             'target': 'new',
@@ -385,27 +393,82 @@ class CertificationRequest(models.Model):
     # Retour depuis technical_review (Instruction Technique) vers reception
     def action_return_to_reception(self):
         """Retourne de l'instruction technique à la réception du dossier."""
-        return self._open_return_wizard(target_state='reception')
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Retourner au dépôt',
+            'res_model': 'phytosanitary.return.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_certification_request_id': self.id,
+                'default_current_state': self.state,
+                'default_target_state': 'reception'
+            }
+        }
 
     # Retour depuis technical_eval (Évaluations) vers technical_review
     def action_return_to_technical_review(self):
         """Retourne des évaluations à l'instruction technique."""
-        return self._open_return_wizard(target_state='technical_review')
-        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Retourner au dépôt',
+            'res_model': 'phytosanitary.return.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_certification_request_id': self.id,
+                'default_current_state': self.state,
+                'default_target_state': 'technical_review'
+            }
+        }
+
     # Retour depuis admin_check (Traitement du dossier) vers technical_eval
     def action_return_to_technical_eval(self):
         """Retourne du traitement du dossier à l'étape d'évaluation technique."""
-        return self._open_return_wizard(target_state='technical_eval')
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Retourner au dépôt',
+            'res_model': 'phytosanitary.return.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_certification_request_id': self.id,
+                'default_current_state': self.state,
+                'default_target_state': 'technical_eval'
+            }
+        }
 
     # Retour depuis final_decision vers admin_check
     def action_return_to_admin_check(self):
         """Retourne de la décision finale à l'étape de traitement du dossier."""
-        return self._open_return_wizard(target_state='admin_check')
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Retourner au dépôt',
+            'res_model': 'phytosanitary.return.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_certification_request_id': self.id,
+                'default_current_state': self.state,
+                'default_target_state': 'admin_check'
+            }
+        }
 
     # Retour vers draft (brouillon) — souvent utilisé depuis reception
     def action_return_to_draft(self):
         """Retourne à l'état brouillon (pour les erreurs de soumission initiales)."""
-        return self._open_return_wizard(target_state='draft')
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Retourner au dépôt',
+            'res_model': 'phytosanitary.return.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_certification_request_id': self.id,
+                'default_current_state': self.state,
+                'default_target_state': 'draft'
+            }
+        }
     
     # methode de previsualisation des documents
     def action_preview_document(self):

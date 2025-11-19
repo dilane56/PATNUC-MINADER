@@ -1,11 +1,12 @@
 from odoo import fields, models, api, _
 from odoo.exceptions import ValidationError
 
-class CertificationReturnWizard(models.TransientModel):
-    _name = 'certification.return.wizard'
-    _description = 'Wizard de retour de demande de certification'
+class PhytosanitaryReturnWizard(models.TransientModel):
+    _name = 'phytosanitary.return.wizard'
+    _description = 'Wizard de retour de demande de certification phytosanitaire'
+    _transient_max_hours = 1  # Suppression automatique après 1 heure
 
-    request_id = fields.Many2one('phytosanitary.certification.request', string='Demande', required=True)
+    certification_request_id = fields.Many2one('phytosanitary.certification.request', string='Demande', required=True)
     return_reason = fields.Text(string='Motif du retour', required=True)
     current_state = fields.Char(string='État actuel', help='État de la demande avant retour')
     
@@ -43,14 +44,14 @@ class CertificationReturnWizard(models.TransientModel):
         target_state_label = STATE_LABELS.get(target_state, target_state)
 
         # 1. Mise à jour de la demande (changement d'état et motif de retour)
-        self.request_id.write({
+        self.certification_request_id.write({
             'state': target_state,
             'return_reason': self.return_reason,
         })
         
         # 2. Log dans le chatter
         message = _(f"La demande a été **retournée** depuis l'état '{current_state}' vers l'état '{target_state}' pour correction. **Motif:** {self.return_reason}")
-        self.request_id.message_post(body=message)
+        self.certification_request_id.message_post(body=message)
 
         # 3. ACTION : Notifications et Fermeture du Wizard
         # On retourne une action client combinée. Odoo va exécuter la notification PUIS fermer la fenêtre.

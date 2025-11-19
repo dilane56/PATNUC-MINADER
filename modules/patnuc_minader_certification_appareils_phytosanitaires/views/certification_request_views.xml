@@ -95,11 +95,12 @@
                           <group name="main_info">
                               <field name="user_id" options="{'no_create': True, 'no_edit': True}" readonly="state != 'draft'"/>
                               <field name="legal_representative" readonly="state != 'draft'"/>
-                              <field name="equipment_id" options="{'no_create': True}" readonly="state != 'draft'"/>
-                              <field name="submission_date" readonly="1"/>
+
                           </group>
                           <group name="status_info">
-                              
+                              <field name="equipment_id" options="{'no_create': True}" readonly="state != 'draft'"/>
+                              <field name="submission_date" readonly="1"/>
+                              <field name="return_reason" invisible="not return_reason" readonly="1"/>
                               <field name="technical_evaluation_id" invisible="1"/>
                               <field name="is_signed" invisible="1"/>
                           </group>
@@ -107,77 +108,49 @@
                       <notebook>
                         <page string="Documents requis" name="documents">
                             <!-- Adaptation à la structure 'group' et 'preview_document' pour l'alignement en ligne -->
-                            <group style="display:flex; flex-direction: column ">
+                            <group >
                                 
                                 <!-- Document 1 : official_request_letter -->
                                 <label string="Lettre de demande officielle" for="official_request_letter"/>
-                                <group style="display:flex; ">
-                                    <field name="official_request_letter" filename="official_request_letter_filename" readonly="state != 'draft'" nolabel="1"/>
-                                    <field name="official_request_letter_filename" readonly="1" invisible="1" />
-                                    <button name="preview_document" 
-                                            string="Prévisualiser" 
-                                            type="object" 
-                                            class="btn-link col-md-2" 
-                                            context="{'document_field': 'official_request_letter'}" 
-                                            invisible="not official_request_letter" 
-                                            style="display:inline;"/>
-                                </group>
-                                
+                                 <div class="o_row">
+                                     <field name="official_request_letter" filename="official_request_letter_filename" readonly="state != 'draft'" nolabel="1"/>
+                                    <field name="official_request_letter_filename"  invisible="1" />
+                                     <button name="preview_document" string="Prévisualiser" type="object" class="btn-secondary" context="{'document_field': 'official_request_letter'}" invisible="not official_request_letter"/>
+                                 </div>
+
                                 <!-- Document 2 : homologation_certificate -->
                                 <label string="Certificat d'homologation" for="homologation_certificate"/>
-                                <group style="display:flex; ">
-                                    <field name="homologation_certificate" filename="homologation_certificate_filename" readonly="state != 'draft'" nolabel="1"/>
-                                    <field name="homologation_certificate_filename" readonly="1" invisible="1"/>
-                                    <button name="preview_document" 
-                                            string="Prévisualiser" 
-                                            type="object" 
-                                            class="btn-link col-md-2" 
-                                            context="{'document_field': 'homologation_certificate'}" 
-                                            invisible="not homologation_certificate" 
-                                            style="display:inline;"/>
-                                </group>
-                                
+                                <div class="o_row">
+                                     <field name="homologation_certificate" filename="homologation_certificate_filename" readonly="state != 'draft'" nolabel="1"/>
+                                    <field name="homologation_certificate_filename"  invisible="1"/>
+                                    <button name="preview_document" string="Prévisualiser" type="object" class="btn-secondary" context="{'document_field': 'homologation_certificate'}" invisible="not homologation_certificate or state=='draft'" />
+                                </div>
+
                                 <!-- Document 3 : import_agreement_copy -->
                                 <label string="Copie de l'accord d'importation" for="import_agreement_copy"/>
-                                <group style="display:flex; ">
-                                    <field name="import_agreement_copy" filename="import_agreement_copy_filename" readonly="state != 'draft'" nolabel="1"/>
-                                    <field name="import_agreement_copy_filename" readonly="1" invisible="1"/>
-                                    <button name="preview_document" 
-                                            string="Prévisualiser" 
-                                            type="object" 
-                                            class="btn-link col-md-2" 
-                                            context="{'document_field': 'import_agreement_copy'}" 
-                                            invisible="not import_agreement_copy" 
-                                            style="display:inline;"/>
-                                </group>
-                                
+                                <div class="o_row">
+                                     <field name="import_agreement_copy" filename="import_agreement_copy_filename" readonly="state != 'draft'" nolabel="1"/>
+                                    <field name="import_agreement_copy_filename" invisible="1"/>
+                                    <button name="preview_document" string="Prévisualiser" type="object" class="btn-secondary" context="{'document_field': 'import_agreement_copy'}" invisible="not import_agreement_copy"/>
+                                </div>
+
                                 <!-- Document 4 : identity_document_copy -->
                                 <label string="Copie du document d'identité" for="identity_document_copy"/>
-                                <group style="display:flex; ">
+                                <div class="o_row">
                                     <field name="identity_document_copy" filename="identity_document_copy_filename" readonly="state != 'draft'" nolabel="1"/>
-                                    <field name="identity_document_copy_filename" readonly="1" invisible="1"/>
-                                    <button name="preview_document" 
-                                            string="Prévisualiser" 
-                                            type="object" 
-                                            class="btn-link col-md-2" 
-                                            context="{'document_field': 'identity_document_copy'}" 
-                                            invisible="not identity_document_copy" 
-                                            style="display:inline;"/>
-                                </group>
-                                
+                                    <field name="identity_document_copy_filename"  invisible="1"/>
+                                    <button name="preview_document" string="Prévisualiser" type="object" class="btn-secondary" context="{'document_field': 'identity_document_copy'}" invisible="not identity_document_copy"/>
+                                </div>
+
                                 <!-- Document 5 : invoice_payment_cert_atp -->
                                 <label string="Facture de paiement/Certificat ATP" for="invoice_payment_cert_atp"/>
-                                <group style="display:flex; ">
+                               <div class="o_row">
                                     <field name="invoice_payment_cert_atp" filename="invoice_payment_cert_atp_filename" readonly="state != 'draft'" nolabel="1"/>
-                                    <field name="invoice_payment_cert_atp_filename" readonly="1" invisible="1"/>
-                                    <button name="preview_document" 
-                                            string="Prévisualiser" 
-                                            type="object" 
-                                            class="btn-link col-md-2" 
-                                            context="{'document_field': 'invoice_payment_cert_atp'}" 
-                                            invisible="not invoice_payment_cert_atp" 
-                                            style="display:inline;"/>
-                                </group>
+                                    <field name="invoice_payment_cert_atp_filename"  invisible="1"/>
+                                    <button name="preview_document" string="Prévisualiser" type="object" class="btn-secondary" context="{'document_field': 'invoice_payment_cert_atp'}" invisible="not invoice_payment_cert_atp"/>
+                               </div>
+
+
                             </group>
                             <!-- Fin de la modification -->
                         </page>
@@ -217,8 +190,13 @@
                                 </group>
                                 <group string="Informations" invisible="state == 'technical_review'">
                                     <field name="technical_instruction_note" readonly="1"/>
-                                    <field name="technical_instruction_doc" filename="technical_instruction_doc_filename" readonly="1"/>
-                                    <field name="technical_instruction_doc_filename" invisible="1"/> 
+                                    <label string="Rapport d'instruction technique" for="technical_instruction_doc"/>
+                                    <div class="o_row">
+                                         <field name="technical_instruction_doc" filename="technical_instruction_doc_filename" readonly="1" nolabel="1"/>
+                                        <field name="technical_instruction_doc_filename" invisible="1"/>
+                                         <button name="preview_document" type="object" string="Prévisualiser" class="btn-secondary" invisible="not technical_instruction_doc or state == 'technical_review'" context="{'document_field': 'technical_instruction_doc'}"/>
+                                    </div>
+
                                     <field name="instruction_technical_agent" readonly="1"/>
                                     <field name="instruction_technical_date" readonly="1"/>
                                 </group>
@@ -234,8 +212,14 @@
                                 </group>
                                 <group string="Informations" invisible="state=='technical_eval or or bool(technical_evaluation_id)'">
                                     <field name="technical_report" readonly="1" />
-                                    <field name="tech_eval_report_file" filename="tech_eval_report_filename" readonly="1"/>
-                                    <field name="tech_eval_report_filename" invisible="1"/>
+                                    <label string="Rapport Technique" for="tech_eval_report_file" />
+                                    <div class="o_row">
+                                        <field name="tech_eval_report_file" filename="tech_eval_report_filename" readonly="1" nolabel="1"/>
+                                        <field name="tech_eval_report_filename" invisible="1"/>
+                                        <button name="preview_document" type="object" string="Prévisualiser" class="btn-secondary" invisible="not tech_eval_report_file or state == 'technical_review'" context="{'document_field': 'tech_eval_report_file'}"/>
+
+                                    </div>
+
                                     <field name="evaluator_id" readonly="1"/>
                                     <field name="evaluation_date" readonly="1"/>
                                     <field name="overall_score" readonly="1"/>
@@ -272,8 +256,15 @@
                                     <field name="conformite_technical_report_verified" readonly="1"/>
                                     <field name="conformite_technical_eval_report_verified" readonly="1"/> 
                                     <field name="note_conformite" readonly="1"/>
-                                    <field name="conformite_report" filename="conformite_report_filename" readonly="1" string ="Rapport de conformité du dossier"/>
-                                    <field name="conformite_report_filename" invisible="1"/>
+
+                                    <label string="Rapport de conformité du dossier" for="conformite_report"/>
+                                    <div class="o_row">
+                                         <field name="conformite_report" filename="conformite_report_filename" readonly="1" string ="Rapport de conformité du dossier" nolabel="1"/>
+                                        <field name="conformite_report_filename" invisible="1"/>
+                                        <button name="preview_document" type="object" string="Prévisualiser" class="btn-secondary" invisible="not conformite_report or state == 'admin_check'" context="{'document_field': 'conformite_report'}"/>
+
+                                    </div>
+
                                     <field name="conformite_agent" readonly="1"/>
                                     <field name="conformite_date" readonly="1"/>
                                 </group>
@@ -292,10 +283,23 @@
                             </group>   
                             <group string="Informations" invisible="state=='final_decision'">        
                                 <field name="certificat_delivr_report"  readonly="1" />
-                                <field name="certificat_deliv" filename="certificat_deliv_filename" readonly="1" string=" Certificat délivré"/>
-                                <field name="certificat_deliv_filename" invisible="1"/>
-                                <field name="reception_pv" filename="reception_pv_filename" readonly="1" string="PV de reception"/>
-                                <field name="reception_pv_filename" invisible="1"/>   
+
+                                <label string="Certificat délivré" for="certificat_deliv"/>
+                                <div class="o_row">
+                                    <field name="certificat_deliv" filename="certificat_deliv_filename" readonly="1" nolabel="1"/>
+                                    <field name="certificat_deliv_filename" invisible="1"/>
+                                    <button name="preview_document" type="object" string="Prévisualiser" class="btn-secondary" invisible="not certificat_deliv or state == 'final_decision'" context="{'document_field': 'certificat_deliv'}"/>
+
+                                </div>
+
+                                <label string="PV de reception" for="reception_pv"/>
+                                <div class="o_row">
+                                     <field name="reception_pv" filename="reception_pv_filename" readonly="1" nolabel="1"/>
+                                     <field name="reception_pv_filename" invisible="1"/>
+                                    <button name="preview_document" type="object" string="Prévisualiser" class="btn-secondary" invisible="not reception_pv or state == 'final_decision'" context="{'document_field': 'reception_pv'}"/>
+
+                                </div>
+
                                 <field name="decision_agent" readonly="1"/>
                                 <field name="decision_date" readonly="1"/>   
                             </group>
@@ -309,8 +313,13 @@
                                     <field name="certificat_signed_filename" invisible="1"/>
                             </group>
                             <group string="Informations supplementaires sur la verification" invisible="state=='certificate_signed'">
-                                    <field name="certificat_signed" filename="certificat_signed_filename" readonly="1" string="Certificat signé par le Ministre"/>
-                                    <field name="certificat_signed_filename" invisible="1"/>
+                                    <label string="Certificat signé par le Ministre" for="certificat_signed"/>
+                                    <div class="o_row">
+                                         <field name="certificat_signed" filename="certificat_signed_filename" readonly="1" nolabel="1"/>
+                                         <field name="certificat_signed_filename" invisible="1"/>
+                                         <button name="preview_document" type="object" string="Prévisualiser" class="btn-secondary" invisible="not certificat_signed or state == 'certificate_signed'" context="{'document_field': 'certificat_signed'}"/>
+                                    </div>
+
                                     <field name="signature_agent" readonly="1"/>
                                     <field name="signature_date" readonly="1"/>
                                 </group>

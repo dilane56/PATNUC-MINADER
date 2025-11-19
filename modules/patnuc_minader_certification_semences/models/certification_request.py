@@ -37,8 +37,8 @@ class CertificationRequest(models.Model):
 
 
     # Informations complémentaires
-    agricole_campain = fields.Char(string="Campagne agricole", required=True)
-    encadrement_structure = fields.Char(string="Structure d'encadrement et/ou d'appui", required=True)
+    agricole_campain = fields.Char(string="Campagne agricole")
+    encadrement_structure = fields.Char(string="Structure d'encadrement et/ou d'appui")
 
 
     # Champs related de la parcelle
@@ -48,6 +48,20 @@ class CertificationRequest(models.Model):
     parcelle_frais = fields.Float(related='parcelle_id.frais_redevance', string='Frais de redevance (FCFA)', readonly=True)
     parcelle_qte_sem_meres = fields.Float(related='parcelle_id.quantite_semences_meres', string='Quantité de célèves mères', readonly=True)
     parcelle_production = fields.Float(related='parcelle_id.production_attendue', string='Production attendue (ha)', readonly=True)
+    parcelle_origine = fields.Text(related='parcelle_id.origine_semence_mere', string='Origine de la semence mère',
+                                   readonly=True)
+
+    parcelle_categorie = fields.Selection(related='parcelle_id.categorie', string='Catégorie', readonly=True)
+
+    parcelle_region = fields.Many2one(related='parcelle_id.region_id', string='Région', readonly=True)
+
+    parcelle_departement = fields.Many2one(related='parcelle_id.departement_id', string='Département', readonly=True)
+
+    parcelle_arrondissement = fields.Many2one(related='parcelle_id.arrondissement_id', string='Arrondissement',
+                                              readonly=True)
+
+    parcelle_support_structure = fields.Char(related='parcelle_id.encadrement_structure',
+                                             string="Structure d'encadrement ou d'appui", readonly=True)
     
     parcelle_categorie = fields.Selection(related='parcelle_id.categorie', string='Catégorie', readonly=True)
 

@@ -60,17 +60,17 @@
                     <group col="4">
                         <group colspan="2">
                             <field name="operator_id" options="{'no_create': True}" readonly="state !='draft'"/>
-                            <field name="region_id" readonly="1"/>
-                            <field name="departement_id" domain="[('region_id', '=', region_id)]" readonly="1"/>
-                            <field name="arrondissement_id" domain="[('departement_id', '=', departement_id)]" readonly="1"/>
-                            <field name="localite_id" readonly="1"/>
+<!--                            <field name="region_id" readonly="1"/>-->
+<!--                            <field name="departement_id" domain="[('region_id', '=', region_id)]" readonly="1"/>-->
+<!--                            <field name="arrondissement_id" domain="[('departement_id', '=', departement_id)]" readonly="1"/>-->
+<!--                            <field name="localite_id" readonly="1"/>-->
+                            <field name="parcelle_id" domain="[('operator_id', '=', operator_id), ('request_id', '=', False)]" options="{'no_create': True}" readonly="state != 'draft'"/>
 
                         </group>
                         <group colspan="2">
-
-                            <field name="parcelle_id" domain="[('operator_id', '=', operator_id), ('request_id', '=', False)]" options="{'no_create': True}" readonly="state != 'draft'"/>
-                            <field name="agricole_campain" readonly="state !='draft'"/>
-                            <field name="encadrement_structure" readonly="state !='draft'"/>
+<!--                            <field name="parcelle_id" domain="[('operator_id', '=', operator_id), ('request_id', '=', False)]" options="{'no_create': True}" readonly="state != 'draft'"/>-->
+<!--                            <field name="agricole_campain" readonly="state !='draft'"/>-->
+<!--                            <field name="encadrement_structure" readonly="state !='draft'"/>-->
                             <field name="submission_date" readonly="1"/>
                             <field name="return_reason" invisible=" not return_reason" readonly="1"/>
 
@@ -96,7 +96,7 @@
                             </group>
 
                         </page>
-                        <page string="Détails de la parcelle" invisible="not parcelle_id">
+                       <page string="Détails de la parcelle" invisible="not parcelle_id">
                             <group col="4">
                                 <group colspan="2" string="Informations de base">
                                     <field name="parcelle_espece" readonly="1"/>
@@ -104,21 +104,17 @@
                                     <field name="parcelle_superficie" readonly="1"/>
                                     <field name="parcelle_qte_sem_meres" readonly="1"/>
                                     <field name="parcelle_production" readonly="1"/>
-                                    <field name="region_id" readonly="1"/>
-                                    <field name="departement_id" readonly="1"/>
-                                    <field name="arrondissement_id" readonly="1"/>
-                                    <field name="localite_id" readonly="1"/>
+                                    <field name="parcelle_origine" readonly="1"/>
                                     <field name="parcelle_categorie" readonly="1"/>
                                 </group>
-                                <group colspan="2" string="Résumé des frais de redevance semencière">
-                                    <group >
+                                <group colspan="2" string="Informations supplementaires">
                                         <field name="parcelle_superficie" readonly="1" string="Superficie déclarée (ha)"/>
-                                        <div class="o_form_label">Tarif: 10 000 FCFA / hectare</div>
-                                    </group>
-                                     <group >
-                                        <field name="parcelle_frais" readonly="1"  options="{'currency_field': False}" string="Total à payer (FCFA)"/>
-                                    </group>
-                                    <field name="parcelle_frais" readonly="1" widget="monetary" options="{'currency_field': False}"/>
+<!--                                        <div  >Tarif: 10 000 FCFA / hectare</div>-->
+                                        <field name="parcelle_frais" readonly="1"   string="Total à payer (FCFA)"/>
+                                        <field name="parcelle_region" readonly="1"/>
+                                        <field name="parcelle_departement" readonly="1" />
+                                        <field name="parcelle_arrondissement" readonly="1"/>
+                                        <field name="parcelle_support_structure" readonly="1"/>
                                 </group>
                             </group>
                         </page>
@@ -175,8 +171,7 @@
                                         <field name="name"/>
                                         <field name="lot_id"/>
                                         <field name="inspector_id"/>
-                                        <field name="scheduled_date"/>
-                                        <field name="visit_stage"/>
+                                        <field name="inspector_code"/>
                                         <field name="state"/>
                                         <field name="conclusion"/>
                                     </tree>

@@ -27,6 +27,7 @@
         'reports/technical_report.xml',
         
         #data
+
         'data/sequence.xml',
         'data/mail_templates.xml',
         
@@ -35,6 +36,8 @@
         'views/equipment_views.xml',
         'views/technical_evaluation_views.xml',
         'views/document_views.xml',
+        'views/operator_views.xml',
+        'views/agreement_views.xml',
         'views/portal_templates.xml',
         'views/menu_views.xml',
                 

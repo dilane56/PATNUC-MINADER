@@ -18,5 +18,23 @@
             <field name="padding">6</field>
             <field name="number_increment">1</field>
         </record>
+        
+        <!-- Séquence pour les opérateurs -->
+        <record id="seq_phytosanitary_operator" model="ir.sequence">
+            <field name="name">Opérateur Certification Phytosanitaire</field>
+            <field name="code">phytosanitary.certification.operator</field>
+            <field name="prefix">OP-</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+        </record>
+        
+        <!-- Séquence pour les agréments -->
+        <record id="seq_phytosanitary_agreement" model="ir.sequence">
+            <field name="name">Agrément Certification Phytosanitaire</field>
+            <field name="code">phytosanitary.certification.agreement</field>
+            <field name="prefix">AGR-</field>
+            <field name="padding">5</field>
+            <field name="number_increment">1</field>
+        </record>
     </data>
 </odoo>
